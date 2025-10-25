@@ -2,6 +2,20 @@
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/csrf.php';
+require __DIR__ . '/../vendor/autoload.php';
+use Cloudinary\Cloudinary;
+
+$cloudinary = new Cloudinary([
+    'cloud' => [
+        'cloud_name' => 'dnwqdukbt',
+        'api_key'    => '965758843313653',
+        'api_secret' => '5xIHL7NNir4L3AgK8j3066Kr4PI',
+    ],
+    'url' => ['secure' => true]
+]);
+
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['filename'])) {
     $filename = basename($_POST['filename']); // sanitize filename
@@ -20,11 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['filename'])) {
         $stmt = $pdo->prepare("UPDATE admin_info SET gallery_images = ? WHERE id = ?");
         $stmt->execute([json_encode($updatedGallery), $profile['id']]);
 
-        // Delete the image file
-        $filePath = __DIR__ . '/../assets/images/' . $filename;
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
+try {
+    // Extract public ID from URL (Cloudinary URLs end with /<public_id>.<ext>)
+    $publicId = pathinfo(parse_url($filename, PHP_URL_PATH), PATHINFO_FILENAME);
+    $cloudinary->uploadApi()->destroy('portfolio/gallery/' . $publicId);
+} catch (Exception $e) {
+    // optional: log the error or show it
+}
 
         echo 'success';
     } else {
@@ -46,7 +62,7 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf_or_die();
 
-    $name = $_POST['name'] ?? '';
+    $fullName = $_POST['fullName'] ?? '';
     $title = $_POST['title'] ?? '';
     $bio = $_POST['bio'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -63,14 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'instagram' => trim($_POST['instagram'] ?? '')
     ];
 
-    $publicPath = '../frontend/public/';
+    
     // Handle profile image upload
     $imageFileName = $profile['profile_image'] ?? null;
     if (!empty($_FILES['profile_image']['name'])) {
-
-        $uploadDir = $publicPath . 'assets/profile/';
-
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
         $tmpName = $_FILES['profile_image']['tmp_name'];
         $originalName = basename($_FILES['profile_image']['name']);
@@ -79,10 +91,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $allowedExts = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array($ext, $allowedExts)) {
             $newFileName = uniqid('profile_', true) . '.' . $ext;
-            if (move_uploaded_file($tmpName, $uploadDir . $newFileName)) {
-                $imageFileName = $newFileName;
-            } else {
-                $error = 'Failed to upload image.';
+            try {
+                $uploadResult = $cloudinary->uploadApi()->upload($tmpName, [
+                    'folder' => 'portfolio/profile',
+                ]);
+                $imageFileName = $uploadResult['secure_url']; // store URL instead of filename
+            } catch (Exception $e) {
+                $error = 'Cloudinary upload error: ' . $e->getMessage();
             }
         } else {
             $error = 'Invalid image file type.';
@@ -92,8 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $galleryImages = !empty($profile['gallery_images']) ? json_decode($profile['gallery_images'], true) : [];
 
     if (!empty($_FILES['gallery_images']['name'][0])) {
-        $uploadDir = __DIR__ . '/../assets/images/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
         foreach ($_FILES['gallery_images']['name'] as $key => $name) {
             $tmpName = $_FILES['gallery_images']['tmp_name'][$key];
@@ -102,8 +115,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (in_array($ext, $allowedExts)) {
                 $newFileName = uniqid('gallery_', true) . '.' . $ext;
-                if (move_uploaded_file($tmpName, $uploadDir . $newFileName)) {
-                    $galleryImages[] = $newFileName;
+               try {
+                    $uploadResult = $cloudinary->uploadApi()->upload($tmpName, [
+                        'folder' => 'portfolio/gallery'
+                    ]);
+                    $galleryImages[] = $uploadResult['secure_url']; // store URL instead of filename
+                } catch (Exception $e) {
+                    $error = 'Cloudinary gallery upload failed: ' . $e->getMessage();
                 }
             }
         }
@@ -118,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     SET name=?, title=?, bio=?, email=?, phones=?, locations=?, socials=?, profile_image=?, gallery_images=? ,updated_at=CURRENT_TIMESTAMP 
                     WHERE id=?");
                 $stmt->execute([
-                    $name,
+                    $fullName,
                     $title,
                     $bio,
                     $email,
@@ -135,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     (name, title, bio, email, phones, locations, socials, profile_image, gallery_images) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
                 $stmt->execute([
-                    $name,
+                    $fullName,
                     $title,
                     $bio,
                     $email,
@@ -198,7 +216,7 @@ $socials = !empty($profile['socials']) ? json_decode($profile['socials'], true) 
                     <div class="form-row">
                         <div class="form-group">
                             <label>Full Name</label>
-                            <input type="text" name="name" value="<?= htmlspecialchars($profile['name'] ?? '') ?>" required>
+                            <input type="text" name="fullName" value="<?= htmlspecialchars($profile['name'] ?? '') ?>" required>
                         </div>
                         <div class="form-group">
                             <label>Professional Title</label>
@@ -266,7 +284,7 @@ $socials = !empty($profile['socials']) ? json_decode($profile['socials'], true) 
                         <input type="file" name="profile_image" accept="image/*">
                         <?php if (!empty($profile['profile_image'])): ?>
                             <div>
-                                <img src="../frontend/public/assets/profile/<?= htmlspecialchars($profile['profile_image']) ?>"
+                                <img src="<?= htmlspecialchars($profile['profile_image']) ?>"
                                     alt="Profile" style="max-width: 150px; border-radius: 8px;">
                             </div>
                         <?php endif; ?>
@@ -283,7 +301,7 @@ $socials = !empty($profile['socials']) ? json_decode($profile['socials'], true) 
                                 <div class="gallery-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
                                     <?php foreach ($gallery as $img): ?>
                                         <div style="position:relative; display:inline-block;">
-                                            <img src="/assets/images/<?php echo htmlspecialchars($img); ?>"
+                                            <img src="<?php echo htmlspecialchars($img); ?>"
                                                 alt="Gallery Image" style="max-width:100px; border-radius:8px;">
                                             <button type="button" class="remove-btn"
                                                 data-filename="<?php echo htmlspecialchars($img); ?>"
@@ -297,7 +315,7 @@ $socials = !empty($profile['socials']) ? json_decode($profile['socials'], true) 
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" name="submit">Save Changes</button>
                 </form>
             </div>
         </main>

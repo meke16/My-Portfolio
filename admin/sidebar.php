@@ -16,7 +16,7 @@ if(!empty($profile > 0)) {
 
 <aside class="admin-sidebar">
     <div class="user-profile-info">
-        <img src="../frontend/public/assets/profile/<?= $profileImage ?>" alt="User Profile Photo" class="profile-photo">
+        <img src="<?= $profileImage ?>" alt="User Profile Photo" class="profile-photo">
         <p class="user-name"><?= $name ?></p> </div>
     <nav>
         <ul>

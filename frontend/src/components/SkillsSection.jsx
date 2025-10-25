@@ -122,7 +122,7 @@ export default function SkillsSection({ skills }) {
             const categoryColor = getCategoryColor(category);
             
             return (
-              <div key={category} className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20">
+              <div key={category} className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20 hover:shadow-4xl transition-all duration-500 transform hover:-translate-y-4">
                 <div className="flex items-center mb-6">
                   <div className={`w-12 h-12 bg-${categoryColor}-500/10 rounded-lg flex items-center justify-center mr-4`}>
                     {getCategoryIcon(category)}
