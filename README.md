@@ -28,9 +28,8 @@ A **modern, responsive, and dynamic portfolio website** with a **powerful admin 
 ## 🚀 Getting Started
 
 ### 🧭 Admin Panel Access
-1. Visit: `https://[your-replit-url].repl.co/admin/login.php`  
-2. **If you don’t have an account yet**, click **“Sign Up”** to create one  
-3. After registration, log in with your new credentials  
+1. **If you don’t have an account yet**, click **“Sign Up”** to create one  
+2. After registration, log in with your new credentials  
 
 ---
 
