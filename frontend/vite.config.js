@@ -9,4 +9,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+    server: {
+    proxy: {
+      "/api": {
+        target: "http://cher-portfolio.test",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
+      },
+    },
+  },
+  
 })

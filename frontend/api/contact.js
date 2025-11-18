@@ -6,7 +6,7 @@ export const config = {
 
 export default async function handler(req, res) {
   try {
-    const response = await fetch("https://chere.lovestoblog.com/api/contact.php", {
+    const response = await fetch("http://cher-portfolio.test/api/contact.php", {
       method: "POST",
       body: req.body,
     });
