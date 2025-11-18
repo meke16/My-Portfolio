@@ -146,7 +146,7 @@ export default function Navbar({ info }) {
               </a>
               <div className="pt-2">
                 <a
-                  href="#contact"
+                  href=""
                   className="w-full bg-linear-to-r from-blue-500 to-purple-600 text-white block text-center px-3 py-3 rounded-md text-base font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
                   onClick={handleLinkClick}
                 >

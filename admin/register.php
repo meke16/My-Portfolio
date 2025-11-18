@@ -8,7 +8,7 @@ $check = $pdo->prepare("SELECT id FROM admin_users");
 $check->execute();
 $rows = $check->fetchAll(PDO::FETCH_ASSOC);
 
-if (count($rows) > 0) {
+if (count($rows) > 2) {
     echo "<script>
         alert('Admin already registered');
         window.location.href = 'login.php';
@@ -68,7 +68,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Admin</title>
-    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="admin-styles.css?v=<?= time(); ?>">
+    <style>
+        .login-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+    </style>
 </head>
 
 <body class="login-page">

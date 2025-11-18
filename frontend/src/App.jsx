@@ -7,51 +7,13 @@ import ContactForm from './components/ContactForm';
 import Navbar from "./components/Navbar";
 
 
-  // function dd(...args) {
-  //   // Create container
-  //   const container = document.createElement('div');
-  //   container.style.cssText = `
-  //     background: #fff;
-  //     border: 1px solid #ccc;
-  //     padding: 12px;
-  //     margin: 10px;
-  //     font-family: monospace;
-  //     font-size: 14px;
-  //     line-height: 1.5;
-  //     white-space: pre-wrap;
-  //     word-wrap: break-word;
-  //     color: #111;
-  //     border-radius: 6px;
-  //     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  //   `;
-
-  //   // Add each dumped argument
-  //   args.forEach(arg => {
-  //     const block = document.createElement('div');
-  //     block.style.marginBottom = '8px';
-  //     try {
-  //       block.textContent = JSON.stringify(arg, null, 2);
-  //     } catch {
-  //       block.textContent = String(arg);
-  //     }
-  //     container.appendChild(block);
-  //   });
-
-  //   // Clear page and display dump
-  //   document.body.innerHTML = '';
-  //   document.body.appendChild(container);
-
-  //   // Stop further script execution
-  //   throw new Error('Execution stopped by dd()');
-  // }
-
-
 export default function App() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
     (async () => {
       try {
+        //set timeout for 3 second before fetch
         const result = await getPortfolioData();
         setData(result);
       } catch (error) {
@@ -59,7 +21,6 @@ export default function App() {
       }
     })();
   }, []);
-
 
 if (!data)
   return (
@@ -70,29 +31,62 @@ if (!data)
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        background: "linear-gradient(135deg, #f5f7fa, #c3cfe2)",
-        fontFamily: "Inter, sans-serif",
+        background: "#0a0f14",
+        color: "#00ff9c",
+        fontFamily: "Courier New, monospace",
+        textAlign: "center"
       }}
     >
-      <div
-        style={{
-          width: "60px",
-          height: "60px",
-          border: "6px solid #e0e0e0",
-          borderTop: "6px solid #4a90e2",
-          borderRadius: "50%",
-          animation: "spin 1s linear infinite",
-        }}
-      />
-      <h2 style={{ marginTop: "20px", color: "#333", fontWeight: 500 }}>
-        Loading...
+
+      {/* Booting Text */}
+      <h2 className="boot-text">
+       wait <span className="cursor">_</span>
+      </h2>
+      {/* Device Charging Animation Line */}
+      <div className="loader-line" />
+
+      {/* Booting Text */}
+      <h2 className="boot-text">
+        Loading <span className="cursor">_</span>
       </h2>
 
+      {/* Injecting CSS */}
       <style>
         {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+          .loader-line {
+            width: 180px;
+            height: 6px;
+            background: linear-gradient(90deg, #001, #00ff9c, #001);
+            background-size: 300% 100%;
+            animation: charge 2.5s linear infinite;
+            border-radius: 4px;
+            margin-bottom: 20px;
+          }
+
+          @keyframes charge {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+
+          .boot-text {
+            font-size: 22px;
+            font-weight: bold;
+            animation: flicker 1.5s infinite alternate;
+          }
+
+          @keyframes flicker {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+          }
+
+          .cursor {
+            animation: blink 0.6s infinite;
+          }
+
+          @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
           }
         `}
       </style>

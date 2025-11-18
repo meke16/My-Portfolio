@@ -10,6 +10,13 @@ if (isset($_GET['mark_read']) && isset($_GET['token'])) {
         $stmt->execute([$_GET['mark_read']]);
     }
 }
+// UnMark as read
+if (isset($_GET['unread']) && isset($_GET['token'])) {
+    if (validate_csrf_token($_GET['token'])) {
+        $stmt = $pdo->prepare("UPDATE contact_messages SET read_status = false WHERE id = ?");
+        $stmt->execute([$_GET['unread']]);
+    }
+}
 
 // Delete message
 if (isset($_GET['delete']) && isset($_GET['token'])) {
@@ -24,6 +31,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,15 +39,16 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="admin-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <?php include __DIR__ . '/header.php'; ?>
-    
+
     <div class="admin-container">
         <?php include __DIR__ . '/sidebar.php'; ?>
-        
+
         <main class="admin-content">
             <h1>Contact Messages</h1>
-            
+
             <div class="card">
                 <?php if (empty($messages)): ?>
                     <p>No messages yet.</p>
@@ -69,6 +78,8 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <td class="action-buttons-table">
                                             <?php if (!$msg['read_status']): ?>
                                                 <a href="?mark_read=<?php echo $msg['id']; ?>&token=<?php echo urlencode(generate_csrf_token()); ?>" class="btn btn-info">Mark Read</a>
+                                            <?php elseif ($msg['read_status']): ?>
+                                                <a href="?unread=<?php echo $msg['id']; ?>&token=<?php echo urlencode(generate_csrf_token()); ?>" class="btn btn-primary">Unread</a>
                                             <?php endif; ?>
                                             <a href="?delete=<?php echo $msg['id']; ?>&token=<?php echo urlencode(generate_csrf_token()); ?>" class="btn btn-danger" onclick="return confirm('Delete this message?')">Delete</a>
                                         </td>
@@ -82,4 +93,5 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </main>
     </div>
 </body>
+
 </html>
