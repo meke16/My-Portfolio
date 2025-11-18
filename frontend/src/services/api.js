@@ -1,5 +1,5 @@
 // api.js
-const API_BASE = import.meta.env.VITE_API_URL || "http://cher-portfolio.test/api";;
+const API_BASE = "https://chere.lovestoblog.com/api";
 
 export async function getPortfolioData() {
   const res = await fetch(`${API_BASE}/portfolio.php`);
