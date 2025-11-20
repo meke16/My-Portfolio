@@ -2,7 +2,7 @@ import React from "react";
 
 export default function HeroSection({ info }) {
   // Parse socials (handle null or invalid JSON safely)
-  const socials = info?.socials ? JSON.parse(info.socials) : {};
+  const socials = info.socials;
 
   // Social media icons mapping
   const socialIcons = {

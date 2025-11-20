@@ -30,20 +30,21 @@ try {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
-        CREATE TABLE IF NOT EXISTS portfolio_info (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100),
-            title VARCHAR(150),
-            bio TEXT,
-            email VARCHAR(100),
-            phone VARCHAR(20),
-            location VARCHAR(100),
-            github VARCHAR(100),
-            linkedin VARCHAR(100),
-            twitter VARCHAR(100),
-            profile_image VARCHAR(255) DEFAULT 'assets/images/developer.jpg',
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
+        CREATE TABLE `admin_info` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `name` varchar(100) NOT NULL,
+        `title` varchar(100) DEFAULT NULL,
+        `bio` text,
+        `email` varchar(150) NOT NULL,
+        `phones` json DEFAULT NULL,
+        `locations` json DEFAULT NULL,
+        `socials` json DEFAULT NULL,
+        `profile_image` varchar(255) DEFAULT NULL,
+        `gallery_images` json DEFAULT NULL,
+        `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
         CREATE TABLE IF NOT EXISTS skills (
             id INT AUTO_INCREMENT PRIMARY KEY,
