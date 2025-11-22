@@ -1,3 +1,4 @@
+// frontend/tailwind.config.js
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,8 +8,11 @@ export default {
   ],
   theme: {
     extend: {
-      // If you are using non-standard utility classes (like bg-linear-to-r)
-      // you might need a custom plugin or to configure them here.
+      // THIS BLOCK IS CRUCIAL FOR YOUR GRADIENT STYLES
+      backgroundImage: {
+        'linear-to-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
+        'linear-to-br': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
+      }
     },
   },
   plugins: [],
