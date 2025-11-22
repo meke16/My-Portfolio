@@ -1,7 +1,9 @@
-// contact.js
 import { pool } from "./db.js";
 
-export default async function handler(req, res) {
+// FIX 1: Removed 'default' to allow 'import { contactHandler }' in server.js
+export async function contactHandler(req, res) {
+  
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -18,12 +20,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    await pool.execute(
-      "INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)",
-      [name, email, subject, message]
-    );
+    // FIX 2: PostgreSQL Syntax Changes
+    // 1. Changed .execute() to .query() (standard for 'pg' library)
+    // 2. Changed placeholders from '?' to '$1, $2, $3, $4'
+    const queryText = "INSERT INTO contact_messages (name, email, subject, message) VALUES ($1, $2, $3, $4)";
+    
+    await pool.query(queryText, [name, email, subject, message]);
+
     return res.json({ success: true, message: "Message sent successfully!" });
   } catch (err) {
+    console.error(err); // Good practice to log the actual error on the server console
     return res.json({ success: false, message: "Error sending message: " + err.message });
   }
 }

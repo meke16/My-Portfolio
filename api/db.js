@@ -1,11 +1,18 @@
 // db.js
-import mysql from "mysql2/promise";
+import pkg from "pg";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
+const { Pool } = pkg;
+
+export const pool = new Pool({
+  host: process.env.PG_HOST,
+  user: process.env.PG_USER,
+  password: process.env.PG_PASS,
+  database: process.env.PG_NAME,
+  port: 5432,
+  ssl: {
+    require: true,            
+    rejectUnauthorized: false 
+  }
 });
