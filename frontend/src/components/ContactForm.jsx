@@ -113,7 +113,7 @@ export default function ContactForm({ info }) {
                   (Array.isArray(info.email)
                     ? info.email.length > 0
                     : info.email) && (
-                    <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20">
+                    <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101 ">
                       <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center shrink-0">
                         <svg
                           className="w-6 h-6 text-blue-500"
@@ -142,7 +142,7 @@ export default function ContactForm({ info }) {
 
                 {/* Phones - Parse JSON string */}
                 {info.phones && (
-                  <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20">
+                  <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101">
                     <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center shrink-0">
                       <svg
                         className="w-6 h-6 text-green-500"
@@ -164,7 +164,7 @@ export default function ContactForm({ info }) {
                       </p>
                       {(() => {
                         try {
-                          const phones = JSON.parse(info.phones);
+                          const phones =(info.phones);
                           return Array.isArray(phones) ? (
                             <div className="space-y-1">
                               {phones.map((phone, index) => (
@@ -194,7 +194,7 @@ export default function ContactForm({ info }) {
                 )}
                 {/* Locations - Parse JSON string */}
                 {info.locations && (
-                  <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20">
+                  <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101">
                     <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center shrink-0">
                       <svg
                         className="w-6 h-6 text-orange-500"
@@ -222,7 +222,7 @@ export default function ContactForm({ info }) {
                       </p>
                       {(() => {
                         try {
-                          const locations = JSON.parse(info.locations);
+                          const locations = (info.locations);
                           return Array.isArray(locations) ? (
                             <div className="space-y-1">
                               {locations.map((location, index) => (
@@ -252,7 +252,7 @@ export default function ContactForm({ info }) {
                 )}
 
                 {/* Response Time (Static) */}
-                <div className="flex items-center space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20">
+                <div className="flex items-center space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101">
                   <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center">
                     <svg
                       className="w-6 h-6 text-purple-500"
@@ -273,7 +273,7 @@ export default function ContactForm({ info }) {
                       Response Time
                     </p>
                     <p className="text-gray-900 dark:text-white font-semibold">
-                      Usually within 24 hours
+                      Usually within 12-18 hours
                     </p>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function ContactForm({ info }) {
             {/* Contact Form */}
 
 
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20 mt-[30px]">
+            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20 mt-40">
             
               <form
                 onSubmit={handleSubmit}
@@ -371,7 +371,7 @@ export default function ContactForm({ info }) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-linear-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2 shadow-lg hover:shadow-blue-500/25"
+                  className="w-full bg-linear-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-101 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2 shadow-lg hover:shadow-blue-500/25"
                 >
                   {isLoading ? (
                     <>
