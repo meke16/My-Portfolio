@@ -1,0 +1,15 @@
+{
+  "name": "portfolio-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "npm install express cors dotenv pg",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
