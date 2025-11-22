@@ -283,7 +283,7 @@ export default function ContactForm({ info }) {
             {/* Contact Form */}
 
 
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20  mt-30">
+            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20 mt-[30px]">
             
               <form
                 onSubmit={handleSubmit}
