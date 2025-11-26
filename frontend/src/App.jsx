@@ -6,17 +6,17 @@ import ProjectsSection from "./components/ProjectsSection";
 import ContactForm from './components/ContactForm'; 
 import Navbar from "./components/Navbar";
 import LoadingScreen from "./components/LoadingScreen";
-
+import GallerySection from "./components/GallerySection";
 
 export default function App() {
   const [data, setData] = useState(null);
-
   useEffect(() => {
     (async () => {
       try {
         //set timeout for 3 second before fetch
         const result = await getPortfolioData();
         setData(result);
+        console.log(data.info.gallery_images)
       } catch (error) {
         console.error("Error loading portfolio:", error);
       }
@@ -35,6 +35,7 @@ export default function App() {
       <HeroSection info={data.info} />
       <SkillsSection skills={data.skills} />
       <ProjectsSection projects={data.projects} />
+      <GallerySection info={data.info.gallery_images}/>
       <ContactForm info={data.info}/>
     </>
   );

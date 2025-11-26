@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 
 /**
  * Generates a component that displays a retro binary loading screen 
