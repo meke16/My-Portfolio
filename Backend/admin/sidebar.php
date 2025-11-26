@@ -40,7 +40,7 @@ $msg = $msg->fetchAll(PDO::FETCH_ASSOC);
             <li><a href="manage_skills.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_skills.php' ? 'active' : ''; ?>">
                     <i class="fas fa-code"></i> Manage Skills
                 </a></li>
-                        <li><a href="portfolio_gallery.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_skills.php' ? 'active' : ''; ?>">
+                        <li><a href="portfolio_gallery.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'portfolio_gallery.php' ? 'active' : ''; ?>">
                     <i class="fas fa-code"></i> Manage Portfolio Gallery
                 </a></li>
             <li>

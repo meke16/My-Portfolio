@@ -141,7 +141,7 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </button>
 
             <?php if ($edit_item): ?>
-                <a href="manage_gallery.php" class="btn btn-secondary">Cancel</a>
+                <a href="portfolio_gallery.php" class="btn btn-secondary">Cancel</a>
             <?php endif; ?>
         </form>
     </div>

@@ -22,6 +22,15 @@ export default function App() {
       }
     })();
   }, []);
+  useEffect(() => {
+  if (!data || !data.info || !data.info.profile_image) return;
+
+  const favicon = document.getElementById("dynamic-favicon");
+  if (favicon) {
+    favicon.href = data.info.profile_image;  
+  }
+}, [data]);
+
 
   if (!data)
     return (
