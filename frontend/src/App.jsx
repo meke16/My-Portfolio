@@ -30,7 +30,11 @@ export default function App() {
     favicon.href = data.info.profile_image;  
   }
 }, [data]);
+useEffect(() => {
+  if (!data || !data.info) return;
 
+  document.title = data.info.name;  
+}, [data]);
 
   if (!data)
     return (
