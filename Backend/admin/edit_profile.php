@@ -14,44 +14,6 @@ $cloudinary = new Cloudinary([
     'url' => ['secure' => true]
 ]);
 
-
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['filename'])) {
-    $filename = basename($_POST['filename']); // sanitize filename
-
-    // Fetch current gallery
-    $stmt = $pdo->query("SELECT id, gallery_images FROM admin_info ORDER BY id DESC LIMIT 1");
-    $profile = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($profile && !empty($profile['gallery_images'])) {
-        $gallery = json_decode($profile['gallery_images'], true) ?? [];
-
-        // Remove the image from array
-        $updatedGallery = array_values(array_filter($gallery, fn($img) => $img !== $filename));
-
-        // Update DB
-        $stmt = $pdo->prepare("UPDATE admin_info SET gallery_images = ? WHERE id = ?");
-        $stmt->execute([json_encode($updatedGallery), $profile['id']]);
-
-try {
-    // Extract public ID from URL (Cloudinary URLs end with /<public_id>.<ext>)
-    $publicId = pathinfo(parse_url($filename, PHP_URL_PATH), PATHINFO_FILENAME);
-    $cloudinary->uploadApi()->destroy('portfolio/gallery/' . $publicId);
-} catch (Exception $e) {
-    // optional: log the error or show it
-}
-
-        echo 'success';
-    } else {
-        echo 'no_gallery';
-    }
-
-    exit;
-} else {
-    echo 'invalid';
-}
-
 $success = '';
 $error = '';
 
@@ -103,29 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Invalid image file type.';
         }
     }
-    // Handle gallery images upload (multiple)
-    $galleryImages = !empty($profile['gallery_images']) ? json_decode($profile['gallery_images'], true) : [];
 
-    if (!empty($_FILES['gallery_images']['name'][0])) {
-
-        foreach ($_FILES['gallery_images']['name'] as $key => $name) {
-            $tmpName = $_FILES['gallery_images']['tmp_name'][$key];
-            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-            $allowedExts = ['jpg', 'jpeg', 'png', 'gif'];
-
-            if (in_array($ext, $allowedExts)) {
-                $newFileName = uniqid('gallery_', true) . '.' . $ext;
-               try {
-                    $uploadResult = $cloudinary->uploadApi()->upload($tmpName, [
-                        'folder' => 'portfolio/gallery'
-                    ]);
-                    $galleryImages[] = $uploadResult['secure_url']; // store URL instead of filename
-                } catch (Exception $e) {
-                    $error = 'Cloudinary gallery upload failed: ' . $e->getMessage();
-                }
-            }
-        }
-    }
 
 
     if (empty($error)) {
@@ -133,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($profile) {
                 // Update existing profile
                 $stmt = $pdo->prepare("UPDATE admin_info 
-                    SET name=?, title=?, bio=?, email=?, phones=?, locations=?, socials=?, profile_image=?, gallery_images=? ,updated_at=CURRENT_TIMESTAMP 
+                    SET name=?, title=?, bio=?, email=?, phones=?, locations=?, socials=?, profile_image=?,updated_at=CURRENT_TIMESTAMP 
                     WHERE id=?");
                 $stmt->execute([
                     $fullName,
@@ -144,14 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     json_encode($locations),
                     json_encode($socials),
                     $imageFileName,
-                    json_encode($galleryImages),
                     $profile['id']
                 ]);
             } else {
                 // Insert new profile
                 $stmt = $pdo->prepare("INSERT INTO admin_info 
-                    (name, title, bio, email, phones, locations, socials, profile_image, gallery_images) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
+                    (name, title, bio, email, phones, locations, socials, profile_image) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?,?)");
                 $stmt->execute([
                     $fullName,
                     $title,
@@ -161,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     json_encode($locations),
                     json_encode($socials),
                     $imageFileName,
-                    json_encode($galleryImages)
                 ]);
             }
 
@@ -289,30 +227,7 @@ $socials = !empty($profile['socials']) ? json_decode($profile['socials'], true) 
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="form-group">
-                        <label>Gallery Images (you can select multiple)</label>
-                        <input type="file" name="gallery_images[]" accept="image/*" multiple>
 
-                        <?php
-                        if (!empty($profile['gallery_images'])):
-                            $gallery = json_decode($profile['gallery_images'], true);
-                            if (!empty($gallery)):
-                        ?>
-                                <div class="gallery-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
-                                    <?php foreach ($gallery as $img): ?>
-                                        <div style="position:relative; display:inline-block;">
-                                            <img src="<?php echo htmlspecialchars($img); ?>"
-                                                alt="Gallery Image" style="max-width:100px; border-radius:8px;">
-                                            <button type="button" class="remove-btn"
-                                                data-filename="<?php echo htmlspecialchars($img); ?>"
-                                                style="position:absolute; top:0; right:0; background:red; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer;">×</button>
-                                        </div>
-
-                                    <?php endforeach; ?>
-                                </div>
-                        <?php endif;
-                        endif; ?>
-                    </div>
 
 
                     <button type="submit" class="btn btn-primary" name="submit">Save Changes</button>
@@ -320,38 +235,7 @@ $socials = !empty($profile['socials']) ? json_decode($profile['socials'], true) 
             </div>
         </main>
     </div>
-<script>
-document.querySelectorAll('.remove-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (!confirm('Remove this image?')) return;
 
-        const filename = btn.dataset.filename;
-        const csrfToken = document.querySelector('[name="csrf_token"]').value;
-
-        const formData = new URLSearchParams();
-        formData.append('filename', filename);
-        formData.append('csrf_token', csrfToken);
-
-        fetch('', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded' // 👈 Important
-            },
-            body: formData
-        })
-        .then(res => res.text())
-        .then(response => {
-            console.log('Server response:', response); // debug line
-            if (response.trim() === 'success') {
-                btn.parentElement.remove();
-            } else {
-                alert('Failed to remove image: ' + response);
-            }
-        })
-        .catch(err => alert('Error: ' + err));
-    });
-});
-</script>
 
 
 </body>

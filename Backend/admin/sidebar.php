@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/database.php';
 require 'functions.php';
 $stmt = $pdo->query("SELECT * FROM admin_info ORDER BY id DESC LIMIT 1");
+$stmt->execute();
 $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
@@ -38,6 +39,9 @@ $msg = $msg->fetchAll(PDO::FETCH_ASSOC);
                 </a></li>
             <li><a href="manage_skills.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_skills.php' ? 'active' : ''; ?>">
                     <i class="fas fa-code"></i> Manage Skills
+                </a></li>
+                        <li><a href="portfolio_gallery.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_skills.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-code"></i> Manage Portfolio Gallery
                 </a></li>
             <li>
                 <a href="messages.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'messages.php' ? 'active' : ''; ?> message-item">

@@ -16,7 +16,7 @@ export default function App() {
         //set timeout for 3 second before fetch
         const result = await getPortfolioData();
         setData(result);
-        console.log(data.info.gallery_images)
+        console.log(data)
       } catch (error) {
         console.error("Error loading portfolio:", error);
       }
@@ -35,7 +35,7 @@ export default function App() {
       <HeroSection info={data.info} />
       <SkillsSection skills={data.skills} />
       <ProjectsSection projects={data.projects} />
-      <GallerySection info={data.info.gallery_images}/>
+      <GallerySection items={data.items}/>
       <ContactForm info={data.info}/>
     </>
   );

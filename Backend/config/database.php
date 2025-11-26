@@ -5,11 +5,17 @@ $user = "neondb_owner";
 $pass = "npg_oWiRh76Uudvs";
 
 try {
-    $pdo = new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    $pdo = new PDO($dsn, $user, $pass,
+[
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 
-    echo "Connected to Neon PostgreSQL successfully!";
+        // IMPORTANT FIXES
+        PDO::ATTR_EMULATE_PREPARES => true,   // avoids cached-plan mismatch
+        PDO::ATTR_PERSISTENT => false,        // prevents stale plan reuse
+    ]
+);
+
 
     // Create tables (PostgreSQL versions)
     $pdo->exec("
@@ -77,10 +83,8 @@ try {
         );
     ");
 
-    echo "<br>Tables created successfully!";
 
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
 }
-?>
 
