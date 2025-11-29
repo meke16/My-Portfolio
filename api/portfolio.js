@@ -3,14 +3,12 @@ import { pool } from "./db.js";
 export async function portfolioHandler(req, res) {
   try {
     const infoResult = await pool.query("SELECT * FROM admin_info ORDER BY id DESC LIMIT 1");
-    const galleryInfo = await pool.query("SELECT * FROM portfolio_gallery ORDER BY id DESC");
     const skillsResult = await pool.query("SELECT * FROM skills ORDER BY id ASC");
     const projectsResult = await pool.query("SELECT * FROM projects ORDER BY created_at DESC");
 
     res.json({
       success: true,
       info: infoResult.rows[0] || null,
-      items: galleryInfo.rows,
       skills: skillsResult.rows,
       projects: projectsResult.rows
     });

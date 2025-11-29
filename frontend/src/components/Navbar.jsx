@@ -11,7 +11,7 @@ export default function Navbar({ info }) {
       setScrolled(window.scrollY > 50);
 
       // 2. Handle Active Link Highlighting
-      const sections = ["hero", "skills", "projects","gallery", "contact"];
+      const sections = ["hero", "skills", "projects","contact"];
       
       // We add roughly 100px offset to account for the fixed navbar height
       // so the link becomes active slightly before the section hits the very top
@@ -120,19 +120,7 @@ export default function Navbar({ info }) {
                   }`}
                 ></span>
               </a>
-              <a
-                href="#gallery"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-white/10 relative group ${
-                  activeSection === "gallery" ? "text-white" : "text-gray-300"
-                }`}
-              >
-                Gallery
-                <span
-                  className={`absolute bottom-0 left-0 h-0.5 bg-purple-200 transition-all duration-300 ${
-                    activeSection === "gallery" ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
-                ></span>
-              </a>
+              
               <a
                 href="#contact"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-white/10 relative group ${
