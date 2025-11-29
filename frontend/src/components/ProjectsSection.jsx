@@ -34,7 +34,7 @@ export default function ProjectsSection({ projects }) {
       if (!selectedProject) return;
       
       const images = getProjectImages(selectedProject);
-      
+
       if (e.key === "Escape") closeProject();
       if (e.key === "ArrowLeft") {
         setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -48,14 +48,11 @@ export default function ProjectsSection({ projects }) {
   }, [selectedProject, currentImageIndex]);
 
   // Parse images helper
-  const getProjectImages = (project) => {
-    if (!project?.image) return ["https://via.placeholder.com/800x600?text=No+Image"];
-    return project.image
-      .split(",")
-      .map((img) => img.trim().replace(/\s+/g, ""))
-      .filter((img) => img.length > 5);
-  };
-
+const getProjectImages = (project) => {
+  if (!project.image) return [];
+  // Ensure it’s always an array
+  return Array.isArray(project.image) ? project.image : [project.image];
+};
   // Parse technologies helper
   const getProjectTech = (project) => {
     return project.technologies?.split(",").map((t) => t.trim()) || [];
