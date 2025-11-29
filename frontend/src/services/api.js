@@ -2,7 +2,7 @@
 
 // 1. Automatically determine the API URL based on the environment
 const API_BASE = import.meta.env.PROD 
-  ? "https://portfolio-fpeg.onrender.com/api"  // Used when deployed (Production)
+  ? "https://portfolio-zuca.onrender.com/api"  // Used when deployed (Production)
   : "http://localhost:4000/api";               // Used when running locally (Development)
 
 export async function getPortfolioData() {
