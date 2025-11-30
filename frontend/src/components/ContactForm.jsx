@@ -1,261 +1,111 @@
+// ————————————
+// PRO CONTACT SECTION
+// Sleek + Premium UI Version
+// ————————————
+
 import React, { useState } from "react";
 import { sendContactForm } from "../services/api";
 
 export default function ContactForm({ info }) {
-  // console.log(info);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
+
   const [status, setStatus] = useState({ message: "", type: "" });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setStatus({ message: "Sending your message...", type: "info" });
+    setStatus({ message: "Sending...", type: "info" });
 
     const data = new FormData();
-    Object.keys(formData).forEach((key) => data.append(key, formData[key]));
+    Object.keys(formData).forEach((k) => data.append(k, formData[k]));
 
     try {
       const res = await sendContactForm(data);
       if (res.success) {
         setStatus({
-          message: "🎉 Message sent successfully! I'll get back to you soon.",
+          message: "Message sent successfully!",
           type: "success",
         });
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
         setStatus({
-          message: res.message || "❌ Error sending message. Please try again.",
+          message: res.message || "Something went wrong.",
           type: "error",
         });
       }
     } catch {
       setStatus({
-        message:
-          "❌ Error sending message. Please check your connection and try again.",
+        message: "Connection error. Try again.",
         type: "error",
       });
     } finally {
       setIsLoading(false);
     }
 
-    setTimeout(() => setStatus({ message: "", type: "" }), 5000);
+    setTimeout(() => setStatus({ message: "", type: "" }), 4000);
   };
 
-  const getStatusColor = () => {
-    switch (status.type) {
-      case "success":
-        return "bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400";
-      case "error":
-        return "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400";
-      case "info":
-        return "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400";
-      default:
-        return "";
-    }
+  const badgeColor = {
+    success:
+      "bg-green-50 dark:bg-green-700/20 border border-green-300 text-green-700 dark:text-green-300",
+    error:
+      "bg-red-50 dark:bg-red-700/20 border border-red-300 text-red-700 dark:text-red-300",
+    info:
+      "bg-blue-50 dark:bg-blue-700/20 border border-blue-300 text-blue-700 dark:text-blue-300",
   };
 
   return (
-    <section
-      id="contact"
-      className="py-20 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative overflow-hidden"
-    >
-      {/* Background decorations */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+    <section className="py-24 relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      {/* Subtle gradient circles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-32 -right-24 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-3xl" />
+      </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Get In{" "}
-            <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+      <div className="relative container mx-auto px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+            Let’s Stay in{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               Touch
             </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Let's work together! Send me a message and I'll get back to you as
-            soon as possible.
+
+          <p className="mt-4 text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+            Interested in collaborating or have a question? Drop your message below and I’ll respond shortly.
           </p>
-          <div className="w-24 h-1 bg-linear-to-r from-blue-600 to-purple-600 mx-auto mt-6 rounded-full"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Contact Information */}
-            {/* Contact Information */}
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  Let's start a conversation
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                  I'm always interested in new opportunities, creative projects,
-                  and collaborating with amazing people. Whether you have a
-                  question or just want to say hi, I'll do my best to get back
-                  to you!
-                </p>
-              </div>
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          {/* LEFT — Contact Info */}
+          <div className="space-y-10">
+            <div className="space-y-4">
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                Contact Details
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                Feel free to use the form or reach out through any of the alternatives below.
+              </p>
+            </div>
 
-              {/* Contact Details */}
-              <div className="space-y-4">
-                {/* Email - Handle array or single string */}
-                {info.email &&
-                  (Array.isArray(info.email)
-                    ? info.email.length > 0
-                    : info.email) && (
-                    <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101 ">
-                      <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center shrink-0">
-                        <svg
-                          className="w-6 h-6 text-blue-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                          Email
-                        </p>
-                        <p className="text-gray-900 dark:text-white font-semibold">
-                          {info.email}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                {/* Phones - Parse JSON string */}
-                {info.phones && (
-                  <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101">
-                    <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center shrink-0">
-                      <svg
-                        className="w-6 h-6 text-green-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                        Phone
-                      </p>
-                      {(() => {
-                        try {
-                          const phones =(info.phones);
-                          return Array.isArray(phones) ? (
-                            <div className="space-y-1">
-                              {phones.map((phone, index) => (
-                                <p
-                                  key={index}
-                                  className="text-gray-900 dark:text-white font-semibold"
-                                >
-                                  {phone}
-                                </p>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-gray-900 dark:text-white font-semibold">
-                              {phones}
-                            </p>
-                          );
-                        } catch {
-                          return (
-                            <p className="text-gray-900 dark:text-white font-semibold">
-                              {info.phones}
-                            </p>
-                          );
-                        }
-                      })()}
-                    </div>
-                  </div>
-                )}
-                {/* Locations - Parse JSON string */}
-                {info.locations && (
-                  <div className="flex items-start space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101">
-                    <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center shrink-0">
-                      <svg
-                        className="w-6 h-6 text-orange-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                        Location
-                      </p>
-                      {(() => {
-                        try {
-                          const locations = (info.locations);
-                          return Array.isArray(locations) ? (
-                            <div className="space-y-1">
-                              {locations.map((location, index) => (
-                                <p
-                                  key={index}
-                                  className="text-gray-900 dark:text-white font-semibold"
-                                >
-                                  {location}
-                                </p>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-gray-900 dark:text-white font-semibold">
-                              {locations}
-                            </p>
-                          );
-                        } catch {
-                          return (
-                            <p className="text-gray-900 dark:text-white font-semibold">
-                              {info.locations}
-                            </p>
-                          );
-                        }
-                      })()}
-                    </div>
-                  </div>
-                )}
-
-                {/* Response Time (Static) */}
-                <div className="flex items-center space-x-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/20 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-101">
-                  <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center">
+            {/* Info Cards */}
+            <div className="space-y-6">
+              {/* EMAIL */}
+              {info.email && (
+                <div className="flex items-start gap-4 p-5 rounded-xl bg-white/70 dark:bg-gray-800/60 border border-white/30 dark:border-gray-700/50 backdrop-blur-md">
+                  <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
                     <svg
-                      className="w-6 h-6 text-purple-500"
+                      className="w-6 h-6 text-blue-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -263,170 +113,199 @@ export default function ContactForm({ info }) {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        strokeWidth="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                       />
                     </svg>
                   </div>
+
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Response Time
-                    </p>
-                    <p className="text-gray-900 dark:text-white font-semibold">
-                      Usually within 12-18 hours
+                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {Array.isArray(info.email)
+                        ? info.email.join(", ")
+                        : info.email}
                     </p>
                   </div>
                 </div>
-              </div>
+              )}
+
+              {/* PHONE */}
+              {info.phones && (
+                <div className="flex items-start gap-4 p-5 rounded-xl bg-white/70 dark:bg-gray-800/60 border border-white/30 dark:border-gray-700/50 backdrop-blur-md">
+                  <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
+                    <svg
+                      className="w-6 h-6 text-green-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.68l1.5 4.49a1 1 0 01-.5 1.21l-2.26 1.13a11.04 11.04 0 005.52 5.52l1.13-2.26a1 1 0 011.21-.5l4.49 1.5a1 1 0 01.68.95V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"
+                      />
+                    </svg>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Phone</p>
+                    {Array.isArray(info.phones) ? (
+                      <div className="space-y-1">
+                        {info.phones.map((p, i) => (
+                          <p
+                            key={i}
+                            className="font-medium text-gray-900 dark:text-white"
+                          >
+                            {p}
+                          </p>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {info.phones}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* LOCATION */}
+              {info.locations && (
+                <div className="flex items-start gap-4 p-5 rounded-xl bg-white/70 dark:bg-gray-800/60 border border-white/30 dark:border-gray-700/50 backdrop-blur-md">
+                  <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                    <svg
+                      className="w-6 h-6 text-orange-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Location</p>
+                    {Array.isArray(info.locations) ? (
+                      info.locations.map((loc, i) => (
+                        <p
+                          key={i}
+                          className="font-medium text-gray-900 dark:text-white"
+                        >
+                          {loc}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {info.locations}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
+          </div>
 
-            {/* Contact Form */}
-
-
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20 mt-40">
-            
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-6"
-                autoComplete="off"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                      placeholder="John Doe"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                      placeholder="john@example.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="subject"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    Subject *
+          {/* RIGHT — Form */}
+          <div className="p-10 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-white/40 dark:border-gray-700/50 backdrop-blur-xl shadow-sm">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Name *
                   </label>
                   <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                    placeholder="What's this about?"
+                    className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    placeholder="Your name"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    Your Message *
+                <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Email *
                   </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows="6"
-                    value={formData.message}
+                  <input
+                    name="email"
+                    type="email"
+                    value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none"
-                    placeholder="Tell me about your project or just say hello..."
+                    className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    placeholder="you@example.com"
                   />
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-linear-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-101 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2 shadow-lg hover:shadow-blue-500/25"
-                >
-                  {isLoading ? (
-                    <>
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      <span>Sending...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                        />
-                      </svg>
-                      <span>Send Message</span>
-                    </>
-                  )}
-                </button>
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Subject *
+                </label>
+                <input
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none"
+                  placeholder="Project inquiry, collaboration..."
+                />
+              </div>
 
-                {/* Status Message */}
-                {status.message && (
-                  <div
-                    className={`p-4 rounded-lg border ${getStatusColor()} transition-all duration-300`}
-                  >
-                    <p className="text-sm font-medium">{status.message}</p>
-                  </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Message *
+                </label>
+                <textarea
+                  name="message"
+                  rows={6}
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                  placeholder="Tell me about your idea..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-4 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <span>Send Message</span>
+                  </>
                 )}
-              </form>
-            </div>
+              </button>
+
+              {status.message && (
+                <div
+                  className={`mt-4 px-4 py-3 rounded-lg text-sm font-medium ${badgeColor[status.type]}`}
+                >
+                  {status.message}
+                </div>
+              )}
+            </form>
           </div>
         </div>
       </div>
