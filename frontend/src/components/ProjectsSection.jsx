@@ -210,6 +210,12 @@ export default function ProjectsSection({ projects }) {
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors">
                         {project.title}
                       </h3>
+                      {/* Optional Year Display */}
+                      {project.year && (
+                        <span className="inline-block text-xs font-medium bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full mb-2">
+                          Developed: {project.year}
+                        </span>
+                      )}
                       <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4 flex-grow">
                         {project.description}
                       </p>
@@ -383,6 +389,12 @@ export default function ProjectsSection({ projects }) {
                     <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                       {selectedProject.title}
                     </h3>
+                    {/* Year */}
+                    {selectedProject.year && (
+                      <span className="inline-block text-sm font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-3 py-1 rounded-full mb-4">
+                        Developed: {selectedProject.year}
+                      </span>
+                    )}
                     <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                       {selectedProject.description}
                     </p>
