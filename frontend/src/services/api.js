@@ -1,7 +1,7 @@
 
 // 1. Automatically determine the API URL based on the environment
 const API_BASE = import.meta.env.PROD 
-  ? "https://portfolio-zuca.onrender.com/api"  
+  ? "https://cher-api.vercel.app/api"  
   : "http://localhost:4000/api";               
 
 export async function getPortfolioData() {
