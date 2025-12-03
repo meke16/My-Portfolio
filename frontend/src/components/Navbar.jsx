@@ -66,15 +66,15 @@ export default function Navbar({ info }) {
               >
                 <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">
-                    {info.name.substring(0, 1) +
-                      info.name.substring(
-                        info.name.indexOf(" "),
-                        info.name.indexOf(" ") + 2
+                    {info.substring(0, 1) +
+                      info.substring(
+                        info.indexOf(" "),
+                        info.indexOf(" ") + 2
                       )}
                   </span>
                 </div>
                 <span className="text-white font-bold text-xl tracking-tight group-hover:text-blue-300 transition-colors duration-300">
-                  {info.name}
+                  {info}
                 </span>
               </a>
             </div>

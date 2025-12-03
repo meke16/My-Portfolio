@@ -1,21 +1,17 @@
+import axios from 'axios';
 
 // 1. Automatically determine the API URL based on the environment
-const API_BASE = import.meta.env.PROD 
-  ? "https://cher-api.vercel.app/api"  
-  : "http://localhost:4000/api";               
+const API_BASE = process.env.NODE_ENV === 'production' ? "https://cher-api.vercel.app/api" : "http://localhost:4000/api";
 
 export async function getPortfolioData() {
   try {
-    
-    const res = await fetch(`${API_BASE}/portfolio`);
 
-    if(!res.ok)
-      throw new Error("Failed to fetch data")
-  
-    return res.json();
+    const response = await axios.get(`${API_BASE}/portfolio`);
 
-  } catch(error) {
-      console.log(`Error: ${error.message}`);
+    return response.data;
+
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
   }
 }
 
@@ -23,19 +19,13 @@ export async function sendContactForm(formData) {
   const plain = Object.fromEntries(formData.entries());
 
   try {
-    const res = await fetch(`${API_BASE}/contact`, {
+    const result = await axios.post(`${API_BASE}/contact`, formData, {
       headers: {
         'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify(plain)
+      }
     });
-    
-    if(!res.ok)
-      throw new Error("Failed to send...not ok response")
-
-    return res.json();
-  } catch(error) {
-    console.log("Error",error.message)
-  } 
+    return result.data
+  } catch (error) {
+    console.log("Error", error.message)
+  }
 }

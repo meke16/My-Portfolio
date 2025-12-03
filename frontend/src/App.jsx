@@ -15,6 +15,7 @@ export default function App() {
         //set timeout for 3 second before fetch
         const result = await getPortfolioData();
         setData(result);
+        console.log(result)
       } catch (error) {
         console.error("Error loading portfolio:", error);
       }
@@ -42,7 +43,7 @@ useEffect(() => {
     );
   return (
     <>
-      <Navbar info={data.info} />
+      <Navbar info={data.info.name} />
       <HeroSection info={data.info} />
       <SkillsSection skills={data.skills} />
       <ProjectsSection projects={data.projects} />

@@ -231,7 +231,7 @@ export default function ContactForm({ info }) {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full mt-1 px-4 py-3 rounded-lg text-white text-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                     placeholder="Your name"
                   />
                 </div>
@@ -246,7 +246,7 @@ export default function ContactForm({ info }) {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full mt-1 px-4 py-3 text-white rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -261,7 +261,7 @@ export default function ContactForm({ info }) {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full mt-1 px-4 py-3 text-white rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none"
                   placeholder="Project inquiry, collaboration..."
                 />
               </div>
@@ -276,7 +276,7 @@ export default function ContactForm({ info }) {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="w-full mt-1 px-4 py-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                  className="w-full mt-1 px-4 py-3 text-white rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
                   placeholder="Tell me about your idea..."
                 />
               </div>
