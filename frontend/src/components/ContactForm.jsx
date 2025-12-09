@@ -1,8 +1,3 @@
-// ————————————
-// PRO CONTACT SECTION
-// Sleek + Premium UI Version
-// ————————————
-
 import React, { useState } from "react";
 import { sendContactForm } from "../services/api";
 
