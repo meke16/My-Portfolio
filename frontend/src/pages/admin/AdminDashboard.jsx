@@ -59,28 +59,13 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/15 via-transparent to-violet-500/10 p-6 md:p-8">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-blue-300/90 font-semibold">
-              Portfolio admin
-            </p>
-            <h1 className="text-3xl font-bold text-white tracking-tight mt-2">Dashboard</h1>
-            <p className="text-gray-300/80 mt-2 max-w-2xl">
-              Welcome back{info?.name ? `, ${info.name}` : ""}. Data lives in Firestore.
-            </p>
-          </div>
-          {info?.profile_image ? (
-            <img
-              src={info.profile_image}
-              alt={info?.name ? `${info.name} profile` : "Profile"}
-              className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl object-cover ring-2 ring-white/15 bg-white/5"
-            />
-          ) : (
-            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-white/10 ring-2 ring-white/15 flex items-center justify-center text-lg sm:text-xl font-semibold text-white">
-              {info?.name?.trim()?.charAt(0)?.toUpperCase() || "A"}
-            </div>
-          )}
-        </div>
+        <p className="text-xs uppercase tracking-[0.18em] text-blue-300/90 font-semibold">
+          Portfolio admin
+        </p>
+        <h1 className="text-3xl font-bold text-white tracking-tight mt-2">Dashboard</h1>
+        <p className="text-gray-300/80 mt-2 max-w-2xl">
+          Welcome back{info?.name ? `, ${info.name}` : ""}. Data lives in Firestore.
+        </p>
         <div className="mt-5 flex flex-wrap gap-2">
           <Link
             to="/admin/projects"
@@ -134,27 +119,27 @@ export default function AdminDashboard() {
         />
       </div>
 
-      <div className="max-w-2xl rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
         <h2 className="text-lg font-semibold text-white flex items-center gap-2">
           <User className="w-5 h-5 text-violet-400" />
           Profile status
         </h2>
-        <dl className="mt-4 space-y-3 text-sm">
-          <div className="flex justify-between gap-4">
+        <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+          <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
             <dt className="text-gray-500">Name</dt>
-            <dd className="text-white font-medium truncate">{info?.name || "—"}</dd>
+            <dd className="text-white font-medium truncate mt-1">{info?.name || "—"}</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
             <dt className="text-gray-500">Title</dt>
-            <dd className="text-white truncate">{info?.title || "—"}</dd>
+            <dd className="text-white truncate mt-1">{info?.title || "—"}</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
             <dt className="text-gray-500">Email</dt>
-            <dd className="text-white truncate">{info?.email || "—"}</dd>
+            <dd className="text-white truncate mt-1">{info?.email || "—"}</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
             <dt className="text-gray-500">Bio</dt>
-            <dd className="text-white">{info?.bio ? "Set" : "—"}</dd>
+            <dd className="text-white mt-1">{info?.bio ? "Set" : "—"}</dd>
           </div>
         </dl>
         <Link

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const PLACEHOLDER_AVATAR =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%239CA3AF'%3EProfile%3C/text%3E%3C/svg%3E";
@@ -27,7 +28,7 @@ function socialHref(platform, value) {
   }
 }
 
-export default function HeroSection({ info }) {
+function HeroSection({ info }) {
   const rawSocials = info?.socials;
   const socials =
     rawSocials && typeof rawSocials === "object" && !Array.isArray(rawSocials)
@@ -125,18 +126,18 @@ export default function HeroSection({ info }) {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <a
-                href="#projects"
+              <Link
+                to="/projects"
                 className="bg-linear-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 text-center"
               >
                 View My Work
-              </a>
-              <a
-                href="#contact"
+              </Link>
+              <Link
+                to="/contact"
                 className="border-2 border-white/20 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 hover:border-white/30 transform hover:scale-105 transition-all duration-300 text-center"
               >
                 Get In Touch
-              </a>
+              </Link>
             </div>
 
             {/* Social Links */}
@@ -249,3 +250,6 @@ export default function HeroSection({ info }) {
     </section>
   );
 }
+
+export { HeroSection };
+export default HeroSection;

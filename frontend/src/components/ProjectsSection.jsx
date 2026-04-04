@@ -11,7 +11,7 @@ import {
   Code2,
 } from "lucide-react";
 
-export default function ProjectsSection({ projects }) {
+function ProjectsSection({ projects }) {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -449,3 +449,6 @@ export default function ProjectsSection({ projects }) {
     </>
   );
 }
+
+export { ProjectsSection };
+export default ProjectsSection;

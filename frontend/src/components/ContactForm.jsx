@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 
-export default function ContactForm({ info }) {
+function ContactForm({ info }) {
   const firestoreReady = Boolean(db);
   const [formData, setFormData] = useState({
     name: "",
@@ -304,3 +304,6 @@ export default function ContactForm({ info }) {
     </section>
   );
 }
+
+export { ContactForm };
+export default ContactForm;

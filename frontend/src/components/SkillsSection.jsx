@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SkillsSection({ skills }) {
+function SkillsSection({ skills }) {
   if (!skills?.length)
     return (
       <div className="min-h-96 flex items-center justify-center">
@@ -176,3 +176,6 @@ export default function SkillsSection({ skills }) {
     </section>
   );
 }
+
+export { SkillsSection };
+export default SkillsSection;

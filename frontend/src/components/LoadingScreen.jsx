@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
  * Generates a component that displays a retro binary loading screen 
  * with scanlines, terminal text, and a flowing binary code matrix.
  */
-export default function LoadingScreen() {
+function LoadingScreen() {
   const [binaryMatrix, setBinaryMatrix] = useState([]);
   const [loadingText, setLoadingText] = useState("");
   const matrixRef = useRef(null);
@@ -157,3 +157,6 @@ export default function LoadingScreen() {
     </div>
   );
 }
+
+export { LoadingScreen };
+export default LoadingScreen;
