@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import React, { useEffect } from "react";
+import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import SkillsSection from "../components/SkillsSection";
@@ -9,59 +8,41 @@ import ContactForm from "../components/ContactForm";
 import LoadingScreen from "../components/LoadingScreen";
 
 export default function Portfolio() {
-  const [data, setData] = useState(null);
-  const [loadError, setLoadError] = useState(null);
+  const { info, projects, skills, loading, error, reload } = useFirestorePortfolio();
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [infoSnap, skillsSnap, projectsSnap] = await Promise.all([
-          getDoc(doc(db, "info", "main")),
-          getDocs(collection(db, "skills")),
-          getDocs(collection(db, "projects")),
-        ]);
-
-        setData({
-          info: infoSnap.exists() ? infoSnap.data() : {},
-          skills: skillsSnap.docs.map((d) => ({ id: d.id, ...d.data() })),
-          projects: projectsSnap.docs.map((d) => ({ id: d.id, ...d.data() })),
-        });
-      } catch (e) {
-        console.error(e);
-        setLoadError(
-          "Could not load portfolio data. Check Firebase rules, network, and .env configuration."
-        );
-      }
-    }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (!data?.info) return;
-    if (data.info.profile_image) {
+    if (!info) return;
+    if (info.profile_image) {
       const favicon = document.getElementById("dynamic-favicon");
-      if (favicon) favicon.href = data.info.profile_image;
+      if (favicon) favicon.href = info.profile_image;
     }
-    if (data.info.name) document.title = data.info.name;
-  }, [data]);
+    if (info.name) document.title = info.name;
+  }, [info]);
 
-  if (loadError) {
+  if (loading) return <LoadingScreen />;
+
+  if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950 px-6">
-        <p className="text-red-400 text-center max-w-md">{loadError}</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-950 px-6 gap-4">
+        <p className="text-red-400 text-center max-w-md">{error}</p>
+        <button
+          type="button"
+          onClick={() => reload()}
+          className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-500"
+        >
+          Retry
+        </button>
       </div>
     );
   }
 
-  if (!data) return <LoadingScreen />;
-
   return (
     <>
-      <Navbar info={data.info} />
-      <HeroSection info={data.info} />
-      <SkillsSection skills={data.skills} />
-      <ProjectsSection projects={data.projects} />
-      <ContactForm info={data.info} />
+      <Navbar info={info} />
+      <HeroSection info={info} />
+      <SkillsSection skills={skills} />
+      <ProjectsSection projects={projects} />
+      <ContactForm info={info} />
     </>
   );
 }

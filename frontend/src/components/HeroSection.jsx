@@ -3,6 +3,30 @@ import React from "react";
 const PLACEHOLDER_AVATAR =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%239CA3AF'%3EProfile%3C/text%3E%3C/svg%3E";
 
+/** Accepts full URL or handle; builds known network URLs when needed */
+function socialHref(platform, value) {
+  const v = String(value ?? "").trim();
+  if (!v) return "#";
+  if (/^https?:\/\//i.test(v)) return v;
+  const slug = v.replace(/^@/, "").replace(/^\//, "");
+  switch (platform) {
+    case "github":
+      return `https://github.com/${slug}`;
+    case "linkedin":
+      return `https://linkedin.com/in/${slug}`;
+    case "twitter":
+      return `https://twitter.com/${slug}`;
+    case "facebook":
+      return `https://facebook.com/${slug}`;
+    case "tiktok":
+      return `https://tiktok.com/@${slug.replace(/^@/, "")}`;
+    case "instagram":
+      return `https://instagram.com/${slug.replace(/^@/, "")}`;
+    default:
+      return v;
+  }
+}
+
 export default function HeroSection({ info }) {
   const rawSocials = info?.socials;
   const socials =
@@ -122,7 +146,7 @@ export default function HeroSection({ info }) {
                 <div className="flex justify-center lg:justify-start space-x-4">
                   {socials.github && (
                     <a
-                      href={`https://github.com/${socials.github}`}
+                      href={socialHref("github", socials.github)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
@@ -133,7 +157,7 @@ export default function HeroSection({ info }) {
                   )}
                   {socials.linkedin && (
                     <a
-                      href={`https://linkedin.com/in/${socials.linkedin}`}
+                      href={socialHref("linkedin", socials.linkedin)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
@@ -144,7 +168,7 @@ export default function HeroSection({ info }) {
                   )}
                   {socials.twitter && (
                     <a
-                      href={`https://twitter.com/${socials.twitter}`}
+                      href={socialHref("twitter", socials.twitter)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
@@ -155,7 +179,7 @@ export default function HeroSection({ info }) {
                   )}
                   {socials.facebook && (
                     <a
-                      href={`https://facebook.com/${socials.facebook}`}
+                      href={socialHref("facebook", socials.facebook)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
@@ -166,7 +190,7 @@ export default function HeroSection({ info }) {
                   )}
                   {socials.tiktok && (
                     <a
-                      href={`https://tiktok.com/@${socials.tiktok}`}
+                      href={socialHref("tiktok", socials.tiktok)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
@@ -177,7 +201,7 @@ export default function HeroSection({ info }) {
                   )}
                   {socials.instagram && (
                     <a
-                      href={`https://instagram.com/@${socials.instagram}`}
+                      href={socialHref("instagram", socials.instagram)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg"

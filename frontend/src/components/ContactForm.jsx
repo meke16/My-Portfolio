@@ -3,6 +3,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 
 export default function ContactForm({ info }) {
+  const firestoreReady = Boolean(db);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,6 +19,13 @@ export default function ContactForm({ info }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!firestoreReady) {
+      setStatus({
+        message: "Contact form needs Firebase (configure .env).",
+        type: "error",
+      });
+      return;
+    }
     setIsLoading(true);
     setStatus({ message: "Sending...", type: "info" });
 
