@@ -9,6 +9,7 @@ import React, {
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { normalizeProjectDoc } from "../lib/firestorePortfolio";
+import { defaultAboutContent, normalizeAboutContent } from "../lib/aboutContent";
 
 const FirestorePortfolioContext = createContext(null);
 
@@ -18,6 +19,7 @@ export function FirestorePortfolioProvider({ children }) {
   const [info, setInfo] = useState({});
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [about, setAbout] = useState(defaultAboutContent);
 
   const reload = useCallback(async () => {
     if (!db) {
@@ -26,15 +28,17 @@ export function FirestorePortfolioProvider({ children }) {
       setInfo({});
       setProjects([]);
       setSkills([]);
+      setAbout(defaultAboutContent);
       return;
     }
     setLoading(true);
     setError(null);
     try {
-      const [infoSnap, skillsSnap, projectsSnap] = await Promise.all([
+      const [infoSnap, skillsSnap, projectsSnap, aboutSnap] = await Promise.all([
         getDoc(doc(db, "info", "main")),
         getDocs(collection(db, "skills")),
         getDocs(collection(db, "projects")),
+        getDoc(doc(db, "content", "about")),
       ]);
 
       setInfo(infoSnap.exists() ? infoSnap.data() : {});
@@ -50,9 +54,15 @@ export function FirestorePortfolioProvider({ children }) {
           normalizeProjectDoc(d.id, d.data())
         )
       );
+      setAbout(
+        aboutSnap.exists()
+          ? normalizeAboutContent(aboutSnap.data())
+          : defaultAboutContent
+      );
       setLoading(false);
     } catch (e) {
       setError(e?.message || "Failed to load portfolio from Firestore");
+      setAbout(defaultAboutContent);
       setLoading(false);
     }
   }, []);
@@ -69,9 +79,10 @@ export function FirestorePortfolioProvider({ children }) {
       info,
       projects,
       skills,
+      about,
       reload,
     }),
-    [loading, error, info, projects, skills, reload]
+    [loading, error, info, projects, skills, about, reload]
   );
 
   return (

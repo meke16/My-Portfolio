@@ -6,6 +6,7 @@ import {
   FolderKanban,
   Wrench,
   Mail,
+  BookOpenText,
   LogOut,
   ExternalLink,
   Menu,
@@ -15,6 +16,7 @@ import {
 const menuItems = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/profile", label: "Profile", icon: User },
+  { to: "/admin/about", label: "About page", icon: BookOpenText },
   { to: "/admin/projects", label: "Projects", icon: FolderKanban },
   { to: "/admin/skills", label: "Skills", icon: Wrench },
   { to: "/admin/messages", label: "Messages", icon: Mail },

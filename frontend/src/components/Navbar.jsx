@@ -47,13 +47,13 @@ export function Navbar({ info }) {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-gray-900/95 backdrop-blur-lg shadow-lg"
-          : "bg-gray-600"
+          ? "bg-gray-950/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20"
+          : "bg-gradient-to-b from-black/60 to-transparent"
       }`}
     >
       {/* Gradient border bottom */}
       <div className="relative">
-        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-blue-500/30 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-blue-500/20 to-transparent"></div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
@@ -82,8 +82,8 @@ export function Navbar({ info }) {
                   to={item.to}
                   end={item.to === "/"}
                   className={({ isActive }) =>
-                    `px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-white/10 relative ${
-                      isActive ? "text-white" : "text-gray-300"
+                    `px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/10 relative ${
+                      isActive ? "text-white bg-white/10" : "text-gray-300"
                     }`
                   }
                 >
@@ -94,7 +94,7 @@ export function Navbar({ info }) {
               {/* CTA Button */}
               <Link
                 to="/contact"
-                className="bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+                className="bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
               >
                 Get In Touch
               </Link>

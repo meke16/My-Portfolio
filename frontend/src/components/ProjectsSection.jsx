@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   Github,
   ExternalLink,
-  X,
   ChevronLeft,
   ChevronRight,
   Layers,
@@ -102,7 +101,7 @@ function ProjectsSection({ projects }) {
     <>
       <section
         id="projects"
-        className="py-24 bg-gray-50 dark:bg-gray-900 relative overflow-hidden"
+        className="py-24 bg-gray-950 relative overflow-hidden"
       >
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
@@ -115,7 +114,7 @@ function ProjectsSection({ projects }) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6"
+              className="text-4xl md:text-5xl font-bold text-white mb-6"
             >
               Featured{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
@@ -127,7 +126,7 @@ function ProjectsSection({ projects }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+              className="text-lg text-gray-300 max-w-2xl mx-auto"
             >
               A selection of my recent work, featuring full-stack applications
               and experimental designs.
@@ -143,7 +142,7 @@ function ProjectsSection({ projects }) {
                   className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                     activeFilter.toLowerCase() === "all"
                       ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                      : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+                        : "bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10"
                   }`}
                 >
                   All
@@ -161,7 +160,7 @@ function ProjectsSection({ projects }) {
                       className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                         activeFilter.toLowerCase() === tech
                           ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                          : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+                          : "bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10"
                       }`}
                     >
                       {tech.charAt(0).toUpperCase() + tech.slice(1)}
@@ -190,7 +189,7 @@ function ProjectsSection({ projects }) {
                     transition={{ duration: 0.3 }}
                     key={project.id || index}
                     onClick={() => openProject(project)}
-                    className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-gray-100 dark:border-gray-700 cursor-pointer transition-all duration-300 flex flex-col h-full"
+                    className="group bg-white/[0.03] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-white/10 cursor-pointer transition-all duration-300 flex flex-col h-full"
                   >
                     {/* Card Image */}
                     <div className="relative h-56 overflow-hidden">
@@ -207,16 +206,16 @@ function ProjectsSection({ projects }) {
 
                     {/* Card Content */}
                     <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
                         {project.title}
                       </h3>
                       {/* Optional Year Display */}
                       {project.year && (
-                        <span className="inline-block text-xs font-medium bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full mb-2">
+                        <span className="inline-block text-xs font-medium bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded-full mb-2">
                           Developed: {project.year}
                         </span>
                       )}
-                      <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4 flex-grow">
+                      <p className="text-gray-400 text-sm line-clamp-2 mb-4 flex-grow">
                         {project.description}
                       </p>
 
@@ -224,13 +223,13 @@ function ProjectsSection({ projects }) {
                         {techStack.slice(0, 3).map((t, i) => (
                           <span
                             key={i}
-                            className="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md font-medium"
+                            className="text-xs px-2 py-1 bg-blue-500/15 text-blue-300 rounded-md font-medium"
                           >
                             {t}
                           </span>
                         ))}
                         {techStack.length > 3 && (
-                          <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-md">
+                          <span className="text-xs px-2 py-1 bg-white/10 text-gray-400 rounded-md">
                             +{techStack.length - 3}
                           </span>
                         )}
@@ -268,15 +267,15 @@ function ProjectsSection({ projects }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-gray-950 overflow-y-auto sm:overflow-hidden"
+            className="fixed inset-0 z-50 flex flex-col bg-gray-950 overflow-y-auto sm:overflow-hidden"
           >
             {/* Top Navigation */}
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md sticky top-0 z-50">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-gray-950/90 backdrop-blur-md sticky top-0 z-50">
               <button
                 onClick={closeProject}
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group"
+                className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors group"
               >
-                <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition">
+                <div className="p-2 bg-white/10 rounded-full group-hover:bg-blue-500/20 transition">
                   <ArrowLeft size={20} />
                 </div>
                 <span className="font-medium">Back to Projects</span>
@@ -288,7 +287,7 @@ function ProjectsSection({ projects }) {
                     href={selectedProject.github_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition"
+                    className="p-2 text-gray-300 hover:text-white transition"
                     title="View Code"
                   >
                     <Github size={24} />
@@ -299,7 +298,7 @@ function ProjectsSection({ projects }) {
                     href={selectedProject.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 transition"
+                    className="p-2 text-gray-300 hover:text-blue-400 transition"
                     title="Live Demo"
                   >
                     <ExternalLink size={24} />
@@ -383,33 +382,33 @@ function ProjectsSection({ projects }) {
               </div>
 
               {/* Right: Project Details (Scrollable) */}
-              <div className="w-full lg:w-[400px] xl:w-[500px] bg-white dark:bg-gray-900 border-l border-gray-100 dark:border-gray-800 overflow-y-auto p-8 shadow-2xl z-20">
+              <div className="w-full lg:w-[400px] xl:w-[500px] bg-gray-900 border-l border-white/10 overflow-y-auto p-8 shadow-2xl z-20">
                 <div className="space-y-8">
                   <div>
-                    <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                    <h3 className="text-3xl font-bold text-white mb-4">
                       {selectedProject.title}
                     </h3>
                     {/* Year */}
                     {selectedProject.year && (
-                      <span className="inline-block text-sm font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-3 py-1 rounded-full mb-4">
+                      <span className="inline-block text-sm font-medium bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full mb-4">
                         Developed: {selectedProject.year}
                       </span>
                     )}
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    <p className="text-gray-300 leading-relaxed">
                       {selectedProject.description}
                     </p>
                   </div>
 
                   {/* Tech Stack */}
                   <div>
-                    <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
                       <Code2 size={16} /> Technologies
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {getProjectTech(selectedProject).map((tech) => (
                         <span
                           key={tech}
-                          className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700"
+                          className="px-3 py-1.5 bg-white/10 text-gray-200 text-sm font-medium rounded-lg border border-white/10"
                         >
                           {tech}
                         </span>
@@ -418,7 +417,7 @@ function ProjectsSection({ projects }) {
                   </div>
 
                   {/* Action Buttons (Redundant but useful here too) */}
-                  <div className="flex flex-col gap-3 pt-6 border-t border-gray-100 dark:border-gray-800">
+                  <div className="flex flex-col gap-3 pt-6 border-t border-white/10">
                     {selectedProject.url && (
                       <a
                         href={selectedProject.url}
@@ -434,7 +433,7 @@ function ProjectsSection({ projects }) {
                         href={selectedProject.github_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                        className="flex items-center justify-center gap-2 w-full py-3 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/15 transition"
                       >
                         <Github size={18} /> View Source Code
                       </a>

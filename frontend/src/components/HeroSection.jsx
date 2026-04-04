@@ -95,17 +95,19 @@ function HeroSection({ info }) {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center bg-gray-900 relative overflow-hidden pt-20 sm:pt-24 lg:pt-0" // Added top padding for mobile
+      className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden pt-24 sm:pt-28 lg:pt-0"
     >
-      {" "}
       {/* Background decorations */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-blue-500/15 via-transparent to-transparent"></div>
+      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/15 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl"></div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left space-y-8">
+            <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-blue-200">
+              Available for freelance and full-time roles
+            </span>
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight animate-fadeIn">
                 Hi, I'm{" "}
@@ -118,7 +120,7 @@ function HeroSection({ info }) {
                 {info?.title || "Full Stack Developer"}
               </h2>
 
-              <p className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl">
+              <p className="text-base sm:text-lg text-gray-300/90 leading-relaxed max-w-2xl">
                 {info?.bio ||
                   "I create amazing digital experiences with modern technologies. Passionate about clean code and user-centered design."}
               </p>
@@ -128,13 +130,13 @@ function HeroSection({ info }) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 to="/projects"
-                className="bg-linear-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 text-center"
+                className="bg-linear-to-r from-blue-500 to-purple-600 text-white px-7 py-3.5 rounded-xl font-semibold text-base hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 text-center"
               >
                 View My Work
               </Link>
               <Link
                 to="/contact"
-                className="border-2 border-white/20 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 hover:border-white/30 transform hover:scale-105 transition-all duration-300 text-center"
+                className="border border-white/20 text-white px-7 py-3.5 rounded-xl font-semibold text-base hover:bg-white/10 hover:border-white/30 transition-all duration-300 text-center"
               >
                 Get In Touch
               </Link>
@@ -239,7 +241,7 @@ function HeroSection({ info }) {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden lg:block">
           <div className="animate-bounce">
             <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
               <div className="w-1 h-3 bg-white/50 rounded-full mt-2"></div>

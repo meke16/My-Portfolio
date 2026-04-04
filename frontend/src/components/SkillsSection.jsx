@@ -59,34 +59,25 @@ function SkillsSection({ skills }) {
     return "Novice";
   };
 
-  const categoryColors = {
-    Frontend: "blue",
-    Backend: "green",
-    Framework: "purple",
-    Database: "orange",
-    Tools: "red",
-    Other: "gray",
-  };
-
   return (
     <section
       id="skills"
-      className="py-20 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative overflow-hidden"
+      className="py-24 bg-gray-950 relative overflow-hidden"
     >
       {/* Background decorations */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             My{" "}
             <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Skills
             </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Technologies and tools I use to bring ideas to life
           </p>
           <div className="w-24 h-1 bg-linear-to-r from-blue-600 to-purple-600 mx-auto mt-6 rounded-full"></div>
@@ -97,22 +88,19 @@ function SkillsSection({ skills }) {
           {categoryOrder.map((category) => {
             const categorySkills = skillsByCategory[category];
             if (!categorySkills?.length) return null;
-            const color = categoryColors[category] || "gray";
 
             return (
               <div
                 key={category}
-                className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20 transition-transform duration-500 transform hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(128,0,255,0.5)] hover:scale-105"
+                className="bg-white/[0.03] backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/10 transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="flex items-center mb-6">
-                  <div
-                    className={`w-12 h-12 bg-${color}-500/10 rounded-lg flex items-center justify-center mr-4`}
-                  >
-                    <span className={`text-${color}-500 font-bold`}>
+                  <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mr-4 border border-white/10">
+                    <span className="text-blue-300 font-bold">
                       {category[0]}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <h3 className="text-2xl font-bold text-white">
                     {category}
                   </h3>
                 </div>
@@ -128,7 +116,7 @@ function SkillsSection({ skills }) {
 
                       <div className="flex items-center justify-between mb-2 relative z-10">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-lg transition-shadow duration-300">
+                          <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-lg transition-shadow duration-300 border border-white/10">
                             <img
                               src={skill.logo}
                               alt={skill.name}
@@ -139,16 +127,16 @@ function SkillsSection({ skills }) {
                               }}
                             />
                           </div>
-                          <span className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                            {skill.name}
+                            <span className="font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">
+                              {skill.name}
+                            </span>
+                          </div>
+                          <span className="text-sm font-medium text-gray-400">
+                            {getProficiencyLevel(skill.proficiency)}
                           </span>
                         </div>
-                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          {getProficiencyLevel(skill.proficiency)}
-                        </span>
-                      </div>
 
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden relative z-10">
+                        <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden relative z-10">
                         <div
                           className={`h-full rounded-full bg-linear-to-r ${getProficiencyColor(
                             skill.proficiency
@@ -160,7 +148,7 @@ function SkillsSection({ skills }) {
                         ></div>
                       </div>
 
-                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1 relative z-10">
+                      <div className="flex justify-between text-xs text-gray-500 mt-1 relative z-10">
                         <span>0%</span>
                         <span className="font-semibold">{skill.proficiency}%</span>
                         <span>100%</span>

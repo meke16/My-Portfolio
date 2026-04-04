@@ -1,6 +1,6 @@
 import React from "react";
 import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
-import HeroSection from "../components/HeroSection";
+import { HeroSection } from "../components/HeroSection";
 
 function Portfolio() {
   const { info } = useFirestorePortfolio();
@@ -12,5 +12,4 @@ function Portfolio() {
   );
 }
 
-export { Portfolio };
 export default Portfolio;
