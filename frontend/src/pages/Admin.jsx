@@ -58,10 +58,11 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.22),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.18),transparent_35%)]" />
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-900 p-8 rounded-xl w-full max-w-sm space-y-4 border border-gray-800"
+        className="relative z-10 bg-gray-900/85 backdrop-blur-xl p-8 rounded-2xl w-full max-w-sm space-y-4 border border-white/10 shadow-2xl shadow-blue-950/20"
       >
         <h1 className="text-2xl font-bold text-white text-center">Admin sign in</h1>
         <p className="text-xs text-gray-500 text-center">
@@ -74,7 +75,7 @@ function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-4 py-2 rounded-lg bg-gray-950 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+          className="w-full px-4 py-2.5 rounded-xl bg-gray-950 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
         />
         <input
           type="password"
@@ -82,12 +83,12 @@ function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full px-4 py-2 rounded-lg bg-gray-950 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+          className="w-full px-4 py-2.5 rounded-xl bg-gray-950 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
         />
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium disabled:opacity-50"
+          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium disabled:opacity-50"
         >
           {loading ? "Signing in..." : "Sign in"}
         </button>

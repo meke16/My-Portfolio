@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-import { FolderKanban, Wrench, User, Upload, Loader2, Mail } from "lucide-react";
+import { FolderKanban, Wrench, User, Mail, ArrowRight } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
-import { seedFirestoreFromJson } from "../../lib/seedFirestoreFromJson";
 
 function StatCard({ title, value, icon: Icon, color, bg, to }) {
   const inner = (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-6 transition-all hover:border-gray-700 hover:bg-gray-900 cursor-pointer h-full">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm text-gray-500">{title}</p>
-          <p className="text-3xl font-bold text-white mt-1 tabular-nums">{value}</p>
+    <div className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.05] cursor-pointer h-full min-h-36">
+      <div className="flex h-full flex-col justify-between gap-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+              {title}
+            </p>
+            <p className="text-3xl font-bold text-white mt-2 tabular-nums leading-none truncate">
+              {value}
+            </p>
+          </div>
+          <div
+            className={`rounded-xl p-3 ring-1 ring-inset ring-white/10 transition-transform duration-200 group-hover:scale-105 ${bg}`}
+          >
+            <Icon className={`w-5 h-5 ${color}`} />
+          </div>
         </div>
-        <div className={`rounded-lg p-3 ${bg}`}>
-          <Icon className={`w-6 h-6 ${color}`} />
+        <div className="inline-flex items-center text-xs text-gray-400 group-hover:text-gray-200 transition-colors">
+          Open {title.toLowerCase()}
+          <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-0.5" />
         </div>
       </div>
     </div>
@@ -24,8 +35,6 @@ function StatCard({ title, value, icon: Icon, color, bg, to }) {
 
 export default function AdminDashboard() {
   const { db, info, projects, skills, reload } = useFirestorePortfolio();
-  const [seeding, setSeeding] = useState(false);
-  const [seedMsg, setSeedMsg] = useState("");
   const [msgTotal, setMsgTotal] = useState(0);
   const [msgUnread, setMsgUnread] = useState(0);
 
@@ -47,40 +56,47 @@ export default function AdminDashboard() {
       });
   }, [db, reload]);
 
-  const runSeed = async () => {
-    if (
-      !window.confirm(
-        "Import bundled src/data/*.json into Firestore?\n\n" +
-          "- Merges profile into info/main.\n" +
-          "- Adds every skill and project again (duplicates if you run this twice).\n\n" +
-          "Continue?"
-      )
-    ) {
-      return;
-    }
-    if (!db) return;
-    setSeeding(true);
-    setSeedMsg("");
-    try {
-      await seedFirestoreFromJson(db);
-      setSeedMsg("Imported. Reloading...");
-      await reload();
-      setSeedMsg("Done.");
-    } catch (e) {
-      setSeedMsg(e?.message || "Import failed. Check Firestore rules and console.");
-    } finally {
-      setSeeding(false);
-      setTimeout(() => setSeedMsg(""), 6000);
-    }
-  };
-
   return (
-    <div className="max-w-6xl mx-auto space-y-10">
-      <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Dashboard</h1>
-        <p className="text-gray-500 mt-1">
-          Welcome back{info?.name ? `, ${info.name}` : ""}. Data lives in Firestore.
-        </p>
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/15 via-transparent to-violet-500/10 p-6 md:p-8">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.18em] text-blue-300/90 font-semibold">
+              Portfolio admin
+            </p>
+            <h1 className="text-3xl font-bold text-white tracking-tight mt-2">Dashboard</h1>
+            <p className="text-gray-300/80 mt-2 max-w-2xl">
+              Welcome back{info?.name ? `, ${info.name}` : ""}. Data lives in Firestore.
+            </p>
+          </div>
+          {info?.profile_image ? (
+            <img
+              src={info.profile_image}
+              alt={info?.name ? `${info.name} profile` : "Profile"}
+              className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl object-cover ring-2 ring-white/15 bg-white/5"
+            />
+          ) : (
+            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-white/10 ring-2 ring-white/15 flex items-center justify-center text-lg sm:text-xl font-semibold text-white">
+              {info?.name?.trim()?.charAt(0)?.toUpperCase() || "A"}
+            </div>
+          )}
+        </div>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <Link
+            to="/admin/projects"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-gray-100 hover:bg-white/10"
+          >
+            Manage projects
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link
+            to="/admin/messages"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-gray-100 hover:bg-white/10"
+          >
+            Review inbox
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
@@ -118,65 +134,39 @@ export default function AdminDashboard() {
         />
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <User className="w-5 h-5 text-violet-400" />
-            Profile status
-          </h2>
-          <dl className="mt-4 space-y-3 text-sm">
-            <div className="flex justify-between gap-4">
-              <dt className="text-gray-500">Name</dt>
-              <dd className="text-white font-medium truncate">{info?.name || "—"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-gray-500">Title</dt>
-              <dd className="text-white truncate">{info?.title || "—"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-gray-500">Email</dt>
-              <dd className="text-white truncate">{info?.email || "—"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-gray-500">Bio</dt>
-              <dd className="text-white">{info?.bio ? "Set" : "—"}</dd>
-            </div>
-          </dl>
-          <Link
-            to="/admin/profile"
-            className="inline-block mt-4 text-sm text-blue-400 hover:text-blue-300"
-          >
-            Edit profile →
-          </Link>
-        </div>
-
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Upload className="w-5 h-5 text-amber-400" />
-            Migrate bundled JSON
-          </h2>
-          <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-            Push the default <code className="text-gray-400">admin_info.json</code>,{" "}
-            <code className="text-gray-400">projects.json</code>, and{" "}
-            <code className="text-gray-400">skills.json</code> from{" "}
-            <code className="text-gray-400">src/data/</code> into Firestore. Use once on a new
-            project or after clearing collections.
-          </p>
-          <button
-            type="button"
-            disabled={seeding || !db}
-            onClick={runSeed}
-            className="inline-flex items-center gap-2 mt-5 px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-sm font-medium"
-          >
-            {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            Import JSON to Firestore
-          </button>
-          {seedMsg && <p className="text-sm text-gray-400 mt-3">{seedMsg}</p>}
-        </div>
+      <div className="max-w-2xl rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+        <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+          <User className="w-5 h-5 text-violet-400" />
+          Profile status
+        </h2>
+        <dl className="mt-4 space-y-3 text-sm">
+          <div className="flex justify-between gap-4">
+            <dt className="text-gray-500">Name</dt>
+            <dd className="text-white font-medium truncate">{info?.name || "—"}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-gray-500">Title</dt>
+            <dd className="text-white truncate">{info?.title || "—"}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-gray-500">Email</dt>
+            <dd className="text-white truncate">{info?.email || "—"}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-gray-500">Bio</dt>
+            <dd className="text-white">{info?.bio ? "Set" : "—"}</dd>
+          </div>
+        </dl>
+        <Link
+          to="/admin/profile"
+          className="inline-block mt-4 text-sm text-blue-400 hover:text-blue-300"
+        >
+          Edit profile →
+        </Link>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
             <FolderKanban className="w-5 h-5 text-blue-400" />
             Recent projects
@@ -185,7 +175,7 @@ export default function AdminDashboard() {
             {(projects || []).slice(0, 5).map((p) => (
               <li
                 key={p.id}
-                className="flex items-center gap-3 p-3 rounded-lg border border-gray-800/80 bg-gray-900/50"
+                className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-black/20"
               >
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-white truncate">{p.title}</p>
@@ -207,7 +197,7 @@ export default function AdminDashboard() {
           </Link>
         </div>
 
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
             <Wrench className="w-5 h-5 text-emerald-400" />
             Skills snapshot

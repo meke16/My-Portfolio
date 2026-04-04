@@ -98,11 +98,11 @@ export default function AdminProfile() {
     <div className="max-w-3xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-white tracking-tight">Profile</h1>
-        <p className="text-gray-500 mt-1">Stored in Firestore document info/main</p>
+        <p className="text-gray-400 mt-1">Edit the core identity and contact details shown on your portfolio.</p>
       </div>
 
       <form onSubmit={handleSave} className="space-y-8">
-        <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-5">
+        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <User className="w-5 h-5 text-violet-400" />
             Basic information
@@ -147,7 +147,7 @@ export default function AdminProfile() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-5">
+        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Image className="w-5 h-5 text-amber-400" />
             Images (URLs)
@@ -172,7 +172,7 @@ export default function AdminProfile() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-5">
+        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
           <h2 className="text-lg font-semibold text-white">Contact</h2>
           <div className="space-y-3">
             <label className="block text-sm text-gray-400">Phone numbers</label>
@@ -241,7 +241,7 @@ export default function AdminProfile() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4">
+        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <LinkIcon className="w-5 h-5 text-sky-400" />
             Social handles or URLs
@@ -263,7 +263,7 @@ export default function AdminProfile() {
           ))}
         </section>
 
-        <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-3">
+        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-3">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Image className="w-5 h-5 text-pink-400" />
             Gallery image URLs
@@ -315,7 +315,7 @@ export default function AdminProfile() {
           <button
             type="submit"
             disabled={saving || !db}
-            className="ml-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium disabled:opacity-50"
+            className="ml-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
             Save to Firestore

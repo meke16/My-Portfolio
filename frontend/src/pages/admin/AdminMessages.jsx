@@ -121,8 +121,8 @@ export default function AdminMessages() {
             <Mail className="w-8 h-8 text-blue-400" />
             Messages
           </h1>
-          <p className="text-gray-500 mt-1">
-            Contact form submissions from your portfolio
+           <p className="text-gray-400 mt-1">
+             Contact form submissions from your portfolio
             {messages.length > 0 && (
               <span className="text-gray-400">
                 {" "}
@@ -138,7 +138,7 @@ export default function AdminMessages() {
           type="button"
           onClick={() => load()}
           disabled={loading || !db}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 text-sm font-medium disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 text-sm font-medium disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           Refresh
@@ -158,7 +158,7 @@ export default function AdminMessages() {
       {loading ? (
         <p className="text-gray-500 text-sm">Loading messages…</p>
       ) : messages.length === 0 ? (
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 py-20 text-center">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] py-20 text-center">
           <Inbox className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-500">No messages yet.</p>
           <p className="text-gray-600 text-sm mt-2">
@@ -167,8 +167,8 @@ export default function AdminMessages() {
         </div>
       ) : (
         <div className="flex flex-col lg:flex-row gap-6 min-h-[420px]">
-          <div className="lg:w-[min(100%,380px)] flex flex-col rounded-xl border border-gray-800 bg-gray-900/40 overflow-hidden">
-            <div className="px-4 py-3 border-b border-gray-800 text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <div className="lg:w-[min(100%,380px)] flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden">
+              <div className="px-4 py-3 border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-gray-500">
               Inbox
             </div>
             <ul className="overflow-y-auto max-h-[60vh] lg:max-h-[calc(100vh-12rem)]">
@@ -177,10 +177,10 @@ export default function AdminMessages() {
                   <button
                     type="button"
                     onClick={() => openMessage(m)}
-                    className={`w-full text-left px-4 py-3 border-b border-gray-800/80 transition-colors ${
+                    className={`w-full text-left px-4 py-3 border-b border-white/10 transition-colors ${
                       selected?.id === m.id
                         ? "bg-blue-600/15 border-l-2 border-l-blue-500"
-                        : "border-l-2 border-l-transparent hover:bg-gray-800/50"
+                        : "border-l-2 border-l-transparent hover:bg-white/5"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -207,7 +207,7 @@ export default function AdminMessages() {
             </ul>
           </div>
 
-          <div className="flex-1 min-w-0 rounded-xl border border-gray-800 bg-gray-900/40 p-6 min-h-[320px]">
+           <div className="flex-1 min-w-0 rounded-2xl border border-white/10 bg-white/[0.03] p-6 min-h-[320px]">
             {!selected ? (
               <div className="h-full flex items-center justify-center text-gray-500 text-sm">
                 Select a message to read

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   User,
@@ -22,39 +22,48 @@ const menuItems = [
 
 export default function AdminLayout({ onLogout }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+  const activeItem =
+    menuItems.find((item) =>
+      item.end ? location.pathname === item.to : location.pathname.startsWith(item.to)
+    ) || menuItems[0];
 
   const linkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+    `group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
       isActive
-        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-        : "text-gray-400 hover:text-white hover:bg-gray-800/80"
+        ? "bg-blue-500/20 text-blue-100 border border-blue-400/30 shadow-lg shadow-blue-900/20"
+        : "text-gray-400 border border-transparent hover:text-white hover:bg-white/5"
     }`;
 
   return (
     <div className="flex h-screen w-full bg-gray-950 text-gray-100 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.1),transparent_32%)]" />
       {mobileOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden"
           aria-label="Close menu"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 flex flex-col border-r border-gray-800 bg-gray-900 transition-transform duration-200 lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 flex flex-col border-r border-white/10 bg-gray-900/90 backdrop-blur-xl transition-transform duration-200 lg:static lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-5 border-b border-gray-800">
+        <div className="p-5 border-b border-white/10">
           <NavLink
             to="/admin"
-            className="font-semibold text-lg tracking-tight text-white"
+            className="font-semibold text-lg tracking-tight text-white inline-flex items-center gap-2"
             onClick={() => setMobileOpen(false)}
           >
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-blue-500/20 text-blue-300 text-xs font-bold">
+              AP
+            </span>
             Admin Panel
           </NavLink>
-          <p className="text-xs text-gray-500 mt-1">Portfolio CMS</p>
+          <p className="text-xs text-gray-500 mt-1">Portfolio workspace</p>
         </div>
 
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -69,7 +78,7 @@ export default function AdminLayout({ onLogout }) {
               className={linkClass}
               onClick={() => setMobileOpen(false)}
             >
-              <Icon className="w-5 h-5 shrink-0 opacity-90" />
+              <Icon className="w-5 h-5 shrink-0 opacity-90 transition-transform group-hover:scale-105" />
               {label}
             </NavLink>
           ))}
@@ -81,18 +90,18 @@ export default function AdminLayout({ onLogout }) {
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800/80 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 border border-transparent hover:text-white hover:bg-white/5 transition-all"
           >
             <ExternalLink className="w-5 h-5 shrink-0" />
             View site
           </a>
         </nav>
 
-        <div className="p-3 border-t border-gray-800">
+        <div className="p-3 border-t border-white/10">
           <button
             type="button"
             onClick={onLogout}
-            className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-gray-800/80 hover:text-red-300 transition-colors"
+            className="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
           >
             <LogOut className="w-5 h-5 shrink-0" />
             Logout
@@ -100,8 +109,8 @@ export default function AdminLayout({ onLogout }) {
         </div>
       </aside>
 
-      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-        <header className="flex h-14 shrink-0 items-center justify-between gap-4 border-b border-gray-800 bg-gray-900/80 px-4 backdrop-blur-sm lg:px-6">
+      <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-hidden">
+        <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-white/10 bg-gray-900/55 px-4 backdrop-blur-sm lg:px-8">
           <button
             type="button"
             className="lg:hidden p-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white"
@@ -110,17 +119,25 @@ export default function AdminLayout({ onLogout }) {
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-gray-500 hover:text-blue-400 transition-colors ml-auto"
-          >
-            View public site →
-          </a>
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.16em] text-gray-500">Admin</p>
+            <h1 className="text-sm sm:text-base font-semibold text-white truncate">
+              {activeItem.label}
+            </h1>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-lg border border-white/10 px-3 py-1.5 text-xs sm:text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+            >
+              View public site
+            </a>
+          </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto bg-gray-950/50 p-5 md:p-8">
+        <main className="flex-1 overflow-y-auto bg-transparent p-5 md:p-8">
           <Outlet />
         </main>
       </div>
