@@ -73,12 +73,17 @@ function ContactForm({ info }) {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8 xl:gap-10 items-stretch">
-          <div className="lg:col-span-5 rounded-2xl bg-white/[0.03] border border-white/10 p-6 sm:p-8 space-y-8 h-full">
+          <div className="lg:col-span-5 rounded-2xl bg-white/[0.03] border border-white/10 p-6 sm:p-8 space-y-8 h-fit lg:sticky lg:top-24">
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold text-white">Contact Details</h3>
               <p className="text-gray-300 leading-relaxed">
                 Feel free to use the form or reach out through any alternatives below.
               </p>
+            </div>
+
+            <div className="rounded-xl border border-blue-400/25 bg-blue-500/10 px-4 py-3">
+              <p className="text-sm text-blue-200 font-medium">Typical response time</p>
+              <p className="text-xs text-blue-100/80 mt-1">Within 24 hours for serious inquiries.</p>
             </div>
 
             <div className="space-y-6">
@@ -149,6 +154,10 @@ function ContactForm({ info }) {
 
           <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-white/[0.03] border border-white/10 shadow-sm h-full">
             <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="space-y-1">
+                <h3 className="text-xl font-semibold text-white">Send a message</h3>
+                <p className="text-sm text-gray-400">Please include context, timeline, and goals for faster help.</p>
+              </div>
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label className="text-sm font-medium text-gray-300">Name *</label>

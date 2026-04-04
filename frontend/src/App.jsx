@@ -1,28 +1,24 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FirestorePortfolioProvider } from "./context/FirestorePortfolioContext";
-import PublicLayout from "./pages/PublicLayout";
+import * as PublicLayoutModule from "./pages/PublicLayout";
+import * as PortfolioModule from "./pages/Portfolio";
+import * as AboutPageModule from "./pages/AboutPage";
+import * as ProjectsPageModule from "./pages/ProjectsPage";
+import * as SkillsPageModule from "./pages/SkillsPage";
+import * as ContactPageModule from "./pages/ContactPage";
 import Admin from "./pages/Admin";
 
-const Portfolio = React.lazy(() =>
-  import("./pages/Portfolio").then((m) => ({ default: m.default || m.Portfolio }))
-);
-const AboutPage = React.lazy(() =>
-  import("./pages/AboutPage").then((m) => ({ default: m.default || m.AboutPage }))
-);
-const ProjectsPage = React.lazy(() =>
-  import("./pages/ProjectsPage").then((m) => ({
-    default: m.default || m.ProjectsPage,
-  }))
-);
-const SkillsPage = React.lazy(() =>
-  import("./pages/SkillsPage").then((m) => ({ default: m.default || m.SkillsPage }))
-);
-const ContactPage = React.lazy(() =>
-  import("./pages/ContactPage").then((m) => ({
-    default: m.default || m.ContactPage,
-  }))
-);
+function pickComponent(moduleObj, namedExport) {
+  return moduleObj[namedExport] || moduleObj.default || (() => null);
+}
+
+const PublicLayout = pickComponent(PublicLayoutModule, "PublicLayout");
+const Portfolio = pickComponent(PortfolioModule, "Portfolio");
+const AboutPage = pickComponent(AboutPageModule, "AboutPage");
+const ProjectsPage = pickComponent(ProjectsPageModule, "ProjectsPage");
+const SkillsPage = pickComponent(SkillsPageModule, "SkillsPage");
+const ContactPage = pickComponent(ContactPageModule, "ContactPage");
 
 export default function App() {
   return (
@@ -30,24 +26,16 @@ export default function App() {
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <FirestorePortfolioProvider>
-        <React.Suspense
-          fallback={
-            <div className="min-h-screen flex items-center justify-center bg-gray-950 text-gray-400 text-sm">
-              Loading...
-            </div>
-          }
-        >
-          <Routes>
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<Portfolio />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
-              <Route path="/skills" element={<SkillsPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-            </Route>
-            <Route path="/admin/*" element={<Admin />} />
-          </Routes>
-        </React.Suspense>
+        <Routes>
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<Portfolio />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/skills" element={<SkillsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+          </Route>
+          <Route path="/admin/*" element={<Admin />} />
+        </Routes>
       </FirestorePortfolioProvider>
     </BrowserRouter>
   );
