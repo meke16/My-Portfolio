@@ -7,4 +7,5 @@ function SkillsPage() {
   return <SkillsSection skills={skills} />;
 }
 
+export { SkillsPage };
 export default SkillsPage;

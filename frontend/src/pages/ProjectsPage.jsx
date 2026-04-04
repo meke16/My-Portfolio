@@ -7,4 +7,5 @@ function ProjectsPage() {
   return <ProjectsSection projects={projects} />;
 }
 
+export { ProjectsPage };
 export default ProjectsPage;

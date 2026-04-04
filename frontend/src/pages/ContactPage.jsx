@@ -7,4 +7,5 @@ function ContactPage() {
   return <ContactForm info={info} />;
 }
 
+export { ContactPage };
 export default ContactPage;

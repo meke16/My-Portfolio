@@ -46,4 +46,5 @@ function PublicLayout() {
   );
 }
 
+export { PublicLayout };
 export default PublicLayout;
