@@ -1,8 +1,14 @@
 import React from "react";
 
+const PLACEHOLDER_AVATAR =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%239CA3AF'%3EProfile%3C/text%3E%3C/svg%3E";
+
 export default function HeroSection({ info }) {
-  // Parse socials (handle null or invalid JSON safely)
-  const socials = info.socials;
+  const rawSocials = info?.socials;
+  const socials =
+    rawSocials && typeof rawSocials === "object" && !Array.isArray(rawSocials)
+      ? rawSocials
+      : {};
 
   // Social media icons mapping
   const socialIcons = {
@@ -110,7 +116,7 @@ export default function HeroSection({ info }) {
             </div>
 
             {/* Social Links */}
-            {Object.keys(socials).length > 0 && (
+            {Object.keys(socials).some((k) => socials[k]) && (
               <div className="pt-8">
                 <p className="text-gray-400 mb-4">Follow me on</p>
                 <div className="flex justify-center lg:justify-start space-x-4">
@@ -191,15 +197,11 @@ export default function HeroSection({ info }) {
               <div className="w-80 h-180 sm:w-96 sm:h-166 relative">
                 <div className="absolute inset-0 bg-linear-to-r from-blue-800 to-yellow-600 rounded-3xl blur-lg opacity-50 animate-pulse"></div>
                 <img
-                  src={
-                    `${info?.profile_image}` ||
-                    "efault-avatar.jpg"
-                  }
+                  src={info?.profile_image || PLACEHOLDER_AVATAR}
                   alt={info?.name || "Profile"}
                   className="w-full h-full object-cover rounded-full relative z-10 transform hover:scale-105 transition-transform duration-500 mix-blend-overlay opacity-90 "
                   onError={(e) => {
-                    e.target.src =
-                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%239CA3AF'%3EProfile%3C/text%3E%3C/svg%3E";
+                    e.target.src = PLACEHOLDER_AVATAR;
                   }}
                 />
               </div>

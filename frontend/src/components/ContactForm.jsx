@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { sendContactForm } from "../services/api";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function ContactForm({ info }) {
   const [formData, setFormData] = useState({
@@ -20,28 +21,16 @@ export default function ContactForm({ info }) {
     setIsLoading(true);
     setStatus({ message: "Sending...", type: "info" });
 
-    const data = new FormData();
-    Object.keys(formData).forEach((k) => data.append(k, formData[k]));
-
     try {
-      const res = await sendContactForm(data);
-      if (res.success) {
-        setStatus({
-          message: "Message sent successfully!",
-          type: "success",
-        });
-        setFormData({ name: "", email: "", subject: "", message: "" });
-      } else {
-        setStatus({
-          message: res.message || "Something went wrong.",
-          type: "error",
-        });
-      }
-    } catch {
-      setStatus({
-        message: "Connection error. Try again.",
-        type: "error",
+      await addDoc(collection(db, "messages"), {
+        ...formData,
+        read: false,
+        createdAt: serverTimestamp(),
       });
+      setStatus({ message: "Message sent successfully!", type: "success" });
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch {
+      setStatus({ message: "Connection error. Try again.", type: "error" });
     } finally {
       setIsLoading(false);
     }

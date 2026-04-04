@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from "react";
 
+function displayNameFromInfo(info) {
+  if (typeof info === "string") return info.trim() || "Portfolio";
+  return info?.name?.trim() || "Portfolio";
+}
+
+function initialsFromName(name) {
+  const n = name.trim();
+  if (!n) return "?";
+  const space = n.indexOf(" ");
+  if (space === -1) return n.slice(0, 2).toUpperCase();
+  const second = n[space + 1];
+  return second ? (n[0] + second).toUpperCase() : n[0].toUpperCase();
+}
+
 export default function Navbar({ info }) {
+  const displayName = displayNameFromInfo(info);
+  const logoInitials = initialsFromName(displayName);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
@@ -66,15 +82,11 @@ export default function Navbar({ info }) {
               >
                 <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">
-                    {info.substring(0, 1) +
-                      info.substring(
-                        info.indexOf(" "),
-                        info.indexOf(" ") + 2
-                      )}
+                    {logoInitials}
                   </span>
                 </div>
                 <span className="text-white font-bold text-xl tracking-tight group-hover:text-blue-300 transition-colors duration-300">
-                  {info}
+                  {displayName}
                 </span>
               </a>
             </div>
