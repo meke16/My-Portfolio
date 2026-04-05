@@ -31,137 +31,93 @@ export function Navbar({ info }) {
   ];
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [location.pathname]);
+  useEffect(() => { setOpen(false); }, [location.pathname]);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-gray-950/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20"
-          : "bg-gradient-to-b from-black/60 to-transparent"
-      }`}
-    >
-      {/* Gradient border bottom */}
-      <div className="relative">
-        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-blue-500/20 to-transparent"></div>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      scrolled ? "bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/[0.06]" : "bg-transparent"
+    }`}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-18">
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Logo */}
-            <div className="shrink-0">
-              <Link
-                to="/"
-                className="flex items-center space-x-2 group"
-              >
-                <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">
-                    {logoInitials}
-                  </span>
-                </div>
-                <span className="text-white font-bold text-xl tracking-tight group-hover:text-blue-300 transition-colors duration-300">
-                  {displayName}
-                </span>
-              </Link>
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 bg-[#ff4500] rounded-md flex items-center justify-center">
+              <span className="text-white font-black text-sm tracking-tight">{logoInitials}</span>
             </div>
+            <span className="text-white font-bold text-lg tracking-tight group-hover:text-[#ff4500] transition-colors duration-200">
+              {displayName}
+            </span>
+          </Link>
 
-            {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  className={({ isActive }) =>
-                    `px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/10 relative ${
-                      isActive ? "text-white bg-white/10" : "text-gray-300"
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-
-              {/* CTA Button */}
-              <Link
-                to="/contact"
-                className="bg-linear-to-r from-blue-500 to-purple-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-1">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === "/"}
+                className={({ isActive }) =>
+                  `px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    isActive
+                      ? "text-[#ff4500] bg-[#ff4500]/10"
+                      : "text-[#888] hover:text-white hover:bg-white/5"
+                  }`
+                }
               >
-                Get In Touch
-              </Link>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="lg:hidden">
-              <button
-                onClick={() => setOpen(!open)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-all duration-300"
-                aria-expanded="false"
-              >
-                <span className="sr-only">Open main menu</span>
-                {/* Hamburger icon */}
-                <div className="w-6 h-6 relative">
-                  <span
-                    className={`absolute left-0 top-1 w-6 h-0.5 bg-current transform transition-all duration-300 ${
-                      open ? "rotate-45 top-3" : "rotate-0"
-                    }`}
-                  ></span>
-                  <span
-                    className={`absolute left-0 top-3 w-6 h-0.5 bg-current transform transition-all duration-300 ${
-                      open ? "opacity-0" : "opacity-100"
-                    }`}
-                  ></span>
-                  <span
-                    className={`absolute left-0 top-5 w-6 h-0.5 bg-current transform transition-all duration-300 ${
-                      open ? "-rotate-45 top-3" : "rotate-0"
-                    }`}
-                  ></span>
-                </div>
-              </button>
-            </div>
+                {item.label}
+              </NavLink>
+            ))}
+            <Link
+              to="/contact"
+              className="ml-4 px-5 py-2 bg-[#ff4500] text-white text-sm font-semibold rounded-md hover:bg-[#cc3700] transition-colors duration-200"
+            >
+              Hire me
+            </Link>
           </div>
 
-          {/* Mobile Menu */}
-          <div
-            className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-              open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-            }`}
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="lg:hidden p-2 text-[#888] hover:text-white transition-colors"
+            aria-label="Toggle menu"
           >
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-900/95 backdrop-blur-lg rounded-lg mt-2 shadow-xl border border-white/10">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  className={({ isActive }) =>
-                    `block px-3 py-3 rounded-md text-base font-medium transition-all duration-300 hover:bg-white/10 border-l-4 ${
-                      isActive
-                        ? "bg-white/10 text-white border-blue-500"
-                        : "text-gray-300 border-transparent hover:border-blue-500"
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-              <div className="pt-2">
-                <Link
-                  to="/contact"
-                  className="w-full bg-linear-to-r from-blue-500 to-purple-600 text-white block text-center px-3 py-3 rounded-md text-base font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
-                >
-                  Get In Touch
-                </Link>
-              </div>
+            <div className="w-5 h-4 flex flex-col justify-between">
+              <span className={`block h-0.5 bg-current transition-all duration-300 ${open ? "rotate-45 translate-y-[7px]" : ""}`} />
+              <span className={`block h-0.5 bg-current transition-all duration-300 ${open ? "opacity-0" : ""}`} />
+              <span className={`block h-0.5 bg-current transition-all duration-300 ${open ? "-rotate-45 -translate-y-[9px]" : ""}`} />
             </div>
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        <div className={`lg:hidden overflow-hidden transition-all duration-300 ${open ? "max-h-80 pb-4" : "max-h-0"}`}>
+          <div className="border-t border-white/[0.06] pt-3 space-y-1">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === "/"}
+                className={({ isActive }) =>
+                  `block px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                    isActive ? "text-[#ff4500] bg-[#ff4500]/10" : "text-[#888] hover:text-white"
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <Link
+              to="/contact"
+              className="block mt-2 px-4 py-2.5 bg-[#ff4500] text-white text-sm font-semibold rounded-md text-center hover:bg-[#cc3700] transition-colors"
+            >
+              Hire me
+            </Link>
           </div>
         </div>
       </div>

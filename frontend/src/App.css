@@ -4,26 +4,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add any custom CSS below here */
-/* ... */html {
+html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+:root {
+  --accent: #ff4500;
+  --accent-dim: #cc3700;
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #1a1a1a;
+  --border: rgba(255,255,255,0.08);
+  --text: #f0f0f0;
+  --muted: #888888;
 }
 
-::-webkit-scrollbar-track {
-  background: #1f2937;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #4f46e5;
-  border-radius: 4px;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #6366f1;
-}
-
+/* Selection */
+::selection { background: #ff450033; color: #ff4500; }

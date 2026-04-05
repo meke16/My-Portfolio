@@ -106,7 +106,7 @@ function HeroSection({ info }) {
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left space-y-8">
             <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-blue-200">
-              Available for freelance and full-time roles
+              Available for freelance and part-time roles
             </span>
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight animate-fadeIn">
