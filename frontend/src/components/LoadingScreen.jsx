@@ -1,13 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const DEFAULT_BOOT_DATA = {
+  name: "CHERINET HABTAMU",
+  title: "FULL STACK DEVELOPER",
+  projectsCount: 12,
+  skillsCount: 10,
+  availability: "AVAILABLE FOR WORK",
+};
+
 /**
  * Generates a component that displays a retro binary loading screen 
  * with scanlines, terminal text, and a flowing binary code matrix.
  */
-function LoadingScreen() {
+function LoadingScreen({ bootData }) {
   const [binaryMatrix, setBinaryMatrix] = useState([]);
   const [loadingText, setLoadingText] = useState("");
   const matrixRef = useRef(null);
+  const mergedBootData = {
+    ...DEFAULT_BOOT_DATA,
+    ...(bootData && typeof bootData === "object" ? bootData : {}),
+  };
 
   // --- Constants ---
   const INITIAL_TEXT = ">>> INITIALIZING VIRTUAL PORTFOLIO CORE... [OK]";
@@ -82,18 +94,29 @@ function LoadingScreen() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-gray-950 flex items-center justify-center font-mono overflow-hidden">
+    <div className="fixed inset-0 z-[100] bg-[#0a0a0a] flex items-center justify-center font-mono overflow-hidden">
+      {/* Theme grid + glow to match main UI */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+      <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#ff4500]/10 rounded-full blur-[120px] pointer-events-none" />
+
       {/* --- Binary Matrix Background --- */}
       <div 
         ref={matrixRef}
-        className="absolute inset-0 opacity-10 pointer-events-none"
+        className="absolute inset-0 opacity-15 pointer-events-none"
       >
         {binaryMatrix.map((row, rowIndex) => (
           <div key={rowIndex} className="flex whitespace-nowrap leading-none h-[20px]">
             {row.map((char, colIndex) => (
               <span 
                 key={`${rowIndex}-${colIndex}`} 
-                className={`text-xs w-[12px] text-green-400 transition-colors duration-150 ${char ? 'opacity-100' : 'opacity-0'}`}
+                className={`text-xs w-[12px] text-[#ff7a45] transition-colors duration-150 ${char ? 'opacity-100' : 'opacity-0'}`}
               >
                 {char}
               </span>
@@ -103,22 +126,40 @@ function LoadingScreen() {
       </div>
 
       {/* --- Terminal Content --- */}
-      <div className="p-8 md:p-12 w-full max-w-2xl bg-black/50 border border-green-500/20 shadow-2xl shadow-green-900/50 rounded-lg backdrop-blur-sm z-10">
-        <pre className="text-sm md:text-base text-green-400 h-40 overflow-hidden whitespace-pre-wrap leading-relaxed">
+      <div className="p-8 md:p-12 w-full max-w-2xl bg-[#111111]/70 border border-[#ff4500]/25 shadow-2xl shadow-[#ff4500]/20 rounded-lg backdrop-blur-sm z-10">
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] tracking-wide">
+          <div className="px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
+            PROFILE: <span className="text-[#ffd3bf]">{String(mergedBootData.name || DEFAULT_BOOT_DATA.name).toUpperCase()}</span>
+          </div>
+          <div className="px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
+            ROLE: <span className="text-[#ffd3bf]">{String(mergedBootData.title || DEFAULT_BOOT_DATA.title).toUpperCase()}</span>
+          </div>
+          <div className="px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
+            PROJECTS INDEXED: <span className="text-[#ffd3bf]">{Number(mergedBootData.projectsCount) || 0}</span>
+          </div>
+          <div className="px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
+            SKILLS LOADED: <span className="text-[#ffd3bf]">{Number(mergedBootData.skillsCount) || 0}</span>
+          </div>
+          <div className="sm:col-span-2 px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
+            STATUS: <span className="text-[#ffd3bf]">{String(mergedBootData.availability || DEFAULT_BOOT_DATA.availability).toUpperCase()}</span>
+          </div>
+        </div>
+
+        <pre className="text-sm md:text-base text-[#ff7a45] h-40 overflow-hidden whitespace-pre-wrap leading-relaxed">
           {loadingText}
           {/* Pulsating Cursor */}
           <span className="animate-pulse">█</span>
         </pre>
         
         <div className="mt-6 flex items-center space-x-4">
-          <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
             {/* Progress Bar (simulated, always full width by the time the text finishes) */}
             <div 
-              className="h-full bg-gradient-to-r from-green-500 to-lime-400 transition-all duration-1000 ease-out" 
+              className="h-full bg-gradient-to-r from-[#ff4500] to-[#ff8a50] transition-all duration-1000 ease-out" 
               style={{ width: loadingText.includes(FULL_TEXT) ? '100%' : '5%' }}
             ></div>
           </div>
-          <span className="text-green-400 text-xs tracking-widest">
+          <span className="text-[#ff7a45] text-xs tracking-widest">
             {loadingText.includes(FULL_TEXT) ? '100% COMPLETE' : 'PROCESSING...'}
           </span>
         </div>
@@ -138,8 +179,8 @@ function LoadingScreen() {
           height: 100%;
           background: linear-gradient(
             to bottom,
-            rgba(18, 16, 16, 0) 50%,
-            rgba(0, 0, 0, 0.25) 50%
+            rgba(255, 69, 0, 0.02) 50%,
+            rgba(0, 0, 0, 0.3) 50%
           );
           background-size: 100% 4px;
           animation: scanline 8s linear infinite;

@@ -1,237 +1,126 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft,
-  Github,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight,
-  Layers,
-  Code2,
-} from "lucide-react";
+import { ArrowLeft, Github, ExternalLink, ChevronLeft, ChevronRight, Code2, Layers } from "lucide-react";
 
 function ProjectsSection({ projects }) {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // --- Logic & Helpers ---
-
-  // Lock body scroll when modal is open
   useEffect(() => {
-    if (selectedProject) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => (document.body.style.overflow = "unset");
+    if (!selectedProject) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = "unset"; };
   }, [selectedProject]);
 
-  // Handle Keyboard Navigation
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!selectedProject) return;
-
-      const images = getProjectImages(selectedProject);
-
-      if (e.key === "Escape") closeProject();
-      if (e.key === "ArrowLeft") {
-        setCurrentImageIndex((prev) =>
-          prev === 0 ? images.length - 1 : prev - 1
-        );
-      }
-      if (e.key === "ArrowRight") {
-        setCurrentImageIndex((prev) =>
-          prev === images.length - 1 ? 0 : prev + 1
-        );
-      }
+    if (!selectedProject) return;
+    const onKey = (e) => {
+      const imgs = getImages(selectedProject);
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowLeft") setCurrentImageIndex((p) => (p === 0 ? imgs.length - 1 : p - 1));
+      if (e.key === "ArrowRight") setCurrentImageIndex((p) => (p === imgs.length - 1 ? 0 : p + 1));
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedProject, currentImageIndex]);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedProject]);
 
-  // Parse images helper
-  const getProjectImages = (project) => {
-    if (!project.image) return [];
-    // Ensure it’s always an array
-    return Array.isArray(project.image) ? project.image : [project.image];
-  };
-  // Parse technologies helper
-  const getProjectTech = (project) => {
-    return project.technologies?.split(",").map((t) => t.trim()) || [];
-  };
+  const getImages = (p) => !p.image ? [] : Array.isArray(p.image) ? p.image : [p.image];
+  const getTech = (p) => p.technologies?.split(",").map((t) => t.trim()) || [];
 
-  const openProject = (project) => {
-    setSelectedProject(project);
-    setCurrentImageIndex(0);
-  };
+  const open = (p) => { setSelectedProject(p); setCurrentImageIndex(0); };
+  const close = () => { setSelectedProject(null); setCurrentImageIndex(0); };
 
-  const closeProject = () => {
-    setSelectedProject(null);
-    setCurrentImageIndex(0);
-  };
+  const allTech = [...new Set(projects?.flatMap(getTech) || [])];
+  const filtered = activeFilter === "All"
+    ? projects
+    : projects?.filter((p) => p.technologies?.toLowerCase().includes(activeFilter.toLowerCase()));
 
-  // Extract unique technologies for filter
-  const allTechnologies = [
-    ...new Set(projects?.flatMap((p) => getProjectTech(p)) || []),
-  ];
-
-  // Filter Logic
-  const filteredProjects =
-    activeFilter === "All"
-      ? projects
-      : projects.filter((project) =>
-          project.technologies
-            ?.toLowerCase()
-            .includes(activeFilter.toLowerCase())
-        );
-
-  // --- Render ---
-
-  if (!projects?.length) {
+  if (!projects?.length)
     return (
-      <div className="min-h-[50vh] flex flex-col items-center justify-center text-gray-500">
-        <Layers className="w-16 h-16 mb-4 opacity-50" />
-        <p className="text-xl font-medium">No projects found.</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] gap-4">
+        <Layers className="w-12 h-12 text-[#333]" />
+        <p className="text-[#555] font-mono">No projects yet.</p>
       </div>
     );
-  }
 
   return (
     <>
-      <section
-        id="projects"
-        className="py-24 bg-gray-950 relative overflow-hidden"
-      >
-        {/* Decorative Background Elements */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <section className="min-h-screen py-16 bg-[#0a0a0a] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#ff4500]/6 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Header */}
-          <div className="text-center mb-16">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-bold text-white mb-6"
-            >
-              Featured{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                Projects
-              </span>
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-lg text-gray-300 max-w-2xl mx-auto"
-            >
-              A selection of my recent work, featuring full-stack applications
-              and experimental designs.
-            </motion.p>
+          <div className="mb-8">
+            <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">What I've built</p>
+            <h2 className="text-3xl md:text-4xl font-black text-white">Projects</h2>
+            <div className="mt-3 w-10 h-0.5 bg-[#ff4500]" />
           </div>
 
           {/* Filters */}
-          {allTechnologies.length > 0 && (
-            <div className="overflow-x-auto py-4 mb-12">
-              <div className="flex gap-2 min-w-max px-4">
-                <button
-                  onClick={() => setActiveFilter("All")}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    activeFilter.toLowerCase() === "all"
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                        : "bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10"
-                  }`}
-                >
-                  All
+          {allTech.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-6">
+              {["All", ...allTech.sort()].map((tech) => (
+                <button key={tech} onClick={() => setActiveFilter(tech)}
+                  className={`px-4 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 ${
+                    activeFilter.toLowerCase() === tech.toLowerCase()
+                      ? "bg-[#ff4500] text-white"
+                      : "border border-white/[0.08] text-[#666] hover:text-white hover:border-white/20"
+                  }`}>
+                  {tech}
                 </button>
-                {Array.from(
-                  new Set(
-                    allTechnologies.map((tech) => tech.toLowerCase()) // lowercase for uniqueness
-                  )
-                )
-                  .sort() // sort alphabetically
-                  .map((tech) => (
-                    <button
-                      key={tech}
-                      onClick={() => setActiveFilter(tech)}
-                      className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                        activeFilter.toLowerCase() === tech
-                          ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                          : "bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10"
-                      }`}
-                    >
-                      {tech.charAt(0).toUpperCase() + tech.slice(1)}
-                    </button>
-                  ))}
-              </div>
+              ))}
             </div>
           )}
 
-          {/* Projects Grid */}
-          <motion.div
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
+          {/* Grid */}
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <AnimatePresence>
-              {filteredProjects.map((project, index) => {
-                const images = getProjectImages(project);
-                const techStack = getProjectTech(project);
-
+              {filtered?.map((project, idx) => {
+                const images = getImages(project);
+                const tech = getTech(project);
                 return (
-                  <motion.div
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3 }}
-                    key={project.id || index}
-                    onClick={() => openProject(project)}
-                    className="group bg-white/[0.03] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-white/10 cursor-pointer transition-all duration-300 flex flex-col h-full"
-                  >
-                    {/* Card Image */}
-                    <div className="relative h-56 overflow-hidden">
-                      <img
-                        src={images[0]}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                      <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-medium opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                        View Project
+                  <motion.div key={project.id || idx} layout
+                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.25 }}
+                    onClick={() => open(project)}
+                    className="group rounded-xl border border-white/[0.07] bg-[#111] overflow-hidden cursor-pointer hover:border-[#ff4500]/30 transition-all duration-300 flex flex-col">
+                    {/* Image */}
+                    <div className="relative h-40 overflow-hidden bg-[#0d0d0d]">
+                      {images[0] ? (
+                        <img src={images[0]} alt={project.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Code2 className="w-10 h-10 text-[#333]" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent" />
+                      <div className="absolute top-3 right-3 px-2.5 py-1 bg-[#ff4500] text-white text-xs font-mono rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Open →
                       </div>
                     </div>
 
-                    {/* Card Content */}
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
-                        {project.title}
-                      </h3>
-                      {/* Optional Year Display */}
-                      {project.year && (
-                        <span className="inline-block text-xs font-medium bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded-full mb-2">
-                          Developed: {project.year}
-                        </span>
-                      )}
-                      <p className="text-gray-400 text-sm line-clamp-2 mb-4 flex-grow">
-                        {project.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        {techStack.slice(0, 3).map((t, i) => (
-                          <span
-                            key={i}
-                            className="text-xs px-2 py-1 bg-blue-500/15 text-blue-300 rounded-md font-medium"
-                          >
-                            {t}
-                          </span>
+                    {/* Content */}
+                    <div className="p-4 flex flex-col flex-grow">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h3 className="text-white font-bold text-sm group-hover:text-[#ff4500] transition-colors">
+                          {project.title}
+                        </h3>
+                        {project.year && (
+                          <span className="text-xs text-[#555] font-mono shrink-0">{project.year}</span>
+                        )}
+                      </div>
+                      <p className="text-[#777] text-sm line-clamp-2 mb-4 flex-grow">{project.description}</p>
+                      <div className="flex flex-wrap gap-1.5 mt-auto">
+                        {tech.slice(0, 3).map((t, i) => (
+                          <span key={i} className="text-xs px-2 py-0.5 bg-[#ff4500]/10 text-[#ff6a33] rounded font-mono">{t}</span>
                         ))}
-                        {techStack.length > 3 && (
-                          <span className="text-xs px-2 py-1 bg-white/10 text-gray-400 rounded-md">
-                            +{techStack.length - 3}
-                          </span>
+                        {tech.length > 3 && (
+                          <span className="text-xs px-2 py-0.5 bg-white/5 text-[#555] rounded font-mono">+{tech.length - 3}</span>
                         )}
                       </div>
                     </div>
@@ -241,201 +130,128 @@ function ProjectsSection({ projects }) {
             </AnimatePresence>
           </motion.div>
 
-          {/* Empty State */}
-          {filteredProjects.length === 0 && (
+          {filtered?.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-gray-500 dark:text-gray-400 text-lg">
-                No projects found for this filter.
-              </p>
-              <button
-                onClick={() => setActiveFilter("All")}
-                className="mt-4 text-blue-600 hover:underline"
-              >
-                Clear filters
-              </button>
+              <p className="text-[#555] font-mono mb-4">No projects match this filter.</p>
+              <button onClick={() => setActiveFilter("All")}
+                className="text-[#ff4500] text-sm hover:underline font-mono">Clear filter</button>
             </div>
           )}
         </div>
       </section>
 
-      {/* ------------------------------------------- */}
-      {/* FULL SCREEN PROJECT MODAL (IMMERSIVE VIEW)  */}
-      {/* ------------------------------------------- */}
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex flex-col bg-gray-950 overflow-y-auto sm:overflow-hidden"
-          >
-            {/* Top Navigation */}
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-gray-950/90 backdrop-blur-md sticky top-0 z-50">
-              <button
-                onClick={closeProject}
-                className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors group"
+      {/* Modal rendered via portal */}
+      {selectedProject &&
+        createPortal(
+          <AnimatePresence>
+            <motion.div
+              key="project-modal"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={close}
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
+              className="fixed inset-0 z-[100] flex flex-col bg-[#0a0a0a]"
+            >
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/[0.07] bg-[#0a0a0a]/95 backdrop-blur-md"
               >
-                <div className="p-2 bg-white/10 rounded-full group-hover:bg-blue-500/20 transition">
-                  <ArrowLeft size={20} />
-                </div>
-                <span className="font-medium">Back to Projects</span>
-              </button>
-
-              <div className="flex gap-3">
-                {selectedProject.github_url && (
-                  <a
-                    href={selectedProject.github_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-2 text-gray-300 hover:text-white transition"
-                    title="View Code"
-                  >
-                    <Github size={24} />
-                  </a>
-                )}
-                {selectedProject.url && (
-                  <a
-                    href={selectedProject.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-2 text-gray-300 hover:text-blue-400 transition"
-                    title="Live Demo"
-                  >
-                    <ExternalLink size={24} />
-                  </a>
-                )}
-              </div>
-            </div>
-
-            <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
-              {/* Left: Image Gallery (Takes priority) */}
-              <div className="flex-1 relative bg-black flex items-center justify-center p-4 lg:p-12 h-[50vh] lg:h-auto">
-                {/* Background Blur */}
-                <div className="absolute inset-0 overflow-hidden">
-                  <img
-                    src={getProjectImages(selectedProject)[currentImageIndex]}
-                    className="w-full h-full object-cover blur-3xl opacity-20"
-                    alt="blur-bg"
-                  />
-                  <div className="absolute inset-0 bg-black/40" />
-                </div>
-
-                {/* Main Image */}
-                <motion.div
-                  key={currentImageIndex}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative z-10 max-w-full max-h-full"
+                <button
+                  onClick={close}
+                  className="flex items-center gap-2 text-[#888] hover:text-white transition-colors text-sm font-medium"
                 >
-                  <img
-                    src={getProjectImages(selectedProject)[currentImageIndex]}
-                    alt={`Screenshot ${currentImageIndex + 1}`}
-                    className="max-h-[70vh] w-auto rounded-lg shadow-2xl border border-white/10"
-                  />
-                </motion.div>
+                  <ArrowLeft size={16} /> Back
+                </button>
+                <div className="flex gap-2">
+                  {selectedProject.github_url && (
+                    <a href={selectedProject.github_url} target="_blank" rel="noreferrer"
+                      className="p-2 text-[#666] hover:text-white transition-colors" title="Source code">
+                      <Github size={18} />
+                    </a>
+                  )}
+                  {selectedProject.url && (
+                    <a href={selectedProject.url} target="_blank" rel="noreferrer"
+                      className="p-2 text-[#666] hover:text-[#ff4500] transition-colors" title="Live demo">
+                      <ExternalLink size={18} />
+                    </a>
+                  )}
+                </div>
+              </div>
 
-                {/* Gallery Controls */}
-                {getProjectImages(selectedProject).length > 1 && (
+              <div onClick={(e) => e.stopPropagation()} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+              {/* Image panel */}
+              <div className="flex-1 relative bg-[#050505] flex items-center justify-center p-6 lg:p-12 min-h-[40vh] lg:min-h-0">
+                <div className="absolute inset-0 overflow-hidden">
+                  <img src={getImages(selectedProject)[currentImageIndex]}
+                    className="w-full h-full object-cover blur-3xl opacity-10" alt="" />
+                </div>
+                <motion.img key={currentImageIndex}
+                  initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.25 }}
+                  src={getImages(selectedProject)[currentImageIndex]}
+                  alt={`Screenshot ${currentImageIndex + 1}`}
+                  className="relative z-10 max-h-[65vh] w-auto rounded-lg border border-white/[0.07] shadow-2xl" />
+
+                {getImages(selectedProject).length > 1 && (
                   <>
-                    <button
-                      onClick={() =>
-                        setCurrentImageIndex((prev) =>
-                          prev === 0
-                            ? getProjectImages(selectedProject).length - 1
-                            : prev - 1
-                        )
-                      }
-                      className="absolute left-4 lg:left-8 z-20 p-3 rounded-full bg-black/50 text-white hover:bg-blue-600 transition-colors border border-white/10"
-                    >
-                      <ChevronLeft size={24} />
+                    <button onClick={() => setCurrentImageIndex((p) => p === 0 ? getImages(selectedProject).length - 1 : p - 1)}
+                      className="absolute left-4 z-20 p-2.5 rounded-md bg-black/60 text-white hover:bg-[#ff4500] transition-colors border border-white/10">
+                      <ChevronLeft size={20} />
                     </button>
-                    <button
-                      onClick={() =>
-                        setCurrentImageIndex((prev) =>
-                          prev === getProjectImages(selectedProject).length - 1
-                            ? 0
-                            : prev + 1
-                        )
-                      }
-                      className="absolute right-4 lg:right-8 z-20 p-3 rounded-full bg-black/50 text-white hover:bg-blue-600 transition-colors border border-white/10"
-                    >
-                      <ChevronRight size={24} />
+                    <button onClick={() => setCurrentImageIndex((p) => p === getImages(selectedProject).length - 1 ? 0 : p + 1)}
+                      className="absolute right-4 z-20 p-2.5 rounded-md bg-black/60 text-white hover:bg-[#ff4500] transition-colors border border-white/10">
+                      <ChevronRight size={20} />
                     </button>
-
-                    {/* Pagination Dots */}
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-                      {getProjectImages(selectedProject).map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCurrentImageIndex(idx)}
-                          className={`w-2 h-2 rounded-full transition-all ${
-                            idx === currentImageIndex
-                              ? "bg-white w-6"
-                              : "bg-white/40 hover:bg-white/80"
-                          }`}
-                        />
+                    <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                      {getImages(selectedProject).map((_, i) => (
+                        <button key={i} onClick={() => setCurrentImageIndex(i)}
+                          className={`h-1 rounded-full transition-all duration-200 ${i === currentImageIndex ? "w-6 bg-[#ff4500]" : "w-1.5 bg-white/30"}`} />
                       ))}
                     </div>
                   </>
                 )}
               </div>
 
-              {/* Right: Project Details (Scrollable) */}
-              <div className="w-full lg:w-[400px] xl:w-[500px] bg-gray-900 border-l border-white/10 overflow-y-auto p-8 shadow-2xl z-20">
-                <div className="space-y-8">
+              {/* Details panel */}
+              <div className="w-full lg:w-[380px] bg-[#0f0f0f] border-t lg:border-t-0 lg:border-l border-white/[0.07] overflow-y-auto p-5 sm:p-6">
+                <div className="space-y-5">
                   <div>
-                    <h3 className="text-3xl font-bold text-white mb-4">
-                      {selectedProject.title}
-                    </h3>
-                    {/* Year */}
+                    <h3 className="text-xl font-black text-white mb-2">{selectedProject.title}</h3>
                     {selectedProject.year && (
-                      <span className="inline-block text-sm font-medium bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full mb-4">
-                        Developed: {selectedProject.year}
+                      <span className="text-xs font-mono text-[#ff4500] bg-[#ff4500]/10 px-2.5 py-1 rounded">
+                        {selectedProject.year}
                       </span>
                     )}
-                    <p className="text-gray-300 leading-relaxed">
-                      {selectedProject.description}
-                    </p>
+                    <p className="text-[#888] text-sm leading-relaxed mt-3">{selectedProject.description}</p>
                   </div>
 
-                  {/* Tech Stack */}
                   <div>
-                    <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
-                      <Code2 size={16} /> Technologies
+                    <h4 className="text-xs font-mono uppercase tracking-wider text-[#555] mb-3 flex items-center gap-2">
+                      <Code2 size={12} /> Tech stack
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {getProjectTech(selectedProject).map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1.5 bg-white/10 text-gray-200 text-sm font-medium rounded-lg border border-white/10"
-                        >
-                          {tech}
+                      {getTech(selectedProject).map((t) => (
+                        <span key={t} className="px-3 py-1 bg-[#ff4500]/10 text-[#ff6a33] text-xs font-mono rounded border border-[#ff4500]/20">
+                          {t}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  {/* Action Buttons (Redundant but useful here too) */}
-                  <div className="flex flex-col gap-3 pt-6 border-t border-white/10">
+                  <div className="flex flex-col gap-2.5 pt-6 border-t border-white/[0.07]">
                     {selectedProject.url && (
-                      <a
-                        href={selectedProject.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-500/20"
-                      >
-                        <ExternalLink size={18} /> Visit Live Site
+                      <a href={selectedProject.url} target="_blank" rel="noreferrer"
+                        className="flex items-center justify-center gap-2 w-full py-3 bg-[#ff4500] text-white rounded-md font-semibold text-sm hover:bg-[#cc3700] transition-colors">
+                        <ExternalLink size={15} /> Live site
                       </a>
                     )}
                     {selectedProject.github_url && (
-                      <a
-                        href={selectedProject.github_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/15 transition"
-                      >
-                        <Github size={18} /> View Source Code
+                      <a href={selectedProject.github_url} target="_blank" rel="noreferrer"
+                        className="flex items-center justify-center gap-2 w-full py-3 border border-white/10 text-white rounded-md font-semibold text-sm hover:bg-white/5 transition-colors">
+                        <Github size={15} /> Source code
                       </a>
                     )}
                   </div>
@@ -443,8 +259,9 @@ function ProjectsSection({ projects }) {
               </div>
             </div>
           </motion.div>
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }

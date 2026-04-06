@@ -1,0 +1,52 @@
+{
+  "info": {
+    "name": "Cherinet Habtamu",
+    "title": "Full Stack Developer",
+    "bio": "I build fast, accessible, and beautiful digital products. Focused on clean architecture and great user experience.",
+    "email": ["cherinet@example.com"],
+    "phones": ["+251-900-000-000"],
+    "locations": ["Addis Ababa, Ethiopia"],
+    "profile_image": "",
+    "socials": {
+      "github": "cherinet-habtamu",
+      "linkedin": "",
+      "twitter": "",
+      "facebook": "",
+      "instagram": "",
+      "tiktok": ""
+    }
+  },
+  "projects": [
+    {
+      "title": "E-Commerce Platform",
+      "description": "A full-stack e-commerce solution with real-time inventory management and payment integration.",
+      "image": [],
+      "technologies": "React, Node.js, MongoDB, Stripe",
+      "github_url": "",
+      "url": "",
+      "featured": true,
+      "year": "2024"
+    },
+    {
+      "title": "Portfolio Website",
+      "description": "A modern, responsive portfolio with Firebase backend and admin dashboard.",
+      "image": [],
+      "technologies": "React, Firebase, Tailwind CSS",
+      "github_url": "",
+      "url": "",
+      "featured": true,
+      "year": "2024"
+    }
+  ],
+  "skills": [
+    { "name": "React", "category": "Frontend", "proficiency": 90, "logo": "" },
+    { "name": "JavaScript", "category": "Frontend", "proficiency": 92, "logo": "" },
+    { "name": "Tailwind CSS", "category": "Frontend", "proficiency": 88, "logo": "" },
+    { "name": "Node.js", "category": "Backend", "proficiency": 85, "logo": "" },
+    { "name": "Express", "category": "Backend", "proficiency": 83, "logo": "" },
+    { "name": "MongoDB", "category": "Database", "proficiency": 80, "logo": "" },
+    { "name": "Firebase", "category": "Database", "proficiency": 78, "logo": "" },
+    { "name": "Git", "category": "Tools", "proficiency": 87, "logo": "" },
+    { "name": "Docker", "category": "Tools", "proficiency": 70, "logo": "" }
+  ]
+}

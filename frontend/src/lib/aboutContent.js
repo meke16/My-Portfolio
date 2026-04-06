@@ -1,6 +1,10 @@
-import aboutFallback from "../data/aboutContent.json";
-
-const DEFAULT_ABOUT = aboutFallback;
+const DEFAULT_ABOUT = {
+  headline: "About me",
+  overview: "",
+  journey: [],
+  focusAreas: [],
+  principles: [],
+};
 
 function normalizeJourneyItem(item) {
   if (!item || typeof item !== "object") {

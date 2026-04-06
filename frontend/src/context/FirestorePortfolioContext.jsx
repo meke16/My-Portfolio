@@ -23,16 +23,18 @@ export function FirestorePortfolioProvider({ children }) {
 
   const reload = useCallback(async () => {
     if (!db) {
-      setError("Firebase is not configured. Add VITE_FIREBASE_* variables to frontend/.env");
-      setLoading(false);
       setInfo({});
       setProjects([]);
       setSkills([]);
       setAbout(defaultAboutContent);
+      setError("Firebase is not configured. Add VITE_FIREBASE_* variables to frontend/.env");
+      setLoading(false);
       return;
     }
+
     setLoading(true);
     setError(null);
+
     try {
       const [infoSnap, skillsSnap, projectsSnap, aboutSnap] = await Promise.all([
         getDoc(doc(db, "info", "main")),
@@ -42,6 +44,11 @@ export function FirestorePortfolioProvider({ children }) {
       ]);
 
       setInfo(infoSnap.exists() ? infoSnap.data() : {});
+      setProjects(
+        projectsSnap.docs.map((d) =>
+          normalizeProjectDoc(d.id, d.data())
+        )
+      );
       setSkills(
         skillsSnap.docs.map((d) => ({
           id: d.id,
@@ -49,22 +56,19 @@ export function FirestorePortfolioProvider({ children }) {
           proficiency: Number(d.data().proficiency) || 0,
         }))
       );
-      setProjects(
-        projectsSnap.docs.map((d) =>
-          normalizeProjectDoc(d.id, d.data())
-        )
-      );
       setAbout(
         aboutSnap.exists()
           ? normalizeAboutContent(aboutSnap.data())
           : defaultAboutContent
       );
-      setLoading(false);
     } catch (e) {
-      setError(e?.message || "Failed to load portfolio from Firestore");
+      setInfo({});
+      setProjects([]);
+      setSkills([]);
       setAbout(defaultAboutContent);
-      setLoading(false);
+      setError(e?.message || "Failed to load portfolio data from Firebase.");
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
