@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const DEFAULT_BOOT_DATA = {
   name: "CHERINET HABTAMU",
-  title: "FULL STACK DEVELOPER",
+  title: "FULL STACK DEVELOPER & MANAGER",
   projectsCount: 12,
   skillsCount: 10,
   availability: "AVAILABLE FOR WORK",
@@ -135,10 +135,10 @@ function LoadingScreen({ bootData }) {
             ROLE: <span className="text-[#ffd3bf]">{String(mergedBootData.title || DEFAULT_BOOT_DATA.title).toUpperCase()}</span>
           </div>
           <div className="px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
-            PROJECTS INDEXED: <span className="text-[#ffd3bf]">{Number(mergedBootData.projectsCount) || 0}</span>
+            PROJECTS INDEXED: <span className="text-[#ffd3bf]">{Number(mergedBootData.projectsCount) || 5}</span>
           </div>
           <div className="px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
-            SKILLS LOADED: <span className="text-[#ffd3bf]">{Number(mergedBootData.skillsCount) || 0}</span>
+            SKILLS LOADED: <span className="text-[#ffd3bf]">{Number(mergedBootData.skillsCount) || 10}</span>
           </div>
           <div className="sm:col-span-2 px-3 py-2 rounded border border-[#ff4500]/20 bg-black/20 text-[#ffb08f]">
             STATUS: <span className="text-[#ffd3bf]">{String(mergedBootData.availability || DEFAULT_BOOT_DATA.availability).toUpperCase()}</span>
