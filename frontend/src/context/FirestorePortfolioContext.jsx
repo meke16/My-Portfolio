@@ -9,7 +9,12 @@ import React, {
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { normalizeProjectDoc } from "../lib/firestorePortfolio";
-import { defaultAboutContent, normalizeAboutContent } from "../lib/aboutContent";
+import {
+  defaultAboutContent,
+  defaultWorkExperience,
+  normalizeAboutContent,
+  normalizeWorkExperience,
+} from "../contentSchemas";
 import portfolioDataFallback from "../data/portfolioData.json";
 
 const FirestorePortfolioContext = createContext(null);
@@ -45,6 +50,9 @@ function loadFallbackData() {
     about: fb.about && typeof fb.about === "object"
       ? normalizeAboutContent(fb.about)
       : defaultAboutContent,
+    workExperience: fb.workExperience && typeof fb.workExperience === "object"
+      ? normalizeWorkExperience(fb.workExperience)
+      : defaultWorkExperience,
   };
 }
 
@@ -57,6 +65,7 @@ export function FirestorePortfolioProvider({ children }) {
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
   const [about, setAbout] = useState(defaultAboutContent);
+  const [workExperience, setWorkExperience] = useState(defaultWorkExperience);
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -66,11 +75,12 @@ export function FirestorePortfolioProvider({ children }) {
     // ── 1. Try Firebase ────────────────────────────────────────
     if (db) {
       try {
-        const [infoSnap, skillsSnap, projectsSnap, aboutSnap] = await Promise.all([
+        const [infoSnap, skillsSnap, projectsSnap, aboutSnap, workExperienceSnap] = await Promise.all([
           getDoc(doc(db, "info", "main")),
           getDocs(collection(db, "skills")),
           getDocs(collection(db, "projects")),
           getDoc(doc(db, "content", "about")),
+          getDoc(doc(db, "content", "workExperience")),
         ]);
 
         const rawInfo = infoSnap.exists() ? infoSnap.data() : {};
@@ -85,11 +95,15 @@ export function FirestorePortfolioProvider({ children }) {
         const rawAbout = aboutSnap.exists()
           ? normalizeAboutContent(aboutSnap.data())
           : defaultAboutContent;
+        const rawWorkExperience = workExperienceSnap.exists()
+          ? normalizeWorkExperience(workExperienceSnap.data())
+          : defaultWorkExperience;
 
         setInfo(rawInfo);
         setSkills(rawSkills);
         setProjects(rawProjects);
         setAbout(rawAbout);
+        setWorkExperience(rawWorkExperience);
         setLoading(false);
         return;
       } catch (e) {
@@ -104,6 +118,7 @@ export function FirestorePortfolioProvider({ children }) {
       setProjects(fb.projects);
       setSkills(fb.skills);
       setAbout(fb.about);
+      setWorkExperience(fb.workExperience);
       setFromCache(true);
       setLoading(false);
     } catch {
@@ -112,6 +127,7 @@ export function FirestorePortfolioProvider({ children }) {
       setProjects([]);
       setSkills([]);
       setAbout(defaultAboutContent);
+      setWorkExperience(defaultWorkExperience);
       setLoading(false);
     }
   }, []);
@@ -130,9 +146,10 @@ export function FirestorePortfolioProvider({ children }) {
       projects,
       skills,
       about,
+      workExperience,
       reload,
     }),
-    [loading, error, fromCache, info, projects, skills, about, reload]
+    [loading, error, fromCache, info, projects, skills, about, workExperience, reload]
   );
 
   return (

@@ -10,6 +10,7 @@ import AdminLayout from "../components/admin/AdminLayout";
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminProfile from "./admin/AdminProfile";
 import AdminAbout from "./admin/AdminAbout";
+import AdminWorkExperience from "./admin/AdminWorkExperience";
 import AdminProjects from "./admin/AdminProjects";
 import AdminSkills from "./admin/AdminSkills";
 import AdminMessages from "./admin/AdminMessages";
@@ -140,6 +141,7 @@ function Admin() {
         <Route index element={<AdminDashboard />} />
         <Route path="profile" element={<AdminProfile />} />
         <Route path="about" element={<AdminAbout />} />
+        <Route path="experience" element={<AdminWorkExperience />} />
         <Route path="projects" element={<AdminProjects />} />
         <Route path="skills" element={<AdminSkills />} />
         <Route path="messages" element={<AdminMessages />} />

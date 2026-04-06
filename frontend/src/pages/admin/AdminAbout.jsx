@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { BookOpen, Loader2 } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
-import { normalizeAboutContent } from "../../lib/aboutContent";
+import { normalizeAboutContent } from "../../contentSchemas";
 
 function toTextarea(value) {
   return Array.isArray(value) ? value.join("\n") : "";

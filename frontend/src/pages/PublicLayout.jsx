@@ -5,11 +5,12 @@ import Navbar from "../components/Navbar";
 import LoadingScreen from "../components/LoadingScreen";
 import { HeroSection } from "../components/HeroSection";
 import { AboutPage } from "./AboutPage";
+import { WorkExperiencePage } from "./WorkExperiencePage";
 import { SkillsPage } from "./SkillsPage";
 import { ProjectsPage } from "./ProjectsPage";
 import { ContactPage } from "./ContactPage";
 
-const SECTIONS = ["/", "/about", "/skills", "/projects", "/contact"];
+const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/contact"];
 
 function PublicLayout() {
   const { info, projects, skills, loading, error, fromCache, reload } = useFirestorePortfolio();
@@ -137,6 +138,7 @@ function PublicLayout() {
   const sections = [
     <HeroSection info={info} />,
     <AboutPage />,
+    <WorkExperiencePage />,
     <SkillsPage />,
     <ProjectsPage />,
     <ContactPage />,
