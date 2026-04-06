@@ -98,8 +98,13 @@ function HeroSection({ info }) {
               <p className="text-[#888] text-xs font-mono tracking-widest uppercase">
                 Hello, I'm
               </p>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight">
-                {info?.name || "Your Name"}
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] tracking-tight">
+                <span className="inline-flex items-center gap-0 font-mono bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2 sm:px-5 sm:py-2.5">
+                  <span className="text-[#ff4500] select-none text-2xl sm:text-3xl lg:text-4xl font-light leading-none mt-0.5">`</span>
+                  <span className="text-white text-2xl sm:text-3xl lg:text-4xl font-semibold leading-none">{info?.name || "Your Name"}</span>
+                  <span className="text-[#ff4500] select-none text-2xl sm:text-3xl lg:text-4xl font-light leading-none mt-0.5">`</span>
+                  <span className="inline-block w-0.5 h-7 sm:h-8 lg:h-9 bg-[#ff4500] animate-[blink_1s_step-end_infinite] ml-0.5" />
+                </span>
               </h1>
               <h2 className="text-lg sm:text-xl font-semibold text-[#ff4500]">
                 {info?.title || "Full Stack Developer"}
@@ -149,7 +154,7 @@ function HeroSection({ info }) {
             ref={photoCardRef}
             onMouseMove={handlePhotoMove}
             onMouseLeave={handlePhotoLeave}
-            className="relative flex-shrink-0 w-64 h-[19rem] sm:w-72 sm:h-[21rem] lg:w-96 lg:h-[31rem] [perspective:1000px] transition-transform duration-100 ease-out will-change-transform"
+            className="relative flex-shrink-0 w-64 h-[19rem] sm:w-72 sm:h-[21rem] lg:w-96 lg:h-[33rem] [perspective:1000px] transition-transform duration-100 ease-out will-change-transform"
             style={{ transform: photoTransform }}
           >
             {/* Orange border frame */}
