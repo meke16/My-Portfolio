@@ -40,6 +40,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState(-1);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 6, width: 60 });
   const navRef = useRef(null);
   const location = useLocation();
   const scrollProgress = useScrollProgress();
@@ -61,14 +62,16 @@ export function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (activeIdx < 0 || !navRef.current) return;
-    const link = navRef.current.querySelectorAll("[data-nav-link]")[activeIdx];
+    if (!navRef.current) return;
+    const links = navRef.current.querySelectorAll("[data-nav-link]");
+    const link = links[activeIdx];
     if (!link) return;
-    const parent = link.parentElement;
-    if (parent) {
-      link.style.setProperty("--indicator-left", `${link.offsetLeft}px`);
-      link.style.setProperty("--indicator-width", `${link.offsetWidth}px`);
-    }
+    requestAnimationFrame(() => {
+      setIndicatorStyle({
+        left: link.offsetLeft,
+        width: link.offsetWidth,
+      });
+    });
   }, [activeIdx]);
 
   return (
@@ -88,13 +91,13 @@ export function Navbar() {
           <div className="flex items-center justify-end lg:justify-center h-12">
 
             {/* Desktop nav */}
-            <div className="relative hidden lg:flex items-center gap-0.5 px-1.5 py-1.5 rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/80 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
+            <div ref={navRef} className="relative hidden lg:flex items-center gap-0.5 px-1.5 py-1.5 rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/80 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
               {/* Sliding active indicator */}
               <div
                 className="absolute top-1.5 h-[calc(100%-12px)] rounded-xl bg-[#ff4500]/12 border border-[#ff4500]/20 transition-all duration-300 ease-out"
                 style={{
-                  left: `var(--indicator-left, 6px)`,
-                  width: `var(--indicator-width, 60px)`,
+                  left: `${indicatorStyle.left}px`,
+                  width: `${indicatorStyle.width}px`,
                 }}
               />
 
