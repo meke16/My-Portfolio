@@ -1,23 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
-function displayNameFromInfo(info) {
-  if (typeof info === "string") return info.trim() || "Portfolio";
-  return info?.name?.trim() || "Portfolio";
-}
-
-function initialsFromName(name) {
-  const n = name.trim();
-  if (!n) return "?";
-  const space = n.indexOf(" ");
-  if (space === -1) return n.slice(0, 2).toUpperCase();
-  const second = n[space + 1];
-  return second ? (n[0] + second).toUpperCase() : n[0].toUpperCase();
-}
-
-export function Navbar({ info }) {
-  const displayName = displayNameFromInfo(info);
-  const logoInitials = initialsFromName(displayName);
+export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
@@ -40,33 +24,23 @@ export function Navbar({ info }) {
 
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-      scrolled ? "bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/[0.06]" : "bg-transparent"
+      scrolled ? "pt-3" : "pt-5"
     }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-18">
-
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-[#ff4500] rounded-md flex items-center justify-center">
-              <span className="text-white font-black text-sm tracking-tight">{logoInitials}</span>
-            </div>
-            <span className="text-white font-bold text-lg tracking-tight group-hover:text-[#ff4500] transition-colors duration-200">
-              {displayName}
-            </span>
-          </Link>
+        <div className="flex items-center justify-end lg:justify-center h-12">
 
           {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1 px-2 py-2 rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/75 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.to === "/"}
                 className={({ isActive }) =>
-                  `px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                  `px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "text-[#ff4500] bg-[#ff4500]/10"
-                      : "text-[#888] hover:text-white hover:bg-white/5"
+                      ? "text-[#ffd8c8] bg-[#ff4500]/18 shadow-[inset_0_0_0_1px_rgba(255,69,0,0.28)]"
+                      : "text-[#9a9a9a] hover:text-white hover:bg-white/[0.04]"
                   }`
                 }
               >
@@ -75,16 +49,16 @@ export function Navbar({ info }) {
             ))}
             <Link
               to="/contact"
-              className="ml-4 px-5 py-2 bg-[#ff4500] text-white text-sm font-semibold rounded-md hover:bg-[#cc3700] transition-colors duration-200"
+              className="ml-2 px-5 py-2 bg-[#ff4500] text-white text-sm font-semibold rounded-xl hover:bg-[#cc3700] transition-colors duration-200"
             >
-              Hire me
+              Get In Touch
             </Link>
           </div>
 
           {/* Mobile toggle */}
           <button
             onClick={() => setOpen(!open)}
-            className="lg:hidden p-2 text-[#888] hover:text-white transition-colors"
+            className="lg:hidden p-2.5 rounded-xl border border-white/[0.08] bg-[#0f0f0f]/75 text-[#b0b0b0] hover:text-white hover:border-[#ff4500]/35 transition-colors"
             aria-label="Toggle menu"
           >
             <div className="w-5 h-4 flex flex-col justify-between">
@@ -96,16 +70,18 @@ export function Navbar({ info }) {
         </div>
 
         {/* Mobile menu */}
-        <div className={`lg:hidden overflow-hidden transition-all duration-300 ${open ? "max-h-80 pb-4" : "max-h-0"}`}>
-          <div className="border-t border-white/[0.06] pt-3 space-y-1">
+        <div className={`lg:hidden overflow-hidden transition-all duration-300 ${open ? "max-h-80 pb-2 mt-3" : "max-h-0"}`}>
+          <div className="rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/92 backdrop-blur-xl p-3 space-y-1.5 shadow-[0_14px_35px_rgba(0,0,0,0.4)]">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.to === "/"}
                 className={({ isActive }) =>
-                  `block px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${
-                    isActive ? "text-[#ff4500] bg-[#ff4500]/10" : "text-[#888] hover:text-white"
+                  `block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                    isActive
+                      ? "text-[#ffd8c8] bg-[#ff4500]/18"
+                      : "text-[#9a9a9a] hover:text-white hover:bg-white/[0.04]"
                   }`
                 }
               >
@@ -114,7 +90,7 @@ export function Navbar({ info }) {
             ))}
             <Link
               to="/contact"
-              className="block mt-2 px-4 py-2.5 bg-[#ff4500] text-white text-sm font-semibold rounded-md text-center hover:bg-[#cc3700] transition-colors"
+              className="block mt-2 px-4 py-2.5 bg-[#ff4500] text-white text-sm font-semibold rounded-xl text-center hover:bg-[#cc3700] transition-colors"
             >
               Hire me
             </Link>
