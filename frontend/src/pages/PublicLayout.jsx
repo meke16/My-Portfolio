@@ -12,7 +12,7 @@ import { ContactPage } from "./ContactPage";
 const SECTIONS = ["/", "/about", "/skills", "/projects", "/contact"];
 
 function PublicLayout() {
-  const { info, projects, skills, loading, error, reload } = useFirestorePortfolio();
+  const { info, projects, skills, loading, error, fromCache, reload } = useFirestorePortfolio();
   const navigate = useNavigate();
   const location = useLocation();
   const currentIndex = useRef(SECTIONS.indexOf(location.pathname));
@@ -21,12 +21,8 @@ function PublicLayout() {
   const [showWarning, setShowWarning] = useState(false);
 
   useEffect(() => {
-    if (error && info?.name) {
-      setShowWarning(true);
-    } else if (!error) {
-      setShowWarning(false);
-    }
-  }, [error, info?.name]);
+    setShowWarning(fromCache);
+  }, [fromCache]);
 
   useEffect(() => {
     const idx = SECTIONS.indexOf(location.pathname);
@@ -121,10 +117,10 @@ function PublicLayout() {
     );
   }
 
-  // If Firebase failed but we have fallback data, show a warning banner instead of error page
-  const hasFallbackData = info?.name || (projects?.length > 0) || (skills?.length > 0);
+  // If Firebase failed but we have cached data, show a warning banner instead of error page
+  const hasCachedData = info?.name || (projects?.length > 0) || (skills?.length > 0);
 
-  if (error && !hasFallbackData) {
+  if (error && !hasCachedData) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] px-6 gap-4">
         <p className="text-red-400 text-center max-w-md">{error}</p>
@@ -155,7 +151,7 @@ function PublicLayout() {
             <svg className="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
-            <p className="text-xs text-amber-300">Showing offline data — Firebase unavailable. Changes won&apos;t sync.</p>
+            <p className="text-xs text-amber-300">Using cached data — Firebase unavailable. Data will refresh when connection is restored.</p>
           </div>
           <button onClick={() => setShowWarning(false)} className="text-amber-400 hover:text-amber-200 text-xs shrink-0">
             Dismiss

@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy:firebase-rules": "firebase deploy --only firestore:rules,storage",
+    "sync:data": "node scripts/sync-data.js",
     "migrate:neon-firestore": "node scripts/migrate-neon-to-firestore.mjs"
   },
   "dependencies": {
