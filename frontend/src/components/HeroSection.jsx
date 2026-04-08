@@ -182,18 +182,27 @@ function HeroSection({ info, stats = {} }) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 max-w-2xl mx-auto lg:mx-0">
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3">
+              <Link
+                to="/projects"
+                className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#ff4500]/35 hover:bg-[#ff4500]/8 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4500]/60"
+              >
                 <p className="text-[10px] uppercase tracking-[0.22em] text-[#666] font-mono">Projects</p>
-                <p className="mt-1 text-white text-lg font-bold">{String(stats.projects ?? 0).padStart(2, "0")}</p>
-              </div>
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3">
+                <p className="mt-1 text-white text-lg font-bold">{String(stats.projects ?? 0).padStart(2, "") + "+"}</p>
+              </Link>
+              <Link
+                to="/skills"
+                className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#ff4500]/35 hover:bg-[#ff4500]/8 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4500]/60"
+              >
                 <p className="text-[10px] uppercase tracking-[0.22em] text-[#666] font-mono">Skills</p>
-                <p className="mt-1 text-white text-lg font-bold">{String(stats.skills ?? 0).padStart(2, "0")}</p>
-              </div>
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3">
+                <p className="mt-1 text-white text-lg font-bold">25+</p>
+              </Link>
+              <Link
+                to="/testimonials"
+                className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#ff4500]/35 hover:bg-[#ff4500]/8 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4500]/60"
+              >
                 <p className="text-[10px] uppercase tracking-[0.22em] text-[#666] font-mono">Testimonials</p>
-                <p className="mt-1 text-white text-lg font-bold">{String(stats.testimonials ?? 0).padStart(2, "0")}</p>
-              </div>
+                <p className="mt-1 text-white text-lg font-bold">{String(stats.testimonials ?? 0).padStart(2, "") + "+"}</p>
+              </Link>
             </div>
 
             {/* Socials */}
