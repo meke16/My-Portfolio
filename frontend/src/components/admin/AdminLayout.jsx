@@ -4,10 +4,12 @@ import {
   LayoutDashboard,
   User,
   FolderKanban,
+  BookText,
   Wrench,
   Mail,
   BookOpenText,
   BriefcaseBusiness,
+  MessageCircle,
   LogOut,
   ExternalLink,
   Menu,
@@ -20,7 +22,9 @@ const menuItems = [
   { to: "/admin/about", label: "About page", icon: BookOpenText },
   { to: "/admin/experience", label: "Work & Experience", icon: BriefcaseBusiness },
   { to: "/admin/projects", label: "Projects", icon: FolderKanban },
+  { to: "/admin/blogs", label: "Blogs", icon: BookText },
   { to: "/admin/skills", label: "Skills", icon: Wrench },
+  { to: "/admin/testimonials", label: "Testimonials", icon: MessageCircle },
   { to: "/admin/messages", label: "Messages", icon: Mail },
 ];
 

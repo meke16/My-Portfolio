@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
 
 const NAV_ITEMS = [
   { to: "/", label: "Home", icon: (
@@ -18,8 +17,14 @@ const NAV_ITEMS = [
   { to: "/projects", label: "Projects", icon: (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
   )},
+  { to: "/blog", label: "Blog", icon: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+  )},
   { to: "/contact", label: "Contact", icon: (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+  )},
+  { to: "/testimonials", label: "Reviews", icon: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
   )},
 ];
 
@@ -55,7 +60,6 @@ function useScrollDirection() {
 }
 
 export function Navbar() {
-  const { theme, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState(-1);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -145,19 +149,6 @@ export function Navbar() {
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 Get In Touch
               </Link>
-
-              {/* Theme toggle */}
-              <button
-                onClick={toggleTheme}
-                className="relative z-10 ml-1 p-2 rounded-xl text-[#8a8a8a] hover:text-white hover:bg-white/[0.04] transition-all duration-200"
-                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-              >
-                {theme === "dark" ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-                )}
-              </button>
             </div>
           </div>
         </div>
@@ -202,19 +193,6 @@ export function Navbar() {
           </div>
         </div>
       </nav>
-
-      {/* ── Mobile theme toggle (floating) ────────────────── */}
-      <button
-        onClick={toggleTheme}
-        className="lg:hidden fixed bottom-24 right-5 z-50 p-3 rounded-full border border-white/[0.08] bg-[#0f0f0f]/90 backdrop-blur-xl text-[#8a8a8a] hover:text-white hover:border-[#ff4500]/35 shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-200"
-        aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-      >
-        {theme === "dark" ? (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        ) : (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        )}
-      </button>
     </>
   );
 }

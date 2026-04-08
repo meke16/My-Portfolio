@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
-import { useTheme } from "../context/ThemeContext";
 import Navbar from "../components/Navbar";
 import LoadingScreen from "../components/LoadingScreen";
 import { HeroSection } from "../components/HeroSection";
@@ -10,9 +9,11 @@ import { WorkExperiencePage } from "./WorkExperiencePage";
 import { SkillsPage } from "./SkillsPage";
 import { ProjectsPage } from "./ProjectsPage";
 import { ContactPage } from "./ContactPage";
+import { BlogPage } from "./BlogPage";
+import { TestimonialsPage } from "./TestimonialsPage";
 import { NotFoundPage } from "./NotFoundPage";
 
-const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/contact"];
+const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/blog", "/contact", "/testimonials"];
 
 function PublicLayout() {
   const { info, projects, skills, loading, error, fromCache, reload } = useFirestorePortfolio();
@@ -150,7 +151,9 @@ function PublicLayout() {
     <WorkExperiencePage />,
     <SkillsPage />,
     <ProjectsPage />,
+    <BlogPage />,
     <ContactPage />,
+    <TestimonialsPage />,
   ];
 
   return (

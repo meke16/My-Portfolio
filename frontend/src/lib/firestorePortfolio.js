@@ -20,3 +20,22 @@ export function normalizeProjectDoc(id, data) {
     year: data.year || "",
   };
 }
+
+/** Normalize Firestore blog doc for UI (BlogPage + admin). */
+export function normalizeBlogDoc(id, data) {
+  if (!data) return { id };
+  return {
+    ...data,
+    id,
+    title: String(data.title || "").trim(),
+    excerpt: String(data.excerpt || "").trim(),
+    content: String(data.content || "").trim(),
+    category: String(data.category || "General").trim(),
+    readTime: String(data.readTime || "").trim(),
+    coverImage: String(data.coverImage || "").trim(),
+    slug: String(data.slug || "").trim(),
+    publishedAt: String(data.publishedAt || "").trim(),
+    externalUrl: String(data.externalUrl || "").trim(),
+    featured: Boolean(data.featured),
+  };
+}

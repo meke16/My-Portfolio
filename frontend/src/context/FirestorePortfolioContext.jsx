@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import { normalizeProjectDoc } from "../lib/firestorePortfolio";
+import { normalizeProjectDoc, normalizeBlogDoc } from "../lib/firestorePortfolio";
 import {
   defaultAboutContent,
   defaultWorkExperience,
@@ -53,6 +53,10 @@ function loadFallbackData() {
     workExperience: fb.workExperience && typeof fb.workExperience === "object"
       ? normalizeWorkExperience(fb.workExperience)
       : defaultWorkExperience,
+    testimonials: Array.isArray(fb.testimonials) ? fb.testimonials : [],
+    blogs: Array.isArray(fb.blogs)
+      ? fb.blogs.map((b) => normalizeBlogDoc(b.id || b.slug || b.title, b))
+      : [],
   };
 }
 
@@ -72,6 +76,9 @@ export function FirestorePortfolioProvider({ children }) {
   const [skills, setSkills] = useState(initialFallback.skills || []);
   const [about, setAbout] = useState(initialFallback.about);
   const [workExperience, setWorkExperience] = useState(initialFallback.workExperience);
+  const initialTestimonials = Array.isArray(initialFallback.testimonials) ? initialFallback.testimonials : [];
+  const [testimonials, setTestimonials] = useState(initialTestimonials);
+  const [blogs, setBlogs] = useState(initialFallback.blogs || []);
 
   const reload = useCallback(async () => {
     setError(null);
@@ -82,12 +89,14 @@ export function FirestorePortfolioProvider({ children }) {
     // ── 1. Try Firebase ────────────────────────────────────────
     if (db) {
       try {
-        const [infoSnap, skillsSnap, projectsSnap, aboutSnap, workExperienceSnap] = await Promise.all([
+        const [infoSnap, skillsSnap, projectsSnap, aboutSnap, workExperienceSnap, testimonialsSnap, blogsSnap] = await Promise.all([
           getDoc(doc(db, "info", "main")),
           getDocs(collection(db, "skills")),
           getDocs(collection(db, "projects")),
           getDoc(doc(db, "content", "about")),
           getDoc(doc(db, "content", "workExperience")),
+          getDocs(collection(db, "testimonials")),
+          getDocs(collection(db, "blogs")),
         ]);
 
         const rawInfo = infoSnap.exists() ? infoSnap.data() : fallback.info;
@@ -107,6 +116,15 @@ export function FirestorePortfolioProvider({ children }) {
         const rawWorkExperience = workExperienceSnap.exists()
           ? normalizeWorkExperience(workExperienceSnap.data())
           : fallback.workExperience;
+        const rawTestimonials = testimonialsSnap.docs.length > 0
+          ? testimonialsSnap.docs.map((d) => ({ id: d.id, ...d.data() }))
+          : (fallback.testimonials || []);
+
+        // Merge Firebase blogs with fallback — Firebase takes priority, fallback-only entries fill gaps
+        const fbBlogMap = new Map(blogsSnap.docs.map((d) => [d.id, normalizeBlogDoc(d.id, d.data())]));
+        const mergedBlogs = fbBlogMap.size > 0
+          ? [...fbBlogMap.values(), ...(fallback.blogs || []).filter((b) => !fbBlogMap.has(b.id))]
+          : (fallback.blogs || []);
 
         const usedFallback = !infoSnap.exists() ||
           skillsSnap.docs.length === 0 ||
@@ -119,6 +137,8 @@ export function FirestorePortfolioProvider({ children }) {
         setProjects(rawProjects);
         setAbout(rawAbout);
         setWorkExperience(rawWorkExperience);
+        setTestimonials(rawTestimonials);
+        setBlogs(mergedBlogs);
         setFromCache(usedFallback);
         setLoading(false);
         return;
@@ -134,6 +154,8 @@ export function FirestorePortfolioProvider({ children }) {
       setSkills(fallback.skills);
       setAbout(fallback.about);
       setWorkExperience(fallback.workExperience);
+      setTestimonials(fallback.testimonials || []);
+      setBlogs(fallback.blogs || []);
       setFromCache(true);
       setLoading(false);
     } catch {
@@ -143,6 +165,8 @@ export function FirestorePortfolioProvider({ children }) {
       setSkills([]);
       setAbout(defaultAboutContent);
       setWorkExperience(defaultWorkExperience);
+      setTestimonials([]);
+      setBlogs([]);
       setLoading(false);
     }
   }, []);
@@ -162,9 +186,11 @@ export function FirestorePortfolioProvider({ children }) {
       skills,
       about,
       workExperience,
+      testimonials,
+      blogs,
       reload,
     }),
-    [loading, error, fromCache, info, projects, skills, about, workExperience, reload]
+    [loading, error, fromCache, info, projects, skills, about, workExperience, testimonials, blogs, reload]
   );
 
   return (

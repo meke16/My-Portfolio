@@ -73,12 +73,14 @@ async function main() {
   console.log("🔄 Syncing data from Firebase...");
 
   try {
-    const [infoSnap, skillsSnap, projectsSnap, aboutSnap, workExperienceSnap] = await Promise.all([
+    const [infoSnap, skillsSnap, projectsSnap, aboutSnap, workExperienceSnap, testimonialsSnap, blogsSnap] = await Promise.all([
       getDoc(doc(db, "info", "main")),
       getDocs(collection(db, "skills")),
       getDocs(collection(db, "projects")),
       getDoc(doc(db, "content", "about")),
       getDoc(doc(db, "content", "workExperience")),
+      getDocs(collection(db, "testimonials")),
+      getDocs(collection(db, "blogs")),
     ]);
 
     const data = {
@@ -93,6 +95,14 @@ async function main() {
       })),
       about: aboutSnap.exists() ? aboutSnap.data() : {},
       workExperience: workExperienceSnap.exists() ? workExperienceSnap.data() : {},
+      testimonials: testimonialsSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })),
+      blogs: blogsSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })),
     };
 
     const dataDir = join(root, "src", "data");
@@ -106,6 +116,8 @@ async function main() {
     console.log(`   Skills: ${skillsSnap.docs.length}`);
     console.log(`   About: ${aboutSnap.exists() ? "yes" : "no"}`);
     console.log(`   Work Experience: ${workExperienceSnap.exists() ? "yes" : "no"}`);
+    console.log(`   Testimonials: ${testimonialsSnap.docs.length}`);
+    console.log(`   Blogs: ${blogsSnap.docs.length}`);
   } catch (err) {
     console.error("❌ Failed to sync data:", err.message || err);
     process.exit(1);

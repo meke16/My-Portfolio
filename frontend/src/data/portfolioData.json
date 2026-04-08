@@ -570,5 +570,46 @@
       }
     ],
     "headline": "Work & Experience"
-  }
+  },
+  "testimonials": [
+    {
+      "name": "Sarah Mitchell",
+      "role": "CTO at TechFlow",
+      "quote": "Cherinet delivered an exceptional e-commerce platform ahead of schedule. The attention to detail and clean code made the handoff seamless. Highly recommend for any frontend project.",
+      "avatar": ""
+    },
+    {
+      "name": "Daniel Park",
+      "role": "Founder of DevStack",
+      "quote": "Working with Cherinet was a great experience. He transformed our complex dashboard requirements into an intuitive, responsive UI. The React components were well-structured and easy to maintain.",
+      "avatar": ""
+    },
+    {
+      "name": "Amanda Rodriguez",
+      "role": "Product Manager at Launchify",
+      "quote": "Cherinet has a rare combination of design sensibility and technical skill. He took our rough wireframes and turned them into a polished, performant web app that our users love.",
+      "avatar": ""
+    },
+    {
+      "name": "James Okafor",
+      "role": "Lead Developer at CodeBridge",
+      "quote": "I brought Cherinet in to optimize our frontend performance and he exceeded expectations. Page load times dropped by 40% and the codebase is much cleaner now. A true professional.",
+      "avatar": ""
+    }
+  ],
+  "blogs": [
+    {
+      "id": "blog-top30-sysdesign",
+      "title": "Top 30 System Design Concepts",
+      "excerpt": "A foundational guide covering 30 essential system design concepts across six progressive groups: Networking, APIs, Data Storage, Scaling, Distributed Systems, and Architecture Patterns. Covers everything from client-server basics to CAP theorem, microservices, and API gateways.",
+      "content": "A foundational guide that breaks down 30 essential system design concepts into six progressive groups. Group 1: Networking Foundations (Client-Server, IP, DNS, Proxy, Latency, HTTP/S). Group 2: APIs & Communication (APIs, REST, GraphQL, WebSockets, Webhooks). Group 3: Data Storage (Databases, SQL vs NoSQL, Indexing, Partitioning, Caching, Denormalization, Blob Storage). Group 4: Scaling (Vertical, Horizontal, Load Balancers, Replication, Sharding). Group 5: Distributed Systems (CAP Theorem, CDN, Idempotency). Group 6: Architecture Patterns (Microservices, Message Queues, Rate Limiting, API Gateway).",
+      "category": "System Design",
+      "readTime": "50 min read",
+      "publishedAt": "2026-02-06",
+      "externalUrl": "https://algomaster.io/learn/system-design/top-30-system-design-concepts",
+      "featured": true,
+      "coverImage": "",
+      "slug": "top-30-system-design-concepts"
+    }
+  ]
 }

@@ -12,7 +12,9 @@ import AdminProfile from "./admin/AdminProfile";
 import AdminAbout from "./admin/AdminAbout";
 import AdminWorkExperience from "./admin/AdminWorkExperience";
 import AdminProjects from "./admin/AdminProjects";
+import AdminBlogs from "./admin/AdminBlogs";
 import AdminSkills from "./admin/AdminSkills";
+import AdminTestimonials from "./admin/AdminTestimonials";
 import AdminMessages from "./admin/AdminMessages";
 
 function useAuthUser() {
@@ -143,7 +145,9 @@ function Admin() {
         <Route path="about" element={<AdminAbout />} />
         <Route path="experience" element={<AdminWorkExperience />} />
         <Route path="projects" element={<AdminProjects />} />
+        <Route path="blogs" element={<AdminBlogs />} />
         <Route path="skills" element={<AdminSkills />} />
+        <Route path="testimonials" element={<AdminTestimonials />} />
         <Route path="messages" element={<AdminMessages />} />
       </Route>
     </Routes>
