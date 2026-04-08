@@ -1,10 +1,49 @@
-import React from "react";
-import { Quote } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Quote, X, Sparkles } from "lucide-react";
 
 function TestimonialsSlider({ testimonials }) {
+  const [selectedTestimonial, setSelectedTestimonial] = useState(null);
+
+  useEffect(() => {
+    if (!selectedTestimonial) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setSelectedTestimonial(null);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [selectedTestimonial]);
+
   if (!testimonials?.length) return null;
 
   const loopedTestimonials = [...testimonials, ...testimonials];
+
+  const renderAvatar = (testimonial, size = "w-10 h-10") => {
+    if (testimonial.avatar) {
+      return (
+        <img
+          src={testimonial.avatar}
+          alt={testimonial.name}
+          className={`${size} rounded-full object-cover border border-white/10`}
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
+        />
+      );
+    }
+
+    return (
+      <div className={`${size} rounded-full bg-[#ff4500]/10 border border-[#ff4500]/20 flex items-center justify-center`}>
+        <span className="text-[#ff4500] text-xs font-bold">
+          {testimonial.name.split(" ").map((n) => n[0]).join("")}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <section className="min-h-full flex items-center justify-center py-10 bg-[#0a0a0a] relative overflow-hidden border-t border-white/[0.05]">
@@ -32,26 +71,15 @@ function TestimonialsSlider({ testimonials }) {
               style={{ animationDuration: `${Math.max(testimonials.length * 10, 28)}s` }}
             >
               {loopedTestimonials.map((testimonial, idx) => (
-                <article
+                <button
                   key={`${testimonial.name}-${idx}`}
-                  className="group w-[280px] sm:w-[320px] md:w-[360px] shrink-0 rounded-2xl border border-white/[0.07] bg-[#0f0f0f] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#ff4500]/30 hover:shadow-[0_12px_30px_rgba(255,69,0,0.10)]"
+                  type="button"
+                  onClick={() => setSelectedTestimonial(testimonial)}
+                  className="group w-[280px] sm:w-[320px] md:w-[360px] shrink-0 rounded-2xl border border-white/[0.07] bg-[#0f0f0f] p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#ff4500]/30 hover:shadow-[0_12px_30px_rgba(255,69,0,0.10)] focus:outline-none focus:ring-2 focus:ring-[#ff4500]/40"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <Quote className="w-6 h-6 text-[#ff4500]/30 group-hover:text-[#ff4500]/60 transition-colors duration-300" />
-                    {testimonial.avatar ? (
-                      <img
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
-                        className="w-10 h-10 rounded-full object-cover border border-white/10 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-                        onError={(e) => { e.currentTarget.style.display = "none"; }}
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-[#ff4500]/10 border border-[#ff4500]/20 flex items-center justify-center">
-                        <span className="text-[#ff4500] text-xs font-bold">
-                          {testimonial.name.split(" ").map((n) => n[0]).join("")}
-                        </span>
-                      </div>
-                    )}
+                    {renderAvatar(testimonial)}
                   </div>
 
                   <p className="text-[#aaa] text-sm leading-relaxed mb-6 min-h-[112px]">
@@ -71,12 +99,76 @@ function TestimonialsSlider({ testimonials }) {
                       <p className="text-[#666] text-xs font-mono">{testimonial.role}</p>
                     </div>
                   </div>
-                </article>
+                  <div className="mt-4 flex items-center justify-between text-xs text-[#777]">
+                    <span>Tap to view</span>
+                    <Sparkles className="w-4 h-4 text-[#ff4500]/60" />
+                  </div>
+                </button>
               ))}
             </div>
           </div>
         </div>
       </div>
+
+      {selectedTestimonial && (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center px-4 py-6 testimonial-modal-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setSelectedTestimonial(null);
+          }}
+        >
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-sm pointer-events-none" />
+
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="testimonial-modal-title"
+            className="relative z-10 w-full max-w-2xl rounded-3xl border border-white/[0.10] bg-[#101010] shadow-[0_25px_100px_rgba(0,0,0,0.55)] testimonial-modal-panel"
+          >
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#ff4500] to-transparent opacity-60" />
+
+            <button
+              type="button"
+              onClick={() => setSelectedTestimonial(null)}
+              className="absolute right-4 top-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.04] text-[#bbb] transition-colors hover:bg-white/[0.08] hover:text-white"
+              aria-label="Close testimonial"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="p-6 sm:p-8 md:p-10">
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 px-3 py-1 text-xs font-mono uppercase tracking-[0.2em] text-[#ff9a72]">
+                  Featured testimonial
+                </span>
+                <span className="text-xs text-[#666]">Click outside or press Esc to close</span>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="shrink-0">
+                  {renderAvatar(selectedTestimonial, "w-16 h-16")}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <h3 id="testimonial-modal-title" className="text-2xl font-black text-white">
+                    {selectedTestimonial.name}
+                  </h3>
+                  <p className="mt-1 text-sm font-mono text-[#888]">
+                    {selectedTestimonial.role}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-7 rounded-2xl border border-white/[0.06] bg-[#0b0b0b] p-5 sm:p-6">
+                <Quote className="w-8 h-8 text-[#ff4500]/35 mb-4" />
+                <p className="text-base sm:text-lg leading-relaxed text-[#e2e2e2] italic">
+                  {selectedTestimonial.quote}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

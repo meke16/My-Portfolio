@@ -57,6 +57,34 @@ body {
   animation-play-state: paused;
 }
 
+@keyframes testimonial-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes testimonial-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.testimonial-modal-backdrop {
+  animation: testimonial-backdrop-in 180ms ease-out;
+}
+
+.testimonial-modal-panel {
+  animation: testimonial-panel-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* ── Reduced motion ─────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -69,5 +97,10 @@ body {
   .testimonial-marquee {
     animation: none !important;
     transform: none !important;
+  }
+
+  .testimonial-modal-backdrop,
+  .testimonial-modal-panel {
+    animation: none !important;
   }
 }
