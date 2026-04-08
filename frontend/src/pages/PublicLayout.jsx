@@ -23,6 +23,10 @@ function PublicLayout() {
   const isScrolling = useRef(false);
   const sectionRefs = useRef([]);
   const [showWarning, setShowWarning] = useState(false);
+  const [mobileNavVisible, setMobileNavVisible] = useState(true);
+  const supportsGestureNav = typeof window !== "undefined"
+    ? window.matchMedia("(pointer: fine) and (hover: hover)").matches
+    : true;
 
   useEffect(() => {
     setShowWarning(fromCache);
@@ -31,6 +35,7 @@ function PublicLayout() {
   useEffect(() => {
     const idx = SECTIONS.indexOf(location.pathname);
     if (idx !== -1) currentIndex.current = idx;
+    setMobileNavVisible(true);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -79,6 +84,8 @@ function PublicLayout() {
   }, [goToSection]);
 
   useEffect(() => {
+    if (!supportsGestureNav) return undefined;
+
     let touchStartY = 0;
     const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
     const onTouchEnd = (e) => {
@@ -105,7 +112,38 @@ function PublicLayout() {
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
     };
-  }, [goToSection]);
+  }, [goToSection, supportsGestureNav]);
+
+  const activeIdx = SECTIONS.indexOf(location.pathname);
+  const isKnownRoute = activeIdx !== -1;
+  const displayIdx = Math.max(0, activeIdx);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    if (window.matchMedia("(pointer: fine) and (hover: hover)").matches) return undefined;
+
+    const el = sectionRefs.current[displayIdx];
+    if (!el) return undefined;
+
+    let lastTop = el.scrollTop;
+
+    const onSectionScroll = () => {
+      const currentTop = el.scrollTop;
+      const scrollingDown = currentTop > lastTop + 4;
+      const scrollingUp = currentTop < lastTop - 4;
+
+      if (scrollingDown) {
+        setMobileNavVisible(false);
+      } else if (scrollingUp || currentTop < 12) {
+        setMobileNavVisible(true);
+      }
+
+      lastTop = currentTop;
+    };
+
+    el.addEventListener("scroll", onSectionScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onSectionScroll);
+  }, [displayIdx]);
 
   if (loading) {
     return (
@@ -135,10 +173,6 @@ function PublicLayout() {
       </div>
     );
   }
-
-  const activeIdx = SECTIONS.indexOf(location.pathname);
-  const isKnownRoute = activeIdx !== -1;
-  const displayIdx = Math.max(0, activeIdx);
 
   // 404 for unknown routes
   if (!isKnownRoute) {
@@ -180,7 +214,7 @@ function PublicLayout() {
         </div>
       )}
 
-      <Navbar info={info} />
+      <Navbar info={info} mobileNavVisible={mobileNavVisible} />
 
       {/* Sections with parallax transition */}
       <div className="relative h-full overflow-hidden">

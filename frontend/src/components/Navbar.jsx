@@ -41,25 +41,7 @@ function useScrollProgress() {
   return progress;
 }
 
-function useScrollDirection() {
-  const [visible, setVisible] = useState(true);
-  const lastY = useRef(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      const goingDown = y > lastY.current && y > 60;
-      setVisible(!goingDown);
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return visible;
-}
-
-export function Navbar() {
+export function Navbar({ mobileNavVisible = true }) {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState(-1);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -67,7 +49,6 @@ export function Navbar() {
   const navRef = useRef(null);
   const location = useLocation();
   const scrollProgress = useScrollProgress();
-  const mobileNavVisible = useScrollDirection();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
