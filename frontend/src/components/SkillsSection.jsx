@@ -1,4 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
+import { StaggerContainer } from "./StaggerContainer";
+
+function Tooltip({ visible, children, label, proficiency, level }) {
+  return (
+    <div className="relative group">
+      {children}
+      <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0 invisible"}`}>
+        <div className="px-3 py-1.5 rounded-lg bg-[#1a1a1a] border border-white/10 shadow-xl whitespace-nowrap">
+          <p className="text-xs font-medium text-white">{label}</p>
+          <div className="flex items-center gap-2 mt-0.5">
+            <span className="text-[10px] text-[#ff4500] font-mono">{proficiency}%</span>
+            <span className="text-[10px] text-[#888] font-mono">{level}</span>
+          </div>
+          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+            <div className="w-2 h-2 bg-[#1a1a1a] border-r border-b border-white/10 rotate-45 -translate-y-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SkillRow({ skill, levelLabel, barColor }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Tooltip
+      visible={hovered}
+      label={skill.name}
+      proficiency={skill.proficiency}
+      level={levelLabel(skill.proficiency)}
+    >
+      <div
+        className="transition-transform duration-300 hover:translate-x-1 cursor-default"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-2.5">
+            {skill.logo && (
+              <img src={skill.logo} alt={skill.name}
+                className="w-5 h-5 object-contain opacity-80"
+                onError={(e) => { e.target.style.display = "none"; }} />
+            )}
+            <span className="text-sm font-medium text-[#ddd]">{skill.name}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#555] font-mono">{levelLabel(skill.proficiency)}</span>
+            <span className="text-xs font-mono text-[#ff4500]">{skill.proficiency}%</span>
+          </div>
+        </div>
+        <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-700 hover:brightness-110"
+            style={{ width: `${skill.proficiency}%`, backgroundColor: barColor(skill.proficiency) }}
+          />
+        </div>
+      </div>
+    </Tooltip>
+  );
+}
 
 function SkillsSection({ skills }) {
   if (!skills?.length)
@@ -73,7 +134,7 @@ function SkillsSection({ skills }) {
                     <span className="h-px w-12 bg-[#ff4500]/40" />
                   </div>
 
-                  <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                  <StaggerContainer staggerDelay={0.1}>
                     {categories.map((category) => {
                       const catSkills = typeMap[category];
                       return (
@@ -88,34 +149,13 @@ function SkillsSection({ skills }) {
 
                           <div className="space-y-4">
                             {catSkills.map((skill) => (
-                              <div key={skill.id || skill.name} className="transition-transform duration-300 hover:translate-x-1">
-                                <div className="flex items-center justify-between mb-1.5">
-                                  <div className="flex items-center gap-2.5">
-                                    {skill.logo && (
-                                      <img src={skill.logo} alt={skill.name}
-                                        className="w-5 h-5 object-contain opacity-80"
-                                        onError={(e) => { e.target.style.display = "none"; }} />
-                                    )}
-                                    <span className="text-sm font-medium text-[#ddd]">{skill.name}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xs text-[#555] font-mono">{levelLabel(skill.proficiency)}</span>
-                                    <span className="text-xs font-mono text-[#ff4500]">{skill.proficiency}%</span>
-                                  </div>
-                                </div>
-                                <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                                  <div
-                                    className="h-full rounded-full transition-all duration-700 hover:brightness-110"
-                                    style={{ width: `${skill.proficiency}%`, backgroundColor: barColor(skill.proficiency) }}
-                                  />
-                                </div>
-                              </div>
+                              <SkillRow key={skill.id || skill.name} skill={skill} levelLabel={levelLabel} barColor={barColor} />
                             ))}
                           </div>
                         </div>
                       );
                     })}
-                  </div>
+                  </StaggerContainer>
                 </div>
               );
             })}

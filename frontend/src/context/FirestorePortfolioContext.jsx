@@ -57,20 +57,27 @@ function loadFallbackData() {
 }
 
 export function FirestorePortfolioProvider({ children }) {
-  const [loading, setLoading] = useState(true);
+  // Pre-load fallback data immediately so the page renders without waiting
+  const initialFallback = useMemo(() => loadFallbackData(), []);
+  const hasRealFallback = Object.keys(initialFallback.info || {}).length > 0 ||
+    (initialFallback.projects || []).length > 0 ||
+    (initialFallback.skills || []).length > 0;
+
+  const [loading, setLoading] = useState(!hasRealFallback);
   const [error, setError] = useState(null);
   const [fromCache, setFromCache] = useState(false);
 
-  const [info, setInfo] = useState({});
-  const [projects, setProjects] = useState([]);
-  const [skills, setSkills] = useState([]);
-  const [about, setAbout] = useState(defaultAboutContent);
-  const [workExperience, setWorkExperience] = useState(defaultWorkExperience);
+  const [info, setInfo] = useState(initialFallback.info || {});
+  const [projects, setProjects] = useState(initialFallback.projects || []);
+  const [skills, setSkills] = useState(initialFallback.skills || []);
+  const [about, setAbout] = useState(initialFallback.about);
+  const [workExperience, setWorkExperience] = useState(initialFallback.workExperience);
 
   const reload = useCallback(async () => {
-    setLoading(true);
     setError(null);
     setFromCache(false);
+
+    const fallback = loadFallbackData();
 
     // ── 1. Try Firebase ────────────────────────────────────────
     if (db) {
@@ -83,27 +90,36 @@ export function FirestorePortfolioProvider({ children }) {
           getDoc(doc(db, "content", "workExperience")),
         ]);
 
-        const rawInfo = infoSnap.exists() ? infoSnap.data() : {};
-        const rawSkills = normalizeSkills(skillsSnap.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-          proficiency: Number(d.data().proficiency) || 0,
-        })));
-        const rawProjects = projectsSnap.docs.map((d) =>
-          normalizeProjectDoc(d.id, d.data())
-        );
+        const rawInfo = infoSnap.exists() ? infoSnap.data() : fallback.info;
+        const rawSkills = skillsSnap.docs.length > 0
+          ? normalizeSkills(skillsSnap.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+            proficiency: Number(d.data().proficiency) || 0,
+          })))
+          : fallback.skills;
+        const rawProjects = projectsSnap.docs.length > 0
+          ? projectsSnap.docs.map((d) => normalizeProjectDoc(d.id, d.data()))
+          : fallback.projects;
         const rawAbout = aboutSnap.exists()
           ? normalizeAboutContent(aboutSnap.data())
-          : defaultAboutContent;
+          : fallback.about;
         const rawWorkExperience = workExperienceSnap.exists()
           ? normalizeWorkExperience(workExperienceSnap.data())
-          : defaultWorkExperience;
+          : fallback.workExperience;
+
+        const usedFallback = !infoSnap.exists() ||
+          skillsSnap.docs.length === 0 ||
+          projectsSnap.docs.length === 0 ||
+          !aboutSnap.exists() ||
+          !workExperienceSnap.exists();
 
         setInfo(rawInfo);
         setSkills(rawSkills);
         setProjects(rawProjects);
         setAbout(rawAbout);
         setWorkExperience(rawWorkExperience);
+        setFromCache(usedFallback);
         setLoading(false);
         return;
       } catch (e) {
@@ -113,12 +129,11 @@ export function FirestorePortfolioProvider({ children }) {
 
     // ── 2. Fallback to synced JSON ─────────────────────────────
     try {
-      const fb = loadFallbackData();
-      setInfo(fb.info);
-      setProjects(fb.projects);
-      setSkills(fb.skills);
-      setAbout(fb.about);
-      setWorkExperience(fb.workExperience);
+      setInfo(fallback.info);
+      setProjects(fallback.projects);
+      setSkills(fallback.skills);
+      setAbout(fallback.about);
+      setWorkExperience(fallback.workExperience);
       setFromCache(true);
       setLoading(false);
     } catch {

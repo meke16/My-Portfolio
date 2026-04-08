@@ -38,3 +38,28 @@ body {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
+
+/* ── Light theme ────────────────────────────────────────── */
+html.light body {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface2: #f0f0f0;
+  --border: rgba(0,0,0,0.08);
+  --text: #111111;
+  --muted: #666666;
+  background: var(--bg);
+  color: var(--text);
+}
+
+html.light ::-webkit-scrollbar-track { background: var(--bg); }
+html.light ::selection { background: #ff450033; color: #ff4500; }
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

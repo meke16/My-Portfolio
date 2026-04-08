@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Sarah Mitchell",
+    "role": "CTO at TechFlow",
+    "quote": "Cherinet delivered an exceptional e-commerce platform ahead of schedule. The attention to detail and clean code made the handoff seamless. Highly recommend for any frontend project.",
+    "avatar": ""
+  },
+  {
+    "name": "Daniel Park",
+    "role": "Founder of DevStack",
+    "quote": "Working with Cherinet was a great experience. He transformed our complex dashboard requirements into an intuitive, responsive UI. The React components were well-structured and easy to maintain.",
+    "avatar": ""
+  },
+  {
+    "name": "Amanda Rodriguez",
+    "role": "Product Manager at Launchify",
+    "quote": "Cherinet has a rare combination of design sensibility and technical skill. He took our rough wireframes and turned them into a polished, performant web app that our users love.",
+    "avatar": ""
+  },
+  {
+    "name": "James Okafor",
+    "role": "Lead Developer at CodeBridge",
+    "quote": "I brought Cherinet in to optimize our frontend performance and he exceeded expectations. Page load times dropped by 40% and the codebase is much cleaner now. A true professional.",
+    "avatar": ""
+  }
+]

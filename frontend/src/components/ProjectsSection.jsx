@@ -10,8 +10,9 @@ function ProjectsSection({ projects }) {
 
   useEffect(() => {
     if (!selectedProject) return;
+    const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = "unset"; };
+    return () => { document.body.style.overflow = prev || ""; };
   }, [selectedProject]);
 
   useEffect(() => {
@@ -198,17 +199,22 @@ function ProjectsSection({ projects }) {
                 {getImages(selectedProject).length > 1 && (
                   <>
                     <button onClick={() => setCurrentImageIndex((p) => p === 0 ? getImages(selectedProject).length - 1 : p - 1)}
-                      className="absolute left-4 z-20 p-2.5 rounded-md bg-black/60 text-white hover:bg-[#ff4500] transition-colors border border-white/10">
+                      className="absolute left-4 z-20 p-2.5 rounded-md bg-black/60 text-white hover:bg-[#ff4500] transition-colors border border-white/10"
+                      aria-label="Previous image">
                       <ChevronLeft size={20} />
                     </button>
                     <button onClick={() => setCurrentImageIndex((p) => p === getImages(selectedProject).length - 1 ? 0 : p + 1)}
-                      className="absolute right-4 z-20 p-2.5 rounded-md bg-black/60 text-white hover:bg-[#ff4500] transition-colors border border-white/10">
+                      className="absolute right-4 z-20 p-2.5 rounded-md bg-black/60 text-white hover:bg-[#ff4500] transition-colors border border-white/10"
+                      aria-label="Next image">
                       <ChevronRight size={20} />
                     </button>
-                    <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                    <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 z-20" role="tablist" aria-label="Image thumbnails">
                       {getImages(selectedProject).map((_, i) => (
                         <button key={i} onClick={() => setCurrentImageIndex(i)}
-                          className={`h-1 rounded-full transition-all duration-200 ${i === currentImageIndex ? "w-6 bg-[#ff4500]" : "w-1.5 bg-white/30"}`} />
+                          className={`h-1 rounded-full transition-all duration-200 ${i === currentImageIndex ? "w-6 bg-[#ff4500]" : "w-1.5 bg-white/30"}`}
+                          role="tab"
+                          aria-selected={i === currentImageIndex}
+                          aria-label={`View image ${i + 1}`} />
                       ))}
                     </div>
                   </>

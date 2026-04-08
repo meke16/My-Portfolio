@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useReducedMotion } from "../hooks/useReducedMotion";
+import TestimonialsSection from "./TestimonialsSection";
+import testimonials from "../data/testimonials.json";
 
 const PLACEHOLDER_AVATAR =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='48' fill='%23444'%3EPhoto%3C/text%3E%3C/svg%3E";
@@ -28,6 +31,53 @@ const SOCIAL_ICONS = {
   instagram: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" strokeWidth="2"/><circle cx="12" cy="12" r="4" strokeWidth="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>,
   tiktok: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>,
 };
+
+function TypingName({ text }) {
+  const [displayed, setDisplayed] = useState("");
+  const [showCursor, setShowCursor] = useState(true);
+  const [done, setDone] = useState(false);
+  const reduced = useReducedMotion();
+
+  useEffect(() => {
+    if (reduced) {
+      setDisplayed(text);
+      setDone(true);
+      return;
+    }
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        setDisplayed(text.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(interval);
+        setDone(true);
+      }
+    }, 150);
+    return () => clearInterval(interval);
+  }, [text, reduced]);
+
+  useEffect(() => {
+    if (done) {
+      setShowCursor(false);
+      return;
+    }
+    const blink = setInterval(() => setShowCursor((p) => !p), 530);
+    return () => clearInterval(blink);
+  }, [done]);
+
+  return (
+    <span className="inline-flex items-center gap-0 font-mono bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2 sm:px-5 sm:py-2.5">
+      <span className="text-[#ff4500] select-none text-2xl sm:text-3xl lg:text-4xl font-light leading-none mt-0.5">`</span>
+      <span className="text-white text-2xl sm:text-3xl lg:text-4xl font-semibold leading-none">{displayed}</span>
+      <span className="text-[#ff4500] select-none text-2xl sm:text-3xl lg:text-4xl font-light leading-none mt-0.5">`</span>
+      <span
+        className="inline-block w-0.5 h-7 sm:h-8 lg:h-9 bg-[#ff4500] ml-0.5"
+        style={{ opacity: showCursor ? 1 : 0, transition: "opacity 100ms" }}
+      />
+    </span>
+  );
+}
 
 function HeroSection({ info }) {
   const photoCardRef = React.useRef(null);
@@ -99,12 +149,7 @@ function HeroSection({ info }) {
                 Hello, I'm
               </p>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] tracking-tight">
-                <span className="inline-flex items-center gap-0 font-mono bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2 sm:px-5 sm:py-2.5">
-                  <span className="text-[#ff4500] select-none text-2xl sm:text-3xl lg:text-4xl font-light leading-none mt-0.5">`</span>
-                  <span className="text-white text-2xl sm:text-3xl lg:text-4xl font-semibold leading-none">{info?.name || "Your Name"}</span>
-                  <span className="text-[#ff4500] select-none text-2xl sm:text-3xl lg:text-4xl font-light leading-none mt-0.5">`</span>
-                  <span className="inline-block w-0.5 h-7 sm:h-8 lg:h-9 bg-[#ff4500] animate-[blink_1s_step-end_infinite] ml-0.5" />
-                </span>
+                <TypingName text={info?.name || "Your Name"} />
               </h1>
               <h2 className="text-lg sm:text-xl font-semibold text-[#ff4500]">
                 {info?.title || "Full Stack Developer"}
@@ -125,6 +170,16 @@ function HeroSection({ info }) {
                 className="px-5 py-2.5 border border-white/15 text-white font-semibold text-sm rounded-md hover:bg-white/5 hover:border-white/30 transition-all duration-200">
                 Get in touch
               </Link>
+              {info?.resume_url && (
+                <a
+                  href={info.resume_url}
+                  download
+                  className="px-5 py-2.5 flex items-center gap-2 border border-[#ff4500]/30 text-[#ff4500] font-semibold text-sm rounded-md hover:bg-[#ff4500]/10 transition-all duration-200"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14m0 0l-6-6m6 6l6-6M5 20h14"/></svg>
+                  Resume
+                </a>
+              )}
             </div>
 
             {/* Socials */}
@@ -187,6 +242,9 @@ function HeroSection({ info }) {
           <div className="w-px h-8 bg-gradient-to-b from-[#ff4500]/50 to-transparent animate-pulse" />
         </div>
       </div>
+
+      {/* Testimonials */}
+      <TestimonialsSection testimonials={testimonials} />
     </section>
   );
 }

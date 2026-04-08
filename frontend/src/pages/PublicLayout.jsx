@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
+import { useTheme } from "../context/ThemeContext";
 import Navbar from "../components/Navbar";
 import LoadingScreen from "../components/LoadingScreen";
 import { HeroSection } from "../components/HeroSection";
@@ -9,6 +10,7 @@ import { WorkExperiencePage } from "./WorkExperiencePage";
 import { SkillsPage } from "./SkillsPage";
 import { ProjectsPage } from "./ProjectsPage";
 import { ContactPage } from "./ContactPage";
+import { NotFoundPage } from "./NotFoundPage";
 
 const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/contact"];
 
@@ -133,7 +135,14 @@ function PublicLayout() {
     );
   }
 
-  const activeIdx = Math.max(0, SECTIONS.indexOf(location.pathname));
+  const activeIdx = SECTIONS.indexOf(location.pathname);
+  const isKnownRoute = activeIdx !== -1;
+  const displayIdx = Math.max(0, activeIdx);
+
+  // 404 for unknown routes
+  if (!isKnownRoute) {
+    return <NotFoundPage />;
+  }
 
   const sections = [
     <HeroSection info={info} />,
@@ -163,19 +172,31 @@ function PublicLayout() {
 
       <Navbar info={info} />
 
-      <div
-        className="transition-transform duration-700 ease-in-out"
-        style={{ transform: `translateY(-${activeIdx * 100}vh)` }}
-      >
-        {sections.map((section, idx) => (
-          <div
-            key={SECTIONS[idx]}
-            ref={(el) => (sectionRefs.current[idx] = el)}
-            className="h-screen overflow-y-auto"
-          >
-            {section}
-          </div>
-        ))}
+      {/* Sections with parallax transition */}
+      <div className="relative h-full overflow-hidden">
+        {sections.map((section, idx) => {
+          const isActive = idx === displayIdx;
+          // Parallax: non-active sections move at different speed
+          const translate = isActive ? 0 : (idx < displayIdx ? -105 : 105);
+
+          return (
+            <div
+              key={SECTIONS[idx]}
+              ref={(el) => (sectionRefs.current[idx] = el)}
+              className={`absolute inset-0 w-full h-full overflow-y-auto transition-all duration-700 ease-in-out ${
+                isActive
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              style={{
+                transform: `translateY(${translate}vh)`,
+                transition: "transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease-out",
+              }}
+            >
+              {section}
+            </div>
+          );
+        })}
       </div>
 
       {/* Dot navigation */}
@@ -185,7 +206,7 @@ function PublicLayout() {
             key={path}
             onClick={() => goToSection(idx)}
             className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-              activeIdx === idx ? "bg-[#ff4500] scale-125" : "bg-white/30 hover:bg-white/60"
+              idx === displayIdx ? "bg-[#ff4500] scale-125" : "bg-white/30 hover:bg-white/60"
             }`}
             aria-label={`Go to section ${idx + 1}`}
           />

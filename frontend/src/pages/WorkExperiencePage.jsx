@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Briefcase } from "lucide-react";
 import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
+import { StaggerContainer } from "../components/StaggerContainer";
 
 function WorkExperiencePage() {
   const { workExperience } = useFirestorePortfolio();
@@ -40,7 +41,7 @@ function WorkExperiencePage() {
               No experience entries yet.
             </div>
           ) : (
-            <div className="space-y-4 border-l border-white/[0.08] pl-6">
+            <StaggerContainer staggerDelay={0.12} className="space-y-4 border-l border-white/[0.08] pl-6">
               {content.experiences.map((exp, index) => (
                 <article key={exp.id || index} className="relative rounded-xl border border-white/[0.07] bg-[#111] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff4500]/30 hover:shadow-[0_10px_25px_rgba(255,69,0,0.12)]">
                   <div className="absolute -left-[25px] top-6 w-2.5 h-2.5 rounded-full bg-[#ff4500]" />
@@ -84,7 +85,7 @@ function WorkExperiencePage() {
                   )}
                 </article>
               ))}
-            </div>
+            </StaggerContainer>
           )}
         </div>
       </div>
