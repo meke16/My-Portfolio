@@ -59,7 +59,7 @@ function ContactForm({ info }) {
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#ff4500]/8 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-10">
+        <div className="mb-10 max-w-3xl">
           <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">Get in touch</p>
           <h2 className="text-3xl md:text-4xl font-black text-white">
             Let&apos;s Stay in Touch
@@ -68,10 +68,18 @@ function ContactForm({ info }) {
           <p className="mt-4 text-[#999] text-base max-w-2xl">
             Interested in collaborating or have a question? Drop your message below and I&apos;ll respond shortly.
           </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <span className="px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs font-mono text-[#a8a8a8]">
+              Fast response
+            </span>
+            <span className="px-3 py-1 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 text-xs font-mono text-[#ff9a72]">
+              Serious inquiries preferred
+            </span>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-5 xl:gap-6 items-start">
-          <div className="lg:col-span-5 rounded-xl border border-white/[0.07] bg-[#111] p-5 space-y-6">
+          <div className="lg:col-span-5 rounded-2xl border border-white/[0.07] bg-[#111] p-5 space-y-6 shadow-[0_10px_40px_rgba(0,0,0,0.18)]">
             <div className="space-y-3">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <span className="w-5 h-0.5 bg-[#ff4500]" />
@@ -153,7 +161,7 @@ function ContactForm({ info }) {
             </div>
           </div>
 
-          <div className="lg:col-span-7 p-5 rounded-xl border border-white/[0.07] bg-[#111]">
+          <div className="lg:col-span-7 p-5 rounded-2xl border border-white/[0.07] bg-[#111] shadow-[0_10px_40px_rgba(0,0,0,0.18)]">
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -213,11 +221,11 @@ function ContactForm({ info }) {
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3 rounded-md font-semibold text-white bg-[#ff4500] hover:bg-[#cc3700] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3 rounded-md font-semibold text-white bg-[#ff4500] hover:bg-[#cc3700] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_10px_25px_rgba(255,69,0,0.18)]"
+                >
                 {isLoading ? (
                   <>
                     <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

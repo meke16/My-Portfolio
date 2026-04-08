@@ -25,7 +25,7 @@ function WorkExperiencePage() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-5xl mx-auto">
-          <div className="mb-8">
+          <div className="mb-8 max-w-3xl">
             <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">Career timeline</p>
             <h1 className="text-3xl md:text-4xl font-black text-white leading-tight">
               {content.headline || "Work & Experience"}
@@ -34,6 +34,14 @@ function WorkExperiencePage() {
             {content.intro && (
               <p className="mt-4 text-[#999] text-base leading-relaxed max-w-3xl">{content.intro}</p>
             )}
+            <div className="mt-5 flex flex-wrap gap-2">
+              <span className="px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs font-mono text-[#a8a8a8]">
+                Timeline overview
+              </span>
+              <span className="px-3 py-1 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 text-xs font-mono text-[#ff9a72]">
+                Scroll through key roles
+              </span>
+            </div>
           </div>
 
           {content.experiences.length === 0 ? (
@@ -43,7 +51,7 @@ function WorkExperiencePage() {
           ) : (
             <StaggerContainer staggerDelay={0.12} className="space-y-4 border-l border-white/[0.08] pl-6">
               {content.experiences.map((exp, index) => (
-                <article key={exp.id || index} className="relative rounded-xl border border-white/[0.07] bg-[#111] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff4500]/30 hover:shadow-[0_10px_25px_rgba(255,69,0,0.12)]">
+                <article key={exp.id || index} className="relative rounded-2xl border border-white/[0.07] bg-[#111] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff4500]/30 hover:shadow-[0_10px_25px_rgba(255,69,0,0.12)]">
                   <div className="absolute -left-[25px] top-6 w-2.5 h-2.5 rounded-full bg-[#ff4500]" />
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                     <div>

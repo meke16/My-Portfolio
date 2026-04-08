@@ -78,7 +78,7 @@ function TypingName({ text }) {
   );
 }
 
-function HeroSection({ info }) {
+function HeroSection({ info, stats = {} }) {
   const photoCardRef = React.useRef(null);
   const [photoTransform, setPhotoTransform] = React.useState(
     "perspective(1000px) rotateX(0deg) rotateY(0deg) translateX(0px) translateY(0px) scale3d(1, 1, 1)"
@@ -155,19 +155,19 @@ function HeroSection({ info }) {
               </h2>
             </div>
 
-            <p className="text-[#888] text-sm leading-relaxed max-w-lg mx-auto lg:mx-0">
-              {info?.bio || "I build fast, accessible, and beautiful digital products. Focused on clean architecture and great user experience."}
+            <p className="text-[#999] text-sm sm:text-[15px] leading-relaxed max-w-xl mx-auto lg:mx-0">
+              {info?.bio || "I design and build practical web products that feel polished, load fast, and stay easy to maintain. My focus is turning messy requirements into clear, usable experiences."}
             </p>
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
               <Link to="/projects"
-                className="px-5 py-2.5 bg-[#ff4500] text-white font-semibold text-sm rounded-md hover:bg-[#cc3700] transition-colors duration-200">
-                View my work
+                className="px-5 py-2.5 bg-[#ff4500] text-white font-semibold text-sm rounded-md hover:bg-[#cc3700] transition-colors duration-200 shadow-[0_10px_25px_rgba(255,69,0,0.18)]">
+                Explore projects
               </Link>
               <Link to="/contact"
                 className="px-5 py-2.5 border border-white/15 text-white font-semibold text-sm rounded-md hover:bg-white/5 hover:border-white/30 transition-all duration-200">
-                Get in touch
+                Start a conversation
               </Link>
               {info?.resume_url && (
                 <a
@@ -179,6 +179,21 @@ function HeroSection({ info }) {
                   Resume
                 </a>
               )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 max-w-2xl mx-auto lg:mx-0">
+              <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-[#666] font-mono">Projects</p>
+                <p className="mt-1 text-white text-lg font-bold">{String(stats.projects ?? 0).padStart(2, "0")}</p>
+              </div>
+              <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-[#666] font-mono">Skills</p>
+                <p className="mt-1 text-white text-lg font-bold">{String(stats.skills ?? 0).padStart(2, "0")}</p>
+              </div>
+              <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-3">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-[#666] font-mono">Testimonials</p>
+                <p className="mt-1 text-white text-lg font-bold">{String(stats.testimonials ?? 0).padStart(2, "0")}</p>
+              </div>
             </div>
 
             {/* Socials */}

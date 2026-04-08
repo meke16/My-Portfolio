@@ -16,7 +16,7 @@ import { NotFoundPage } from "./NotFoundPage";
 const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/blog", "/contact", "/testimonials"];
 
 function PublicLayout() {
-  const { info, projects, skills, loading, error, fromCache, reload } = useFirestorePortfolio();
+  const { info, projects, skills, testimonials, loading, error, fromCache, reload } = useFirestorePortfolio();
   const navigate = useNavigate();
   const location = useLocation();
   const currentIndex = useRef(SECTIONS.indexOf(location.pathname));
@@ -146,7 +146,14 @@ function PublicLayout() {
   }
 
   const sections = [
-    <HeroSection info={info} />,
+    <HeroSection
+      info={info}
+      stats={{
+        projects: projects?.length ?? 0,
+        skills: skills?.length ?? 0,
+        testimonials: testimonials?.length ?? 0,
+      }}
+    />,
     <AboutPage />,
     <WorkExperiencePage />,
     <SkillsPage />,

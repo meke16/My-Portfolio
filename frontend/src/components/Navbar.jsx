@@ -6,25 +6,25 @@ const NAV_ITEMS = [
     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
   )},
   { to: "/about", label: "About", icon: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"/></svg>
   )},
   { to: "/experience", label: "Experience", icon: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0h2a2 2 0 012 2v6"/></svg>
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M9 6V5a2 2 0 012-2h2a2 2 0 012 2v1m-7 0h8a2 2 0 012 2v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8a2 2 0 012-2zm0 0V6h8v0"/></svg>
   )},
   { to: "/skills", label: "Skills", icon: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M12 6l2.25 4.5L19 11l-3.5 3.25L16.5 19 12 16.75 7.5 19l1-4.75L5 11l4.75-.5L12 6z"/></svg>
   )},
   { to: "/projects", label: "Projects", icon: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M4 7a2 2 0 012-2h3l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V7z"/><path d="M8 13h8"/></svg>
   )},
   { to: "/blog", label: "Blog", icon: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M7 7h10M7 12h10M7 17h6"/><path d="M5 4h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/></svg>
+  )},
+  { to: "/testimonials", label: "Testimonials", icon: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M7 8h10M7 12h7M7 16h4"/><path d="M5 4h14a1 1 0 011 1v14l-3-2-3 2-3-2-3 2-3-2V5a1 1 0 011-1z"/></svg>
   )},
   { to: "/contact", label: "Contact", icon: (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-  )},
-  { to: "/testimonials", label: "Reviews", icon: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
   )},
 ];
 
@@ -108,8 +108,11 @@ export function Navbar() {
         scrolled ? "pt-2" : "pt-4"
       }`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-end lg:justify-center h-12">
-            <div ref={navRef} className="relative flex items-center gap-0.5 px-1.5 py-1.5 rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/80 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
+          <div className="flex items-center justify-center h-12">
+            <div
+              ref={navRef}
+              className="relative flex items-center gap-0.5 px-1.5 py-1.5 rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/80 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.35)] max-w-full overflow-x-auto scrollbar-none"
+            >
 
               {/* Sliding active indicator */}
               <div
@@ -144,7 +147,7 @@ export function Navbar() {
 
               <Link
                 to="/contact"
-                className="relative z-10 ml-2 flex items-center gap-2 px-5 py-2 bg-[#ff4500] text-white text-sm font-semibold rounded-xl hover:bg-[#cc3700] hover:shadow-[0_4px_20px_rgba(255,69,0,0.3)] transition-all duration-200 hover:-translate-y-0.5"
+                className="relative z-10 ml-2 flex items-center gap-2 px-4 py-2 bg-[#ff4500] text-white text-sm font-semibold rounded-xl hover:bg-[#cc3700] hover:shadow-[0_4px_20px_rgba(255,69,0,0.3)] transition-all duration-200 hover:-translate-y-0.5 whitespace-nowrap"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 Get In Touch
@@ -159,7 +162,7 @@ export function Navbar() {
         mobileNavVisible ? "translate-y-0" : "translate-y-full"
       }`}>
         <div className="mx-3 mb-3">
-          <div className="flex items-center justify-around rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/90 backdrop-blur-xl shadow-[0_-8px_40px_rgba(0,0,0,0.4)] px-1 py-1.5">
+          <div className="flex items-center gap-1 overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/90 backdrop-blur-xl shadow-[0_-8px_40px_rgba(0,0,0,0.4)] px-1 py-1.5 scrollbar-none">
             {NAV_ITEMS.map((item, idx) => {
               const isActive = idx === activeIdx;
               return (
@@ -167,7 +170,7 @@ export function Navbar() {
                   key={item.to}
                   to={item.to}
                   end={item.to === "/"}
-                  className="relative flex flex-col items-center justify-center w-full py-2 rounded-xl transition-all duration-200 group"
+                  className="relative flex flex-col items-center justify-center min-w-[72px] px-3 py-2 rounded-xl transition-all duration-200 group"
                 >
                   {/* Active top glow */}
                   {isActive && (

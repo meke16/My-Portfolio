@@ -17,10 +17,21 @@ function BlogSection({ blogs }) {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ff4500]/6 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mb-10">
+        <div className="mb-10 max-w-3xl">
           <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">Insights & articles</p>
           <h2 className="text-3xl md:text-4xl font-black text-white">Blog</h2>
           <div className="mt-3 w-10 h-0.5 bg-[#ff4500]" />
+          <p className="mt-4 text-sm md:text-base text-[#8f8f8f] leading-relaxed">
+            A small collection of notes, experiments, and explanations. These posts show how I think about building and improving software.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <span className="px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs font-mono text-[#a8a8a8]">
+              {blogs.length} articles
+            </span>
+            <span className="px-3 py-1 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 text-xs font-mono text-[#ff9a72]">
+              Open in new tab
+            </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -30,8 +41,8 @@ function BlogSection({ blogs }) {
               href={blog.externalUrl || "#"}
               target="_blank"
               rel="noopener noreferrer"
-              className="group rounded-xl border border-white/[0.07] bg-[#111] p-6 flex flex-col hover:border-[#ff4500]/30 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,69,0,0.10)] transition-all duration-300"
-            >
+            className="group rounded-xl border border-white/[0.07] bg-[#111] p-6 flex flex-col hover:border-[#ff4500]/30 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,69,0,0.10)] transition-all duration-300"
+          >
               {blog.coverImage && (
                 <div className="h-40 -mx-6 -mt-6 mb-6 overflow-hidden rounded-t-xl">
                   <img

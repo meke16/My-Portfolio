@@ -37,6 +37,7 @@ function ProjectsSection({ projects }) {
   const filtered = activeFilter === "All"
     ? projects
     : projects?.filter((p) => p.technologies?.toLowerCase().includes(activeFilter.toLowerCase()));
+  const featuredCount = projects?.filter((p) => p.featured).length || 0;
 
   if (!projects?.length)
     return (
@@ -55,10 +56,21 @@ function ProjectsSection({ projects }) {
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-8 max-w-3xl">
             <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">What I've built</p>
             <h2 className="text-3xl md:text-4xl font-black text-white">Projects</h2>
             <div className="mt-3 w-10 h-0.5 bg-[#ff4500]" />
+            <p className="mt-4 text-sm md:text-base text-[#8f8f8f] leading-relaxed">
+              A focused look at the work that best shows how I think, build, and polish product experiences.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <span className="px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs font-mono text-[#a8a8a8]">
+                {projects.length} total projects
+              </span>
+              <span className="px-3 py-1 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 text-xs font-mono text-[#ff9a72]">
+                {featuredCount} featured
+              </span>
+            </div>
           </div>
 
           {/* Filters */}
@@ -83,14 +95,15 @@ function ProjectsSection({ projects }) {
               {filtered?.map((project, idx) => {
                 const images = getImages(project);
                 const tech = getTech(project);
+                const isFeatured = Boolean(project.featured);
                 return (
                   <motion.div key={project.id || idx} layout
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.25 }}
                     onClick={() => open(project)}
-                    className="group rounded-xl border border-white/[0.07] bg-[#111] overflow-hidden cursor-pointer hover:border-[#ff4500]/30 transition-all duration-300 flex flex-col">
+                    className="group rounded-2xl border border-white/[0.07] bg-[#111] overflow-hidden cursor-pointer hover:border-[#ff4500]/30 transition-all duration-300 flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.18)]">
                     {/* Image */}
-                    <div className="relative h-40 overflow-hidden bg-[#0d0d0d]">
+                    <div className="relative h-44 overflow-hidden bg-[#0d0d0d]">
                       {images[0] ? (
                         <img src={images[0]} alt={project.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
@@ -103,10 +116,15 @@ function ProjectsSection({ projects }) {
                       <div className="absolute top-3 right-3 px-2.5 py-1 bg-[#ff4500] text-white text-xs font-mono rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         Open →
                       </div>
+                      {isFeatured && (
+                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/60 border border-[#ff4500]/25 text-[#ffb08d] text-[10px] font-mono uppercase tracking-[0.18em]">
+                          Featured
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}
-                    <div className="p-4 flex flex-col flex-grow">
+                    <div className="p-5 flex flex-col flex-grow">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <h3 className="text-white font-bold text-sm group-hover:text-[#ff4500] transition-colors">
                           {project.title}
@@ -115,7 +133,7 @@ function ProjectsSection({ projects }) {
                           <span className="text-xs text-[#555] font-mono shrink-0">{project.year}</span>
                         )}
                       </div>
-                      <p className="text-[#777] text-sm line-clamp-2 mb-4 flex-grow">{project.description}</p>
+                      <p className="text-[#8a8a8a] text-sm leading-relaxed line-clamp-3 mb-4 flex-grow">{project.description}</p>
                       <div className="flex flex-wrap gap-1.5 mt-auto">
                         {tech.slice(0, 3).map((t, i) => (
                           <span key={i} className="text-xs px-2 py-0.5 bg-[#ff4500]/10 text-[#ff6a33] rounded font-mono">{t}</span>
@@ -123,6 +141,10 @@ function ProjectsSection({ projects }) {
                         {tech.length > 3 && (
                           <span className="text-xs px-2 py-0.5 bg-white/5 text-[#555] rounded font-mono">+{tech.length - 3}</span>
                         )}
+                      </div>
+                      <div className="mt-5 pt-4 border-t border-white/[0.05] flex items-center justify-between text-xs text-[#777]">
+                        <span>Open case study</span>
+                        <span className="text-[#ff4500]">View details</span>
                       </div>
                     </div>
                   </motion.div>
@@ -225,6 +247,11 @@ function ProjectsSection({ projects }) {
               <div className="w-full lg:w-[380px] bg-[#0f0f0f] border-t lg:border-t-0 lg:border-l border-white/[0.07] overflow-y-auto p-5 sm:p-6">
                 <div className="space-y-5">
                   <div>
+                    {selectedProject.featured && (
+                      <span className="inline-flex items-center gap-2 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-[#ff9a72] mb-3">
+                        Featured project
+                      </span>
+                    )}
                     <h3 className="text-xl font-black text-white mb-2">{selectedProject.title}</h3>
                     {selectedProject.year && (
                       <span className="text-xs font-mono text-[#ff4500] bg-[#ff4500]/10 px-2.5 py-1 rounded">
@@ -232,6 +259,17 @@ function ProjectsSection({ projects }) {
                       </span>
                     )}
                     <p className="text-[#888] text-sm leading-relaxed mt-3">{selectedProject.description}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-xl border border-white/[0.06] bg-[#0b0b0b] p-3">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#666] font-mono">Stack</p>
+                      <p className="mt-1 text-white text-sm font-semibold">{getTech(selectedProject).length || 0} tools</p>
+                    </div>
+                    <div className="rounded-xl border border-white/[0.06] bg-[#0b0b0b] p-3">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#666] font-mono">Media</p>
+                      <p className="mt-1 text-white text-sm font-semibold">{getImages(selectedProject).length || 0} images</p>
+                    </div>
                   </div>
 
                   <div>

@@ -111,10 +111,21 @@ function SkillsSection({ skills }) {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-10 max-w-3xl">
           <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">What I work with</p>
           <h2 className="text-3xl md:text-4xl font-black text-white">Skills</h2>
           <div className="mt-3 w-10 h-0.5 bg-[#ff4500]" />
+          <p className="mt-4 text-sm md:text-base text-[#8f8f8f] leading-relaxed">
+            A mix of technical and interpersonal strengths. The balance matters because good software is both useful and easy to work with.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <span className="px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs font-mono text-[#a8a8a8]">
+              {skills.filter((s) => String(s.skillType || "hard").toLowerCase() === "hard").length} hard skills
+            </span>
+            <span className="px-3 py-1 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 text-xs font-mono text-[#ff9a72]">
+              {skills.filter((s) => String(s.skillType || "hard").toLowerCase() === "soft").length} soft skills
+            </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
@@ -134,11 +145,11 @@ function SkillsSection({ skills }) {
                     <span className="h-px w-12 bg-[#ff4500]/40" />
                   </div>
 
-                  <StaggerContainer staggerDelay={0.1}>
+                  <StaggerContainer staggerDelay={0.1} className="flex flex-col gap-5">
                     {categories.map((category) => {
                       const catSkills = typeMap[category];
                       return (
-                        <div key={`${section.key}-${category}`} className="rounded-xl border border-white/[0.07] bg-[#111] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#ff4500]/30 hover:shadow-[0_12px_30px_rgba(255,69,0,0.12)]">
+                        <div key={`${section.key}-${category}`} className="rounded-2xl border border-white/[0.07] bg-[#111] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#ff4500]/30 hover:shadow-[0_12px_30px_rgba(255,69,0,0.12)]">
                           <div className="flex items-center gap-3 mb-4">
                             <div className="w-6 h-6 rounded-md bg-[#ff4500]/10 border border-[#ff4500]/20 flex items-center justify-center">
                               <span className="text-[#ff4500] text-[10px] font-black">{category[0]}</span>

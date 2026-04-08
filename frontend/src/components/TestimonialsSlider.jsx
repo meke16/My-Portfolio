@@ -23,6 +23,7 @@ function TestimonialsSlider({ testimonials }) {
   if (!testimonials?.length) return null;
 
   const loopedTestimonials = [...testimonials, ...testimonials];
+  const testimonialCount = testimonials.length;
 
   const renderAvatar = (testimonial, size = "w-10 h-10") => {
     if (testimonial.avatar) {
@@ -46,7 +47,7 @@ function TestimonialsSlider({ testimonials }) {
   };
 
   return (
-    <section className="min-h-full flex items-center justify-center py-10 bg-[#0a0a0a] relative overflow-hidden border-t border-white/[0.05]">
+    <section className="min-h-full flex items-center justify-center py-14 bg-[#0a0a0a] relative overflow-hidden border-t border-white/[0.05]">
       <div className="absolute inset-0 opacity-[0.025]"
         style={{ backgroundImage: "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[420px] h-[420px] bg-[#ff4500]/6 rounded-full blur-[120px] pointer-events-none" />
@@ -57,8 +58,16 @@ function TestimonialsSlider({ testimonials }) {
           <h2 className="text-3xl md:text-4xl font-black text-white">Testimonials</h2>
           <div className="mt-3 w-10 h-0.5 bg-[#ff4500] mx-auto" />
           <p className="mt-4 text-sm md:text-base text-[#8f8f8f] leading-relaxed">
-            A few words from people I’ve worked with, centered here in a smooth horizontal flow.
+            Short notes from people I’ve worked with. Tap any card to open a focused view, or hover to pause the flow.
           </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            <span className="px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs font-mono text-[#a8a8a8]">
+              {testimonialCount} testimonials
+            </span>
+            <span className="px-3 py-1 rounded-full border border-[#ff4500]/20 bg-[#ff4500]/10 text-xs font-mono text-[#ff9a72]">
+              Click to expand
+            </span>
+          </div>
         </div>
 
         <div className="relative max-w-5xl mx-auto">
@@ -75,10 +84,10 @@ function TestimonialsSlider({ testimonials }) {
                   key={`${testimonial.name}-${idx}`}
                   type="button"
                   onClick={() => setSelectedTestimonial(testimonial)}
-                  className="group w-[280px] sm:w-[320px] md:w-[360px] shrink-0 rounded-2xl border border-white/[0.07] bg-[#0f0f0f] p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#ff4500]/30 hover:shadow-[0_12px_30px_rgba(255,69,0,0.10)] focus:outline-none focus:ring-2 focus:ring-[#ff4500]/40"
+                  className="group w-[280px] sm:w-[320px] md:w-[360px] shrink-0 rounded-2xl border border-white/[0.07] bg-[#0f0f0f] p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:bg-[#131313] hover:border-[#ff4500]/30 hover:shadow-[0_12px_30px_rgba(255,69,0,0.10)] focus:outline-none focus:ring-2 focus:ring-[#ff4500]/40"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <Quote className="w-6 h-6 text-[#ff4500]/30 group-hover:text-[#ff4500]/60 transition-colors duration-300" />
+                    <Quote className="w-6 h-6 text-[#ff4500]/35 group-hover:text-[#ff4500]/70 transition-colors duration-300" />
                     {renderAvatar(testimonial)}
                   </div>
 
