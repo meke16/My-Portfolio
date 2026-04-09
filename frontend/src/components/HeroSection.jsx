@@ -83,9 +83,6 @@ function HeroSection({ info, stats = {} }) {
   const [photoTransform, setPhotoTransform] = React.useState(
     "perspective(1000px) rotateX(0deg) rotateY(0deg) translateX(0px) translateY(0px) scale3d(1, 1, 1)"
   );
-  const [photoGlare, setPhotoGlare] = React.useState(
-    "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), transparent 45%)"
-  );
 
   const handlePhotoMove = (event) => {
     if (!window.matchMedia("(hover: hover)").matches) return;
@@ -105,17 +102,11 @@ function HeroSection({ info, stats = {} }) {
     setPhotoTransform(
       `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateX(${translateX}px) translateY(${translateY}px) scale3d(1.015, 1.015, 1.015)`
     );
-    setPhotoGlare(
-      `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,0.2), transparent 45%)`
-    );
   };
 
   const handlePhotoLeave = () => {
     setPhotoTransform(
       "perspective(1000px) rotateX(0deg) rotateY(0deg) translateX(0px) translateY(0px) scale3d(1, 1, 1)"
-    );
-    setPhotoGlare(
-      "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), transparent 45%)"
     );
   };
 
@@ -238,20 +229,18 @@ function HeroSection({ info, stats = {} }) {
             {/* Orange border frame */}
             <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-[#ff4500] to-transparent opacity-40 blur-sm" />
             <div
-              className="relative w-full h-full rounded-xl overflow-hidden border border-[#ff4500]/20"
+              className="relative w-full h-full rounded-2xl overflow-hidden"
+              style={{
+                background: "linear-gradient(160deg, #1c0a00 0%, #110400 60%, #0a0a0a 100%)",
+                boxShadow: "0 0 40px rgba(255,69,0,0.15), 0 0 80px rgba(255,69,0,0.07)"
+              }}
             >
               <img
                 src={info?.profile_image || PLACEHOLDER_AVATAR}
                 alt={info?.name || "Profile"}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain object-center"
                 onError={(e) => { e.target.src = PLACEHOLDER_AVATAR; }}
               />
-              <div
-                className="absolute inset-0 pointer-events-none mix-blend-screen opacity-60 transition-all duration-100"
-                style={{ background: photoGlare }}
-              />
-              {/* Subtle overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/60 via-transparent to-transparent" />
             </div>
             {/* Decorative corner accent */}
             <div className="absolute -bottom-2 -right-2 w-12 h-12 border-r-2 border-b-2 border-[#ff4500]/50 rounded-br-lg" />

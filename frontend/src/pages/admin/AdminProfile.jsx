@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { User, Image, Link as LinkIcon, Plus, Trash2, Loader2 } from "lucide-react";
+
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
 
 const emptySocials = {
@@ -20,10 +21,8 @@ export default function AdminProfile() {
     bio: "",
     email: "",
     profile_image: "",
-    heroImage: "",
     phones: [""],
     locations: [""],
-    galleryImages: [""],
     socials: { ...emptySocials },
   });
   const [saving, setSaving] = useState(false);
@@ -32,17 +31,14 @@ export default function AdminProfile() {
   useEffect(() => {
     const phones = info?.phones?.length ? info.phones : [""];
     const locations = info?.locations?.length ? info.locations : [""];
-    const gallery = info?.galleryImages?.length ? info.galleryImages : [""];
     setForm({
       name: info?.name ?? "",
       title: info?.title ?? "",
       bio: info?.bio ?? "",
       email: info?.email ?? "",
       profile_image: info?.profile_image ?? "",
-      heroImage: info?.heroImage ?? "",
       phones,
       locations,
-      galleryImages: gallery,
       socials: { ...emptySocials, ...info?.socials },
     });
   }, [info]);
@@ -58,10 +54,8 @@ export default function AdminProfile() {
       bio: form.bio.trim(),
       email: form.email.trim(),
       profile_image: form.profile_image.trim(),
-      heroImage: form.heroImage.trim(),
       phones: form.phones.map((p) => p.trim()).filter(Boolean),
       locations: form.locations.map((l) => l.trim()).filter(Boolean),
-      galleryImages: form.galleryImages.map((g) => g.trim()).filter(Boolean),
       socials: Object.fromEntries(
         Object.entries(form.socials).map(([k, v]) => [k, String(v).trim()])
       ),
@@ -87,11 +81,6 @@ export default function AdminProfile() {
     const next = [...form.locations];
     next[i] = v;
     setForm({ ...form, locations: next });
-  };
-  const updateGallery = (i, v) => {
-    const next = [...form.galleryImages];
-    next[i] = v;
-    setForm({ ...form, galleryImages: next });
   };
 
   return (
@@ -157,15 +146,6 @@ export default function AdminProfile() {
             <input
               value={form.profile_image}
               onChange={(e) => setForm({ ...form, profile_image: e.target.value })}
-              placeholder="https://..."
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Hero background URL</label>
-            <input
-              value={form.heroImage}
-              onChange={(e) => setForm({ ...form, heroImage: e.target.value })}
               placeholder="https://..."
               className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
             />
@@ -261,47 +241,6 @@ export default function AdminProfile() {
               />
             </div>
           ))}
-        </section>
-
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-3">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Image className="w-5 h-5 text-pink-400" />
-            Gallery image URLs
-          </h2>
-          {form.galleryImages.map((g, i) => (
-            <div key={i} className="flex gap-2">
-              <input
-                value={g}
-                onChange={(e) => updateGallery(i, e.target.value)}
-                placeholder="https://..."
-                className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
-              />
-              {form.galleryImages.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setForm({
-                      ...form,
-                      galleryImages: form.galleryImages.filter((_, j) => j !== i),
-                    })
-                  }
-                  className="p-2 text-gray-500 hover:text-red-400"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() =>
-              setForm({ ...form, galleryImages: [...form.galleryImages, ""] })
-            }
-            className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300"
-          >
-            <Plus className="w-4 h-4" />
-            Add image URL
-          </button>
         </section>
 
         <div className="flex items-center justify-between gap-4 flex-wrap">
