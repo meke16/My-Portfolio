@@ -26,6 +26,9 @@ function PublicLayout() {
   const sectionRefs = useRef([]);
   const [showWarning, setShowWarning] = useState(false);
   const [mobileNavVisible, setMobileNavVisible] = useState(true);
+  const touchStartY = useRef(null);
+  const touchStartX = useRef(null);
+  const lastTapAt = useRef(0);
   const scrollLockMs = 520;
   const wheelThreshold = typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 768px)").matches
     ? 70
@@ -111,6 +114,70 @@ function PublicLayout() {
       window.removeEventListener("wheel", onWheel);
     };
   }, [goToSection, scrollLockMs, wheelThreshold]);
+
+  // Touch swipe between sections + tap to toggle nav
+  useEffect(() => {
+    const onTouchStart = (e) => {
+      touchStartY.current = e.touches[0].clientY;
+      touchStartX.current = e.touches[0].clientX;
+    };
+
+    const onTouchEnd = (e) => {
+      if (touchStartY.current === null) return;
+      const dy = touchStartY.current - e.changedTouches[0].clientY;
+      const dx = Math.abs(touchStartX.current - e.changedTouches[0].clientX);
+
+      // Tap (minimal movement) → toggle nav
+      if (Math.abs(dy) < 8 && dx < 8) {
+        const now = Date.now();
+        if (now - lastTapAt.current < 300) {
+          // double-tap guard — ignore
+        } else {
+          lastTapAt.current = now;
+          setMobileNavVisible((v) => !v);
+        }
+        touchStartY.current = null;
+        return;
+      }
+
+      // Swipe — only if mostly vertical
+      if (Math.abs(dy) < 50 || dx > Math.abs(dy)) {
+        touchStartY.current = null;
+        return;
+      }
+
+      const idx = currentIndex.current;
+      const el = sectionRefs.current[idx];
+      if (el) {
+        const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 10;
+        const atTop = el.scrollTop < 10;
+        if ((dy > 0 && !atBottom) || (dy < 0 && !atTop)) {
+          touchStartY.current = null;
+          return;
+        }
+      }
+
+      const now = performance.now();
+      if (isScrolling.current || now - lastNavAt.current < scrollLockMs) {
+        touchStartY.current = null;
+        return;
+      }
+
+      const direction = dy > 0 ? 1 : -1;
+      isScrolling.current = true;
+      lastNavAt.current = now;
+      goToSection(currentIndex.current + direction);
+      setTimeout(() => { isScrolling.current = false; }, scrollLockMs);
+      touchStartY.current = null;
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [goToSection, scrollLockMs]);
 
   const activeIdx = SECTIONS.indexOf(location.pathname);
   const isKnownRoute = activeIdx !== -1;
@@ -224,7 +291,7 @@ function PublicLayout() {
             <div
               key={SECTIONS[idx]}
               ref={(el) => (sectionRefs.current[idx] = el)}
-              className={`section-scroll-container absolute inset-0 w-full h-full overflow-y-auto will-change-transform ${
+              className={`section-scroll-container absolute inset-0 w-full h-full overflow-y-auto will-change-transform pb-24 lg:pb-0 ${
                 isActive
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
