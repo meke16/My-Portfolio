@@ -21,15 +21,15 @@ function PublicLayout() {
   const location = useLocation();
   const currentIndex = useRef(SECTIONS.indexOf(location.pathname));
   const isScrolling = useRef(false);
+  const wheelAccumulator = useRef(0);
+  const lastNavAt = useRef(0);
   const sectionRefs = useRef([]);
   const [showWarning, setShowWarning] = useState(false);
   const [mobileNavVisible, setMobileNavVisible] = useState(true);
-  const supportsGestureNav = typeof window !== "undefined"
-    ? window.matchMedia("(pointer: fine) and (hover: hover)").matches
-    : true;
-  const prefersLightTransitions = typeof window !== "undefined"
-    ? window.matchMedia("(pointer: coarse), (max-width: 768px)").matches
-    : false;
+  const scrollLockMs = 520;
+  const wheelThreshold = typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 768px)").matches
+    ? 70
+    : 110;
 
   useEffect(() => {
     setShowWarning(fromCache);
@@ -62,10 +62,25 @@ function PublicLayout() {
   );
 
   useEffect(() => {
+    const triggerSectionShift = (direction) => {
+      const now = performance.now();
+      if (isScrolling.current || now - lastNavAt.current < scrollLockMs) return;
+
+      const idx = currentIndex.current;
+      const next = idx + direction;
+      if (next < 0 || next >= SECTIONS.length) return;
+
+      isScrolling.current = true;
+      lastNavAt.current = now;
+      goToSection(next);
+      setTimeout(() => {
+        isScrolling.current = false;
+      }, scrollLockMs);
+    };
+
     const onWheel = (e) => {
-      if (isScrolling.current) return;
       const delta = e.deltaY;
-      if (Math.abs(delta) < 20) return;
+      if (Math.abs(delta) < 2) return;
 
       const idx = currentIndex.current;
       const el = sectionRefs.current[idx];
@@ -73,49 +88,29 @@ function PublicLayout() {
       if (el) {
         const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 5;
         const atTop = el.scrollTop < 5;
-        if (delta > 0 && !atBottom) return;
-        if (delta < 0 && !atTop) return;
+        if ((delta > 0 && !atBottom) || (delta < 0 && !atTop)) {
+          wheelAccumulator.current = 0;
+          return;
+        }
       }
 
-      isScrolling.current = true;
-      goToSection(delta > 0 ? idx + 1 : idx - 1);
-      setTimeout(() => { isScrolling.current = false; }, 900);
+      if (Math.sign(wheelAccumulator.current) !== Math.sign(delta)) {
+        wheelAccumulator.current = 0;
+      }
+
+      wheelAccumulator.current += delta;
+      if (Math.abs(wheelAccumulator.current) < wheelThreshold) return;
+
+      const direction = wheelAccumulator.current > 0 ? 1 : -1;
+      wheelAccumulator.current = 0;
+      triggerSectionShift(direction);
     };
 
     window.addEventListener("wheel", onWheel, { passive: true });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [goToSection]);
-
-  useEffect(() => {
-    if (!supportsGestureNav) return undefined;
-
-    let touchStartY = 0;
-    const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
-    const onTouchEnd = (e) => {
-      if (isScrolling.current) return;
-      const diff = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) < 60) return;
-
-      const idx = currentIndex.current;
-      const el = sectionRefs.current[idx];
-      if (el) {
-        const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 5;
-        const atTop = el.scrollTop < 5;
-        if (diff > 0 && !atBottom) return;
-        if (diff < 0 && !atTop) return;
-      }
-
-      isScrolling.current = true;
-      goToSection(diff > 0 ? idx + 1 : idx - 1);
-      setTimeout(() => { isScrolling.current = false; }, 900);
-    };
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
     return () => {
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("wheel", onWheel);
     };
-  }, [goToSection, supportsGestureNav]);
+  }, [goToSection, scrollLockMs, wheelThreshold]);
 
   const activeIdx = SECTIONS.indexOf(location.pathname);
   const isKnownRoute = activeIdx !== -1;
@@ -219,27 +214,25 @@ function PublicLayout() {
 
       <Navbar info={info} mobileNavVisible={mobileNavVisible} />
 
-      {/* Sections with parallax transition */}
+      {/* Sections with smooth route transition */}
       <div className="relative h-full overflow-hidden">
         {sections.map((section, idx) => {
           const isActive = idx === displayIdx;
-          // Parallax: non-active sections move at different speed
-          const translate = prefersLightTransitions ? 0 : (isActive ? 0 : (idx < displayIdx ? -105 : 105));
+          const translate = isActive ? 0 : (idx < displayIdx ? -14 : 14);
 
           return (
             <div
               key={SECTIONS[idx]}
               ref={(el) => (sectionRefs.current[idx] = el)}
-              className={`section-scroll-container absolute inset-0 w-full h-full overflow-y-auto ${
+              className={`section-scroll-container absolute inset-0 w-full h-full overflow-y-auto will-change-transform ${
                 isActive
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
-              } ${prefersLightTransitions ? "transition-opacity duration-250 ease-out" : "transition-all duration-700 ease-in-out"}`}
+              } transition-opacity duration-300 ease-out`}
               style={{
-                transform: `translateY(${translate}vh)`,
-                transition: prefersLightTransitions
-                  ? "opacity 0.25s ease-out"
-                  : "transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease-out",
+                transform: `translate3d(0, ${translate}vh, 0)`,
+                transition: "transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease-out",
+                backfaceVisibility: "hidden",
               }}
             >
               {section}
