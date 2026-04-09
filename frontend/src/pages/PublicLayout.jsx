@@ -27,6 +27,9 @@ function PublicLayout() {
   const supportsGestureNav = typeof window !== "undefined"
     ? window.matchMedia("(pointer: fine) and (hover: hover)").matches
     : true;
+  const prefersLightTransitions = typeof window !== "undefined"
+    ? window.matchMedia("(pointer: coarse), (max-width: 768px)").matches
+    : false;
 
   useEffect(() => {
     setShowWarning(fromCache);
@@ -221,20 +224,22 @@ function PublicLayout() {
         {sections.map((section, idx) => {
           const isActive = idx === displayIdx;
           // Parallax: non-active sections move at different speed
-          const translate = isActive ? 0 : (idx < displayIdx ? -105 : 105);
+          const translate = prefersLightTransitions ? 0 : (isActive ? 0 : (idx < displayIdx ? -105 : 105));
 
           return (
             <div
               key={SECTIONS[idx]}
               ref={(el) => (sectionRefs.current[idx] = el)}
-              className={`absolute inset-0 w-full h-full overflow-y-auto transition-all duration-700 ease-in-out ${
+              className={`section-scroll-container absolute inset-0 w-full h-full overflow-y-auto ${
                 isActive
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
-              }`}
+              } ${prefersLightTransitions ? "transition-opacity duration-250 ease-out" : "transition-all duration-700 ease-in-out"}`}
               style={{
                 transform: `translateY(${translate}vh)`,
-                transition: "transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease-out",
+                transition: prefersLightTransitions
+                  ? "opacity 0.25s ease-out"
+                  : "transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease-out",
               }}
             >
               {section}

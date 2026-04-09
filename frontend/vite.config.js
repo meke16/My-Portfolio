@@ -4,5 +4,15 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // Remove the tailwindcss() import and function call from here
+  server: {
+    // Expose dev server on LAN so mobile devices can access it.
+    host: true,
+    port: 5173,
+    strictPort: true,
+  },
+  preview: {
+    host: true,
+    port: 4173,
+    strictPort: true,
+  },
 })

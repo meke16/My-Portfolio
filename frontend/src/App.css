@@ -25,6 +25,11 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+.section-scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -102,5 +107,11 @@ body {
   .testimonial-modal-backdrop,
   .testimonial-modal-panel {
     animation: none !important;
+  }
+}
+
+@media (pointer: coarse), (max-width: 768px) {
+  html {
+    scroll-behavior: auto;
   }
 }
