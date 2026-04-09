@@ -241,6 +241,9 @@ function HeroSection({ info, stats = {} }) {
                 className="absolute inset-0 w-full h-full object-contain object-center"
                 onError={(e) => { e.target.src = PLACEHOLDER_AVATAR; }}
               />
+              {/* Bottom vignette */}
+              <div className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none"
+                style={{ background: "linear-gradient(to top, rgba(10,5,0,0.6) 0%, transparent 100%)" }} />
             </div>
             {/* Decorative corner accent */}
             <div className="absolute -bottom-2 -right-2 w-12 h-12 border-r-2 border-b-2 border-[#ff4500]/50 rounded-br-lg" />
