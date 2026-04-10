@@ -46,10 +46,6 @@ function PublicLayout() {
 
   useEffect(() => {
     if (!info) return;
-    if (info.profile_image) {
-      const favicon = document.getElementById("dynamic-favicon");
-      if (favicon) favicon.href = info.profile_image;
-    }
     if (info.name) document.title = info.name;
   }, [info]);
 
