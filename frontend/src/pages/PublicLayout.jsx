@@ -6,9 +6,7 @@ import Navbar from "../components/Navbar";
 import LoadingScreen from "../components/LoadingScreen";
 
 // Lazy-loaded section components — enables route-level code splitting
-const HeroSection = React.lazy(() =>
-  import("../components/HeroSection").then((m) => ({ default: m.HeroSection }))
-);
+const HeroSection = React.lazy(() => import("../components/HeroSection"));
 const AboutPage = React.lazy(() => import("./AboutPage"));
 const WorkExperiencePage = React.lazy(() => import("./WorkExperiencePage"));
 const SkillsPage = React.lazy(() => import("./SkillsPage"));
@@ -19,6 +17,9 @@ const TestimonialsPage = React.lazy(() => import("./TestimonialsPage"));
 const NotFoundPage = React.lazy(() => import("./NotFoundPage"));
 
 const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/blog", "/contact", "/testimonials"];
+
+// Base URL for canonical links — override with VITE_SITE_URL env variable if needed
+const SITE_BASE_URL = import.meta.env.VITE_SITE_URL || "https://cherinet-habtamu.web.app";
 
 function PublicLayout() {
   const { info, projects, skills, testimonials, loading, error, fromCache, reload } = useFirestorePortfolio();
@@ -46,7 +47,7 @@ function PublicLayout() {
     const name = info?.name || "Portfolio";
     const role = info?.title || "Full Stack Developer";
     const bio = info?.bio || `${name} builds fast, accessible, and beautiful digital products.`;
-    const base = "https://cherinet-habtamu.web.app";
+    const base = SITE_BASE_URL;
     return [
       {
         title: `${name} – ${role}`,
@@ -110,11 +111,11 @@ function PublicLayout() {
     if (!el) return;
     const saved = scrollPositions.current[location.pathname];
     if (saved !== undefined) {
-      // Defer until after the CSS transition has settled
-      const timer = setTimeout(() => {
+      // Use rAF to wait for React's render cycle to finish before restoring scroll
+      const handle = requestAnimationFrame(() => {
         el.scrollTop = saved;
-      }, 50);
-      return () => clearTimeout(timer);
+      });
+      return () => cancelAnimationFrame(handle);
     }
   }, [location.pathname, navigationType]);
 
