@@ -1,17 +1,22 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useRef, useEffect, useCallback, useState, useMemo, Suspense } from "react";
+import { useNavigate, useLocation, useNavigationType } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
 import Navbar from "../components/Navbar";
 import LoadingScreen from "../components/LoadingScreen";
-import { HeroSection } from "../components/HeroSection";
-import { AboutPage } from "./AboutPage";
-import { WorkExperiencePage } from "./WorkExperiencePage";
-import { SkillsPage } from "./SkillsPage";
-import { ProjectsPage } from "./ProjectsPage";
-import { ContactPage } from "./ContactPage";
-import { BlogPage } from "./BlogPage";
-import { TestimonialsPage } from "./TestimonialsPage";
-import { NotFoundPage } from "./NotFoundPage";
+
+// Lazy-loaded section components — enables route-level code splitting
+const HeroSection = React.lazy(() =>
+  import("../components/HeroSection").then((m) => ({ default: m.HeroSection }))
+);
+const AboutPage = React.lazy(() => import("./AboutPage"));
+const WorkExperiencePage = React.lazy(() => import("./WorkExperiencePage"));
+const SkillsPage = React.lazy(() => import("./SkillsPage"));
+const ProjectsPage = React.lazy(() => import("./ProjectsPage"));
+const BlogPage = React.lazy(() => import("./BlogPage"));
+const ContactPage = React.lazy(() => import("./ContactPage"));
+const TestimonialsPage = React.lazy(() => import("./TestimonialsPage"));
+const NotFoundPage = React.lazy(() => import("./NotFoundPage"));
 
 const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/blog", "/contact", "/testimonials"];
 
@@ -19,11 +24,13 @@ function PublicLayout() {
   const { info, projects, skills, testimonials, loading, error, fromCache, reload } = useFirestorePortfolio();
   const navigate = useNavigate();
   const location = useLocation();
+  const navigationType = useNavigationType();
   const currentIndex = useRef(SECTIONS.indexOf(location.pathname));
   const isScrolling = useRef(false);
   const wheelAccumulator = useRef(0);
   const lastNavAt = useRef(0);
   const sectionRefs = useRef([]);
+  const scrollPositions = useRef({});
   const [showWarning, setShowWarning] = useState(false);
   const [mobileNavVisible, setMobileNavVisible] = useState(true);
   const touchStartY = useRef(null);
@@ -33,6 +40,56 @@ function PublicLayout() {
   const wheelThreshold = typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 768px)").matches
     ? 70
     : 110;
+
+  // Per-route SEO metadata — title and description update dynamically per section
+  const sectionMeta = useMemo(() => {
+    const name = info?.name || "Portfolio";
+    const role = info?.title || "Full Stack Developer";
+    const bio = info?.bio || `${name} builds fast, accessible, and beautiful digital products.`;
+    const base = "https://cherinet-habtamu.web.app";
+    return [
+      {
+        title: `${name} – ${role}`,
+        description: bio,
+        canonical: `${base}/`,
+      },
+      {
+        title: `About – ${name}`,
+        description: `Learn about ${name}'s background, principles, and journey as a ${role}.`,
+        canonical: `${base}/about`,
+      },
+      {
+        title: `Experience – ${name}`,
+        description: `${name}'s work history, roles, and career timeline.`,
+        canonical: `${base}/experience`,
+      },
+      {
+        title: `Skills – ${name}`,
+        description: `Technical skills and technologies ${name} works with every day.`,
+        canonical: `${base}/skills`,
+      },
+      {
+        title: `Projects – ${name}`,
+        description: `Explore ${name}'s portfolio of web development projects and case studies.`,
+        canonical: `${base}/projects`,
+      },
+      {
+        title: `Blog – ${name}`,
+        description: `Articles and insights from ${name} on web development and technology.`,
+        canonical: `${base}/blog`,
+      },
+      {
+        title: `Contact – ${name}`,
+        description: `Get in touch with ${name} for collaboration, freelance work, or inquiries.`,
+        canonical: `${base}/contact`,
+      },
+      {
+        title: `Testimonials – ${name}`,
+        description: `What clients and colleagues say about working with ${name}.`,
+        canonical: `${base}/testimonials`,
+      },
+    ];
+  }, [info]);
 
   useEffect(() => {
     setShowWarning(fromCache);
@@ -44,18 +101,39 @@ function PublicLayout() {
     setMobileNavVisible(true);
   }, [location.pathname]);
 
+  // Restore scroll position when using browser back/forward (POP navigation)
+  useEffect(() => {
+    if (navigationType !== "POP") return;
+    const idx = SECTIONS.indexOf(location.pathname);
+    if (idx === -1) return;
+    const el = sectionRefs.current[idx];
+    if (!el) return;
+    const saved = scrollPositions.current[location.pathname];
+    if (saved !== undefined) {
+      // Defer until after the CSS transition has settled
+      const timer = setTimeout(() => {
+        el.scrollTop = saved;
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, navigationType]);
+
   useEffect(() => {
     if (!info) return;
     if (info.profile_image) {
       const favicon = document.getElementById("dynamic-favicon");
       if (favicon) favicon.href = info.profile_image;
     }
-    if (info.name) document.title = info.name;
   }, [info]);
 
   const goToSection = useCallback(
     (idx) => {
       if (idx < 0 || idx >= SECTIONS.length) return;
+      // Save scroll position of the section we are leaving
+      const leavingEl = sectionRefs.current[currentIndex.current];
+      if (leavingEl) {
+        scrollPositions.current[SECTIONS[currentIndex.current]] = leavingEl.scrollTop;
+      }
       currentIndex.current = idx;
       const el = sectionRefs.current[idx];
       if (el) el.scrollTop = 0;
@@ -241,29 +319,48 @@ function PublicLayout() {
 
   // 404 for unknown routes
   if (!isKnownRoute) {
-    return <NotFoundPage />;
+    return (
+      <Suspense fallback={null}>
+        <NotFoundPage />
+      </Suspense>
+    );
   }
 
+  const currentMeta = sectionMeta[displayIdx] || sectionMeta[0];
+
   const sections = [
-    <HeroSection
-      info={info}
-      stats={{
-        projects: projects?.length ?? 0,
-        skills: skills?.length ?? 0,
-        testimonials: testimonials?.length ?? 0,
-      }}
-    />,
-    <AboutPage />,
-    <WorkExperiencePage />,
-    <SkillsPage />,
-    <ProjectsPage />,
-    <BlogPage />,
-    <ContactPage />,
-    <TestimonialsPage />,
+    <Suspense fallback={null} key="hero">
+      <HeroSection
+        info={info}
+        stats={{
+          projects: projects?.length ?? 0,
+          skills: skills?.length ?? 0,
+          testimonials: testimonials?.length ?? 0,
+        }}
+      />
+    </Suspense>,
+    <Suspense fallback={null} key="about"><AboutPage /></Suspense>,
+    <Suspense fallback={null} key="experience"><WorkExperiencePage /></Suspense>,
+    <Suspense fallback={null} key="skills"><SkillsPage /></Suspense>,
+    <Suspense fallback={null} key="projects"><ProjectsPage /></Suspense>,
+    <Suspense fallback={null} key="blog"><BlogPage /></Suspense>,
+    <Suspense fallback={null} key="contact"><ContactPage /></Suspense>,
+    <Suspense fallback={null} key="testimonials"><TestimonialsPage /></Suspense>,
   ];
 
   return (
     <div className="h-screen overflow-hidden">
+      {/* Per-route SEO — title, description, and canonical link update on every section change */}
+      <Helmet>
+        <title>{currentMeta.title}</title>
+        <meta name="description" content={currentMeta.description} />
+        <link rel="canonical" href={currentMeta.canonical} />
+        <meta property="og:title" content={currentMeta.title} />
+        <meta property="og:description" content={currentMeta.description} />
+        <meta property="og:url" content={currentMeta.canonical} />
+        <meta name="twitter:title" content={currentMeta.title} />
+        <meta name="twitter:description" content={currentMeta.description} />
+      </Helmet>
       {/* Fallback warning banner */}
       {showWarning && (
         <div className="fixed top-0 left-0 right-0 z-[60] bg-amber-500/10 border-b border-amber-400/30 px-4 py-2 flex items-center justify-between gap-3">
