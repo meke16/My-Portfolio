@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { Plus, Pencil, Trash2, X, CalendarDays, Star } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
-import UploadToCpanelButton from "../../components/admin/UploadToCpanelButton";
+import ImageUploadField from "../../components/admin/ImageUploadField";
 
 const emptyForm = {
   title: "",
@@ -280,21 +280,13 @@ export default function AdminBlogs() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Cover image URL</label>
-                <div className="flex gap-2">
-                  <input
-                    value={form.coverImage}
-                    onChange={(e) => setForm({ ...form, coverImage: e.target.value })}
-                    placeholder="https://..."
-                    className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
-                  />
-                  <UploadToCpanelButton
-                    folder="blogs"
-                    label="Upload"
-                    onUploaded={(url) => setForm((prev) => ({ ...prev, coverImage: url }))}
-                    onError={(error) => window.alert(error?.message || "Upload failed")}
-                  />
-                </div>
+                <ImageUploadField
+                  label="Cover image"
+                  folder="blogs"
+                  value={form.coverImage}
+                  onChange={(url) => setForm({ ...form, coverImage: url })}
+                  helperText="This image appears in the blog list and on the post page."
+                />
               </div>
 
               <div>

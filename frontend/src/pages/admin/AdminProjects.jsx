@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
-import UploadToCpanelButton from "../../components/admin/UploadToCpanelButton";
+import ImageUploadField from "../../components/admin/ImageUploadField";
 
 const emptyForm = {
   title: "",
@@ -34,13 +34,11 @@ export default function AdminProjects() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm);
-  const [newImageUrl, setNewImageUrl] = useState("");
   const [deleteId, setDeleteId] = useState(null);
 
   const openCreate = () => {
     setEditing(null);
     setForm(emptyForm);
-    setNewImageUrl("");
     setOpen(true);
   };
 
@@ -57,7 +55,6 @@ export default function AdminProjects() {
       featured: Boolean(p.featured),
       year: p.year || "",
     });
-    setNewImageUrl("");
     setOpen(true);
   };
 
@@ -65,7 +62,6 @@ export default function AdminProjects() {
     setOpen(false);
     setEditing(null);
     setForm(emptyForm);
-    setNewImageUrl("");
   };
 
   const handleSubmit = async (e) => {
@@ -249,55 +245,14 @@ export default function AdminProjects() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Images (URLs)</label>
-                <div className="flex gap-2 mb-2">
-                  <input
-                    value={newImageUrl}
-                    onChange={(e) => setNewImageUrl(e.target.value)}
-                    placeholder="https://..."
-                    className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
-                  />
-                  <UploadToCpanelButton
-                    folder="projects"
-                    label="Upload"
-                    onUploaded={(url) => setForm((prev) => ({ ...prev, images: [...prev.images, url] }))}
-                    onError={(error) => window.alert(error?.message || "Upload failed")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const t = newImageUrl.trim();
-                      if (!t) return;
-                      setForm({ ...form, images: [...form.images, t] });
-                      setNewImageUrl("");
-                    }}
-                    className="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm"
-                  >
-                    Add
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {form.images.map((url, idx) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center gap-1 text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded max-w-full"
-                    >
-                      <span className="truncate max-w-[200px]">{url}</span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setForm({
-                            ...form,
-                            images: form.images.filter((_, i) => i !== idx),
-                          })
-                        }
-                        className="text-red-400 shrink-0"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
+                <ImageUploadField
+                  label="Project images"
+                  folder="projects"
+                  multiple
+                  values={form.images}
+                  onValuesChange={(images) => setForm({ ...form, images })}
+                  helperText="Upload one or more images. The first image is used as the cover preview."
+                />
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
