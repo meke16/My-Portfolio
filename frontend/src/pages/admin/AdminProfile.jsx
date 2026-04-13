@@ -3,6 +3,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { User, Image, Link as LinkIcon, Plus, Trash2, Loader2 } from "lucide-react";
 
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
+import UploadToCpanelButton from "../../components/admin/UploadToCpanelButton";
 
 const emptySocials = {
   github: "",
@@ -143,12 +144,23 @@ export default function AdminProfile() {
           </h2>
           <div>
             <label className="block text-sm text-gray-400 mb-1">Profile image URL</label>
-            <input
-              value={form.profile_image}
-              onChange={(e) => setForm({ ...form, profile_image: e.target.value })}
-              placeholder="https://..."
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
-            />
+            <div className="flex gap-2">
+              <input
+                value={form.profile_image}
+                onChange={(e) => setForm({ ...form, profile_image: e.target.value })}
+                placeholder="https://..."
+                className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+              />
+              <UploadToCpanelButton
+                folder="profile"
+                label="Upload"
+                onUploaded={(url) => {
+                  setForm((prev) => ({ ...prev, profile_image: url }));
+                  setMsg("Image uploaded and URL inserted.");
+                }}
+                onError={(error) => setMsg(error?.message || "Upload failed.")}
+              />
+            </div>
           </div>
         </section>
 

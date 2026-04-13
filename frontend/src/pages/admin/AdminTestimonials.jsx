@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import { Plus, Pencil, Trash2, X, Quote } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
+import UploadToCpanelButton from "../../components/admin/UploadToCpanelButton";
 
 const emptyForm = { name: "", role: "", quote: "", avatar: "" };
 
@@ -190,12 +191,20 @@ export default function AdminTestimonials() {
               </div>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Avatar URL (optional)</label>
-                <input
-                  value={form.avatar}
-                  onChange={(e) => setForm({ ...form, avatar: e.target.value })}
-                  placeholder="https://..."
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
-                />
+                <div className="flex gap-2">
+                  <input
+                    value={form.avatar}
+                    onChange={(e) => setForm({ ...form, avatar: e.target.value })}
+                    placeholder="https://..."
+                    className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  />
+                  <UploadToCpanelButton
+                    folder="testimonials"
+                    label="Upload"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, avatar: url }))}
+                    onError={(error) => window.alert(error?.message || "Upload failed")}
+                  />
+                </div>
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button

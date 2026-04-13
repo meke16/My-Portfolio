@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
+import UploadToCpanelButton from "../../components/admin/UploadToCpanelButton";
 
 const emptyForm = { name: "", logo: "", category: "", skillType: "hard", proficiency: 70 };
 const NEW_CATEGORY_VALUE = "__new__";
@@ -284,12 +285,20 @@ export default function AdminSkills() {
               </div>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Logo URL</label>
-                <input
-                  value={form.logo}
-                  onChange={(e) => setForm({ ...form, logo: e.target.value })}
-                  placeholder="https://..."
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
-                />
+                <div className="flex gap-2">
+                  <input
+                    value={form.logo}
+                    onChange={(e) => setForm({ ...form, logo: e.target.value })}
+                    placeholder="https://..."
+                    className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  />
+                  <UploadToCpanelButton
+                    folder="skills"
+                    label="Upload"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, logo: url }))}
+                    onError={(error) => window.alert(error?.message || "Upload failed")}
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">

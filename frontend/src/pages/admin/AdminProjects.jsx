@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
+import UploadToCpanelButton from "../../components/admin/UploadToCpanelButton";
 
 const emptyForm = {
   title: "",
@@ -255,6 +256,12 @@ export default function AdminProjects() {
                     onChange={(e) => setNewImageUrl(e.target.value)}
                     placeholder="https://..."
                     className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  />
+                  <UploadToCpanelButton
+                    folder="projects"
+                    label="Upload"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, images: [...prev.images, url] }))}
+                    onError={(error) => window.alert(error?.message || "Upload failed")}
                   />
                   <button
                     type="button"
