@@ -176,7 +176,7 @@ function PublicLayout() {
   }, [goToSection, scrollLockMs]);
 
   const activeIdx = SECTIONS.indexOf(location.pathname);
-  const isKnownRoute = activeIdx !== -1;
+  const isKnownRoute = activeIdx !== -1 && !(location.pathname === "/testimonials" && testimonials.length === 0);
   const displayIdx = Math.max(0, activeIdx);
 
   useEffect(() => {

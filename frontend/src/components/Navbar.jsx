@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
 
 const NAV_ITEMS = [
   { to: "/", label: "Home", icon: (
@@ -42,6 +43,9 @@ function useScrollProgress() {
 }
 
 export function Navbar({ mobileNavVisible = true }) {
+  const { testimonials } = useFirestorePortfolio();
+  const navItems = testimonials.length > 0 ? NAV_ITEMS : NAV_ITEMS.filter(i => i.to !== "/testimonials");
+
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState(-1);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -57,12 +61,12 @@ export function Navbar({ mobileNavVisible = true }) {
   }, []);
 
   useEffect(() => {
-    const idx = NAV_ITEMS.findIndex((item) => {
+    const idx = navItems.findIndex((item) => {
       if (item.to === "/") return location.pathname === "/";
       return location.pathname.startsWith(item.to);
     });
     setActiveIdx(idx !== -1 ? idx : 0);
-  }, [location.pathname]);
+  }, [location.pathname, navItems]);
 
   useEffect(() => {
     if (!navRef.current) return;
@@ -101,7 +105,7 @@ export function Navbar({ mobileNavVisible = true }) {
                 style={{ left: `${indicatorStyle.left}px`, width: `${indicatorStyle.width}px` }}
               />
 
-              {NAV_ITEMS.map((item, idx) => (
+              {navItems.map((item, idx) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
@@ -144,7 +148,7 @@ export function Navbar({ mobileNavVisible = true }) {
       }`}>
         <div className="mx-3 mb-3">
           <div className="flex items-center gap-1 overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0f0f0f]/90 backdrop-blur-xl shadow-[0_-8px_40px_rgba(0,0,0,0.4)] px-1 py-1.5 scrollbar-none">
-            {NAV_ITEMS.map((item, idx) => {
+            {navItems.map((item, idx) => {
               const isActive = idx === activeIdx;
               return (
                 <NavLink
