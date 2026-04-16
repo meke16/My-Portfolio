@@ -51,11 +51,11 @@ function PublicLayout() {
 
   const goToSection = useCallback(
     (idx) => {
-      if (idx < 0 || idx >= SECTIONS.length) return;
+      if (idx < 0 || idx >= visibleSections.length) return;
       currentIndex.current = idx;
       const el = sectionRefs.current[idx];
       if (el) el.scrollTop = 0;
-      navigate(SECTIONS[idx]);
+      navigate(visibleSections[idx]);
     },
     [navigate]
   );
@@ -175,7 +175,8 @@ function PublicLayout() {
     };
   }, [goToSection, scrollLockMs]);
 
-  const activeIdx = SECTIONS.indexOf(location.pathname);
+  const visibleSections = testimonials.length > 0 ? SECTIONS : SECTIONS.filter(s => s !== "/testimonials");
+  const activeIdx = visibleSections.indexOf(location.pathname);
   const isKnownRoute = activeIdx !== -1 && !(location.pathname === "/testimonials" && testimonials.length === 0);
   const displayIdx = Math.max(0, activeIdx);
 
@@ -285,7 +286,7 @@ function PublicLayout() {
 
           return (
             <div
-              key={SECTIONS[idx]}
+              key={visibleSections[idx]}
               ref={(el) => (sectionRefs.current[idx] = el)}
               className={`section-scroll-container absolute inset-0 w-full h-full overflow-y-auto will-change-transform pb-24 lg:pb-0 ${
                 isActive
@@ -306,7 +307,7 @@ function PublicLayout() {
 
       {/* Dot navigation */}
       <nav className="fixed right-5 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 z-50">
-        {SECTIONS.map((path, idx) => (
+        {visibleSections.map((path, idx) => (
           <button
             key={path}
             onClick={() => goToSection(idx)}

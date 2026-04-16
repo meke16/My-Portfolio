@@ -18,6 +18,7 @@ export function normalizeProjectDoc(id, data) {
         : [],
     featured: Boolean(data.featured),
     year: data.year || "",
+    order: Number(data.order) || 0,
   };
 }
 

@@ -34,9 +34,10 @@ function ProjectsSection({ projects }) {
   const close = () => { setSelectedProject(null); setCurrentImageIndex(0); };
 
   const allTech = [...new Set(projects?.flatMap(getTech) || [])];
+  const sorted = [...(projects || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
   const filtered = activeFilter === "All"
-    ? projects
-    : projects?.filter((p) => p.technologies?.toLowerCase().includes(activeFilter.toLowerCase()));
+    ? sorted
+    : sorted.filter((p) => p.technologies?.toLowerCase().includes(activeFilter.toLowerCase()));
   const featuredCount = projects?.filter((p) => p.featured).length || 0;
 
   if (!projects?.length)

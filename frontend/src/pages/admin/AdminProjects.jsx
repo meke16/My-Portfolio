@@ -27,6 +27,7 @@ const emptyForm = {
   technologies: "",
   featured: false,
   year: "",
+  order: "",
 };
 
 export default function AdminProjects() {
@@ -54,6 +55,7 @@ export default function AdminProjects() {
       technologies: p.technologies || "",
       featured: Boolean(p.featured),
       year: p.year || "",
+      order: p.order ?? "",
     });
     setOpen(true);
   };
@@ -76,6 +78,7 @@ export default function AdminProjects() {
       technologies: form.technologies.trim(),
       featured: form.featured,
       year: form.year.trim(),
+      order: form.order ? Number(form.order) : 0,
     };
     try {
       if (editing) {
@@ -192,6 +195,7 @@ export default function AdminProjects() {
                   </div>
                 </div>
                 <p className="text-sm text-gray-500 line-clamp-2">{project.description}</p>
+                <p className="text-xs text-gray-600">Order: {project.order ?? 0}</p>
                 {project.technologies && (
                   <div className="flex flex-wrap gap-1">
                     {project.technologies.split(",").map((t, i) => (
@@ -290,6 +294,18 @@ export default function AdminProjects() {
                   placeholder="2026"
                   className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
                 />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Display order</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={form.order}
+                  onChange={(e) => setForm({ ...form, order: e.target.value })}
+                  placeholder="1"
+                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                />
+                <p className="text-xs text-gray-600 mt-1">Lower number = shown first</p>
               </div>
               <label className="flex items-center justify-between gap-4 rounded-lg border border-gray-800 p-4 cursor-pointer">
                 <div>
