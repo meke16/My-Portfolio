@@ -16,6 +16,7 @@ import AdminBlogs from "./admin/AdminBlogs";
 import AdminSkills from "./admin/AdminSkills";
 import AdminTestimonials from "./admin/AdminTestimonials";
 import AdminMessages from "./admin/AdminMessages";
+import AdminAnalytics from "./admin/AdminAnalytics";
 
 function useAuthUser() {
   const [user, setUser] = useState(undefined);
@@ -149,6 +150,7 @@ function Admin() {
         <Route path="skills" element={<AdminSkills />} />
         <Route path="testimonials" element={<AdminTestimonials />} />
         <Route path="messages" element={<AdminMessages />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
       </Route>
     </Routes>
   );

@@ -14,6 +14,7 @@ import {
   ExternalLink,
   Menu,
   X,
+  BarChart3,
 } from "lucide-react";
 
 const menuItems = [
@@ -26,6 +27,7 @@ const menuItems = [
   { to: "/admin/skills", label: "Skills", icon: Wrench },
   { to: "/admin/testimonials", label: "Testimonials", icon: MessageCircle },
   { to: "/admin/messages", label: "Messages", icon: Mail },
+  { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
 ];
 
 export default function AdminLayout({ onLogout }) {

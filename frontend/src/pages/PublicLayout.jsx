@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
+import { trackPageView, trackPageDuration } from "../lib/analytics";
 import Navbar from "../components/Navbar";
 import LoadingScreen from "../components/LoadingScreen";
 import { HeroSection } from "../components/HeroSection";
@@ -42,7 +43,34 @@ function PublicLayout() {
     const idx = SECTIONS.indexOf(location.pathname);
     if (idx !== -1) currentIndex.current = idx;
     setMobileNavVisible(true);
+    
+    trackPageView(location.pathname);
   }, [location.pathname]);
+
+  const pageDurationRef = useRef({ started: Date.now(), page: null });
+
+  useEffect(() => {
+    const currentPage = location.pathname;
+    const prev = pageDurationRef.current;
+    
+    if (prev.page && prev.started) {
+      const duration = (Date.now() - prev.started) / 1000;
+      if (duration > 2) {
+        trackPageDuration(prev.page, duration);
+      }
+    }
+    
+    pageDurationRef.current = { started: Date.now(), page: currentPage };
+  }, [location.pathname]);
+
+  useEffect(() => {
+    return () => {
+      const duration = (Date.now() - pageDurationRef.current.started) / 1000;
+      if (duration > 2) {
+        trackPageDuration(pageDurationRef.current.page, duration);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!info) return;
