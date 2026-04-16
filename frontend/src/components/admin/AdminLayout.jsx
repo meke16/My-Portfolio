@@ -27,14 +27,17 @@ const menuItems = [
   { to: "/admin/skills", label: "Skills", icon: Wrench },
   { to: "/admin/testimonials", label: "Testimonials", icon: MessageCircle },
   { to: "/admin/messages", label: "Messages", icon: Mail },
-  { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+];
+
+const quickActionItems = [
+  { to: "/admin/analytics", label: "Analytics", icon: BarChart3, end: true },
 ];
 
 export default function AdminLayout({ onLogout }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const activeItem =
-    menuItems.find((item) =>
+    [...menuItems, ...quickActionItems].find((item) =>
       item.end ? location.pathname === item.to : location.pathname.startsWith(item.to)
     ) || menuItems[0];
 
@@ -96,6 +99,18 @@ export default function AdminLayout({ onLogout }) {
           <p className="px-3 py-2 mt-6 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
             Quick actions
           </p>
+          {quickActionItems.map(({ to, label, icon: Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={linkClass}
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon className="w-5 h-5 shrink-0 opacity-90 transition-transform group-hover:scale-105" />
+              {label}
+            </NavLink>
+          ))}
           <a
             href="/"
             target="_blank"
