@@ -116,7 +116,7 @@ function HeroSection({ info, stats = {} }) {
   const activeSocials = Object.entries(socials).filter(([, v]) => v);
 
   return (
-    <section className="min-h-screen flex items-center bg-[#0a0a0a] relative overflow-hidden pt-12">
+    <section className="min-h-screen flex items-start lg:items-center bg-[#0a0a0a] relative overflow-x-hidden pt-16 pb-10 lg:pt-12 lg:pb-0">
       {/* Subtle grid background */}
       <div className="absolute inset-0 opacity-[0.03]"
         style={{ backgroundImage: "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
@@ -223,7 +223,7 @@ function HeroSection({ info, stats = {} }) {
             ref={photoCardRef}
             onMouseMove={handlePhotoMove}
             onMouseLeave={handlePhotoLeave}
-            className="relative flex-shrink-0 w-64 h-[19rem] sm:w-72 sm:h-[21rem] lg:w-96 lg:h-[33rem] [perspective:1000px] transition-transform duration-100 ease-out will-change-transform"
+            className="relative flex-shrink-0 w-64 h-[23rem] sm:w-72 sm:h-[24rem] lg:w-96 lg:h-[33rem] [perspective:1000px] transition-transform duration-100 ease-out will-change-transform"
             style={{ transform: photoTransform }}
           >
             {/* Orange border frame */}
@@ -242,8 +242,8 @@ function HeroSection({ info, stats = {} }) {
                 onError={(e) => { e.target.src = PLACEHOLDER_AVATAR; }}
               />
               {/* Bottom vignette */}
-              <div className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none"
-                style={{ background: "linear-gradient(to top, rgba(10,5,0,0.6) 0%, transparent 100%)" }} />
+              <div className="absolute bottom-0 left-0 right-0 h-1/4 sm:h-1/3 pointer-events-none"
+                style={{ background: "linear-gradient(to top, rgba(10,5,0,0.45) 0%, transparent 100%)" }} />
             </div>
             {/* Decorative corner accent */}
             <div className="absolute -bottom-2 -right-2 w-12 h-12 border-r-2 border-b-2 border-[#ff4500]/50 rounded-br-lg" />

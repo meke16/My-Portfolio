@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
+import React, { useRef, useEffect, useCallback, useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useFirestorePortfolio } from "../context/FirestorePortfolioContext";
 import { trackPageView, trackPageDuration } from "../lib/analytics";
@@ -13,14 +13,33 @@ import { ContactPage } from "./ContactPage";
 import { BlogPage } from "./BlogPage";
 import { TestimonialsPage } from "./TestimonialsPage";
 import { NotFoundPage } from "./NotFoundPage";
+import FloatingContactButton from "../components/FloatingContactButton";
 
 const SECTIONS = ["/", "/about", "/experience", "/skills", "/projects", "/blog", "/contact", "/testimonials"];
+const SECTION_META = {
+  "/": { label: "Home" },
+  "/about": { label: "About" },
+  "/experience": { label: "Experience" },
+  "/skills": { label: "Skills" },
+  "/projects": { label: "Projects" },
+  "/blog": { label: "Blog" },
+  "/contact": { label: "Contact" },
+  "/testimonials": { label: "Testimonials" },
+};
 
 function PublicLayout() {
   const { info, projects, skills, testimonials, loading, error, fromCache, reload } = useFirestorePortfolio();
   const navigate = useNavigate();
   const location = useLocation();
-  const currentIndex = useRef(SECTIONS.indexOf(location.pathname));
+  const isTouchViewport = useMemo(
+    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 768px)").matches,
+    []
+  );
+  const visibleSections = useMemo(
+    () => (testimonials.length > 0 ? SECTIONS : SECTIONS.filter((section) => section !== "/testimonials")),
+    [testimonials.length]
+  );
+  const currentIndex = useRef(Math.max(0, visibleSections.indexOf(location.pathname)));
   const isScrolling = useRef(false);
   const wheelAccumulator = useRef(0);
   const lastNavAt = useRef(0);
@@ -29,23 +48,22 @@ function PublicLayout() {
   const [mobileNavVisible, setMobileNavVisible] = useState(true);
   const touchStartY = useRef(null);
   const touchStartX = useRef(null);
+  const touchStartAt = useRef(0);
   const lastTapAt = useRef(0);
-  const scrollLockMs = 520;
-  const wheelThreshold = typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 768px)").matches
-    ? 70
-    : 110;
+  const scrollLockMs = isTouchViewport ? 430 : 520;
+  const wheelThreshold = isTouchViewport ? 70 : 110;
 
   useEffect(() => {
     setShowWarning(fromCache);
   }, [fromCache]);
 
   useEffect(() => {
-    const idx = SECTIONS.indexOf(location.pathname);
+    const idx = visibleSections.indexOf(location.pathname);
     if (idx !== -1) currentIndex.current = idx;
     setMobileNavVisible(true);
     
     trackPageView(location.pathname);
-  }, [location.pathname]);
+  }, [location.pathname, visibleSections]);
 
   const pageDurationRef = useRef({ started: Date.now(), page: null });
 
@@ -85,7 +103,7 @@ function PublicLayout() {
       if (el) el.scrollTop = 0;
       navigate(visibleSections[idx]);
     },
-    [navigate]
+    [navigate, visibleSections]
   );
 
   useEffect(() => {
@@ -95,7 +113,7 @@ function PublicLayout() {
 
       const idx = currentIndex.current;
       const next = idx + direction;
-      if (next < 0 || next >= SECTIONS.length) return;
+      if (next < 0 || next >= visibleSections.length) return;
 
       isScrolling.current = true;
       lastNavAt.current = now;
@@ -144,12 +162,23 @@ function PublicLayout() {
     const onTouchStart = (e) => {
       touchStartY.current = e.touches[0].clientY;
       touchStartX.current = e.touches[0].clientX;
+      touchStartAt.current = performance.now();
     };
 
     const onTouchEnd = (e) => {
       if (touchStartY.current === null) return;
       const dy = touchStartY.current - e.changedTouches[0].clientY;
       const dx = Math.abs(touchStartX.current - e.changedTouches[0].clientX);
+      const elapsedMs = Math.max(1, performance.now() - touchStartAt.current);
+      const absDy = Math.abs(dy);
+      const swipeVelocity = absDy / elapsedMs;
+
+      // Fast flicks should require less travel than slow drags.
+      const minSwipeDistance = swipeVelocity > 0.9
+        ? 24
+        : swipeVelocity > 0.55
+          ? 34
+          : 50;
 
       // Tap (minimal movement) → toggle nav
       if (Math.abs(dy) < 8 && dx < 8) {
@@ -165,7 +194,7 @@ function PublicLayout() {
       }
 
       // Swipe — only if mostly vertical
-      if (Math.abs(dy) < 50 || dx > Math.abs(dy)) {
+      if (absDy < minSwipeDistance || dx > absDy) {
         touchStartY.current = null;
         return;
       }
@@ -193,6 +222,7 @@ function PublicLayout() {
       goToSection(currentIndex.current + direction);
       setTimeout(() => { isScrolling.current = false; }, scrollLockMs);
       touchStartY.current = null;
+      touchStartAt.current = 0;
     };
 
     window.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -203,10 +233,11 @@ function PublicLayout() {
     };
   }, [goToSection, scrollLockMs]);
 
-  const visibleSections = testimonials.length > 0 ? SECTIONS : SECTIONS.filter(s => s !== "/testimonials");
   const activeIdx = visibleSections.indexOf(location.pathname);
-  const isKnownRoute = activeIdx !== -1 && !(location.pathname === "/testimonials" && testimonials.length === 0);
+  const isKnownRoute = activeIdx !== -1;
   const displayIdx = Math.max(0, activeIdx);
+  const activePath = visibleSections[displayIdx];
+  const activeSectionLabel = SECTION_META[activePath]?.label || "Section";
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -269,23 +300,29 @@ function PublicLayout() {
     return <NotFoundPage />;
   }
 
-  const sections = [
-    <HeroSection
-      info={info}
-      stats={{
-        projects: projects?.length ?? 0,
-        skills: skills?.length ?? 0,
-        testimonials: testimonials?.length ?? 0,
-      }}
-    />,
-    <AboutPage />,
-    <WorkExperiencePage />,
-    <SkillsPage />,
-    <ProjectsPage />,
-    <BlogPage />,
-    <ContactPage />,
-    <TestimonialsPage />,
-  ];
+  const sectionByPath = {
+    "/": (
+      <HeroSection
+        info={info}
+        stats={{
+          projects: projects?.length ?? 0,
+          skills: skills?.length ?? 0,
+          testimonials: testimonials?.length ?? 0,
+        }}
+      />
+    ),
+    "/about": <AboutPage />,
+    "/experience": <WorkExperiencePage />,
+    "/skills": <SkillsPage />,
+    "/projects": <ProjectsPage />,
+    "/blog": <BlogPage />,
+    "/contact": <ContactPage />,
+    "/testimonials": <TestimonialsPage />,
+  };
+
+  const renderedSections = visibleSections
+    .map((path) => sectionByPath[path])
+    .filter(Boolean);
 
   return (
     <div className="h-screen overflow-hidden">
@@ -305,12 +342,41 @@ function PublicLayout() {
       )}
 
       <Navbar info={info} mobileNavVisible={mobileNavVisible} />
+      <FloatingContactButton info={info} />
+      {/* Active section chip (desktop/tablet) */}
+      <div className="fixed top-16 right-4 z-50 pointer-events-none hidden md:flex">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0f0f0f]/75 backdrop-blur-md px-3.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#ff4500] animate-pulse" />
+          <span className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#ff4500]">
+            {activeSectionLabel}
+          </span>
+          <span className="text-[10px] text-white/45">
+            {String(displayIdx + 1).padStart(2, "0")} / {String(visibleSections.length).padStart(2, "0")}
+          </span>
+        </div>
+      </div>
+      {/* Active section chip (mobile) */}
+      <div
+        className={`fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none md:hidden transition-all duration-300 ${
+          mobileNavVisible ? "bottom-[5.15rem] opacity-100" : "bottom-3 opacity-0"
+        }`}
+      >
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0f0f0f]/80 backdrop-blur-md px-3 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.32)]">
+          <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ff4500]">
+            {activeSectionLabel}
+          </span>
+          <span className="text-[10px] text-white/45">
+            {String(displayIdx + 1).padStart(2, "0")} / {String(visibleSections.length).padStart(2, "0")}
+          </span>
+        </div>
+      </div>
 
       {/* Sections with smooth route transition */}
       <div className="relative h-full overflow-hidden">
-        {sections.map((section, idx) => {
+        {renderedSections.map((section, idx) => {
           const isActive = idx === displayIdx;
-          const translate = isActive ? 0 : (idx < displayIdx ? -14 : 14);
+          const translate = isActive ? 0 : (idx < displayIdx ? (isTouchViewport ? -8 : -14) : (isTouchViewport ? 8 : 14));
+          const scale = isActive ? 1 : (isTouchViewport ? 1 : 0.992);
 
           return (
             <div
@@ -320,10 +386,12 @@ function PublicLayout() {
                 isActive
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
-              } transition-opacity duration-300 ease-out`}
+              } transition-opacity duration-500 ease-out`}
               style={{
-                transform: `translate3d(0, ${translate}vh, 0)`,
-                transition: "transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease-out",
+                transform: `translate3d(0, ${translate}vh, 0) scale(${scale})`,
+                transition: isTouchViewport
+                  ? "transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.34s ease-out"
+                  : "transform 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease-out",
                 backfaceVisibility: "hidden",
               }}
             >
@@ -333,17 +401,29 @@ function PublicLayout() {
         })}
       </div>
 
-      {/* Dot navigation */}
-      <nav className="fixed right-5 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 z-50">
+      {/* Desktop side navigation */}
+      <nav className="fixed right-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-2 z-50 rounded-2xl border border-white/10 bg-[#0f0f0f]/60 backdrop-blur-lg p-2.5 shadow-[0_18px_35px_rgba(0,0,0,0.3)]">
         {visibleSections.map((path, idx) => (
-          <button
-            key={path}
-            onClick={() => goToSection(idx)}
-            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-              idx === displayIdx ? "bg-[#ff4500] scale-125" : "bg-white/30 hover:bg-white/60"
-            }`}
-            aria-label={`Go to section ${idx + 1}`}
-          />
+          <div key={path} className="group relative flex items-center justify-end">
+            <span
+              className={`pointer-events-none absolute right-6 whitespace-nowrap rounded-lg border border-white/10 bg-black/55 px-2 py-1 text-[11px] text-white/80 backdrop-blur-sm transition-all duration-200 ${
+                idx === displayIdx
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0"
+              }`}
+            >
+              {SECTION_META[path]?.label || `Section ${idx + 1}`}
+            </span>
+            <button
+              onClick={() => goToSection(idx)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                idx === displayIdx
+                  ? "bg-[#ff4500] scale-125 shadow-[0_0_0_4px_rgba(255,69,0,0.16)]"
+                  : "bg-white/30 hover:bg-white/70 hover:scale-110"
+              }`}
+              aria-label={`Go to ${SECTION_META[path]?.label || `section ${idx + 1}`}`}
+            />
+          </div>
         ))}
       </nav>
     </div>

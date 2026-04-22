@@ -12,6 +12,8 @@ const emptySocials = {
   facebook: "",
   tiktok: "",
   instagram: "",
+  telegram: "",
+  whatsapp: "",
 };
 
 export default function AdminProfile() {
