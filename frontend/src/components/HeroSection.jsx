@@ -139,10 +139,10 @@ function HeroSection({ info, stats = {} }) {
                 Hello, I'm
               </p>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] tracking-tight">
-                <TypingName text={info?.name || "Your Name"} />
+                <TypingName text={info?.name || "Cherinet Habtamu"} />
               </h1>
               <h2 className="text-lg sm:text-xl font-semibold text-[#ff4500]">
-                {info?.title || "Full Stack Developer"}
+                {info?.title || "Software Engineer & Manager"}
               </h2>
             </div>
 
@@ -246,8 +246,8 @@ function HeroSection({ info, stats = {} }) {
                 style={{ background: "linear-gradient(to top, rgba(10,5,0,0.45) 0%, transparent 100%)" }} />
             </div>
             {/* Decorative corner accent */}
-            <div className="absolute -bottom-2 -right-2 w-12 h-12 border-r-2 border-b-2 border-[#ff4500]/50 rounded-br-lg" />
-            <div className="absolute -top-2 -left-2 w-12 h-12 border-l-2 border-t-2 border-[#ff4500]/20 rounded-tl-lg" />
+            <div className="absolute -bottom-4 -right-4 w-12 h-12 border-r-2 border-b-2 border-[#ff4500]/50 rounded-br-lg" />
+            <div className="absolute -top-4 -left-4 w-12 h-12 border-l-2 border-t-2 border-[#ff4500]/20 rounded-tl-lg" />
           </div>
         </div>
 
