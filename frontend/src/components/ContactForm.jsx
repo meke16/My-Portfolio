@@ -59,6 +59,7 @@ function ContactForm({ info }) {
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#ff4500]/8 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
         <div className="mb-10 max-w-3xl">
           <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">Get in touch</p>
           <h2 className="text-3xl md:text-4xl font-black text-white">
@@ -78,7 +79,7 @@ function ContactForm({ info }) {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-5 xl:gap-6 items-start">
+        <div className="grid lg:grid-cols-12 gap-5 xl:gap-6 items-start justify-center">
           <div className="lg:col-span-5 rounded-2xl border border-white/[0.07] bg-[#111] p-5 space-y-6 shadow-[0_10px_40px_rgba(0,0,0,0.18)]">
             <div className="space-y-3">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -243,6 +244,7 @@ function ContactForm({ info }) {
               )}
             </form>
           </div>
+        </div>
         </div>
       </div>
     </section>

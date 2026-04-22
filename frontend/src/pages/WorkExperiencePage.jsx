@@ -32,7 +32,7 @@ function WorkExperiencePage() {
             </h1>
             <div className="mt-3 w-10 h-0.5 bg-[#ff4500]" />
             {content.intro && (
-              <p className="mt-4 text-[#999] text-base leading-relaxed max-w-3xl">{content.intro}</p>
+              <p className="mt-4 text-[#999] text-base leading-relaxed max-w-2xl">{content.intro}</p>
             )}
             <div className="mt-5 flex flex-wrap gap-2">
               <span className="px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-xs font-mono text-[#a8a8a8]">
@@ -45,11 +45,11 @@ function WorkExperiencePage() {
           </div>
 
           {content.experiences.length === 0 ? (
-            <div className="rounded-xl border border-white/[0.07] bg-[#111] p-8 text-center text-[#777]">
+            <div className="rounded-xl border border-white/[0.07] bg-[#111] p-8 text-center text-[#777] max-w-3xl">
               No experience entries yet.
             </div>
           ) : (
-            <StaggerContainer staggerDelay={0.12} className="space-y-4 border-l border-white/[0.08] pl-6">
+            <StaggerContainer staggerDelay={0.12} className="space-y-4 border-l border-white/[0.08] pl-6 max-w-3xl">
               {content.experiences.map((exp, index) => (
                 <article key={exp.id || index} className="relative rounded-2xl border border-white/[0.07] bg-[#111] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff4500]/30 hover:shadow-[0_10px_25px_rgba(255,69,0,0.12)]">
                   <div className="absolute -left-[25px] top-6 w-2.5 h-2.5 rounded-full bg-[#ff4500]" />

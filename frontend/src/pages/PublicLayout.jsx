@@ -324,6 +324,11 @@ function PublicLayout() {
     .map((path) => sectionByPath[path])
     .filter(Boolean);
 
+  const getSectionSpacingClass = (path) => {
+    if (path === "/" || path === "/contact") return "";
+    return "pt-6 sm:pt-8 lg:pt-10";
+  };
+
   return (
     <div className="h-screen overflow-hidden">
       {/* Fallback warning banner */}
@@ -395,7 +400,9 @@ function PublicLayout() {
                 backfaceVisibility: "hidden",
               }}
             >
-              {section}
+              <div className={getSectionSpacingClass(visibleSections[idx])}>
+                {section}
+              </div>
             </div>
           );
         })}

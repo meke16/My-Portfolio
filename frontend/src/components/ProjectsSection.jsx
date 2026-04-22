@@ -56,12 +56,13 @@ function ProjectsSection({ projects }) {
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#ff4500]/6 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-mono tracking-[0.2em] text-[#ff4500] uppercase mb-2">What I've built</p>
             <h2 className="text-3xl md:text-4xl font-black text-white">Projects</h2>
             <div className="mt-3 w-10 h-0.5 bg-[#ff4500]" />
-            <p className="mt-4 text-sm md:text-base text-[#8f8f8f] leading-relaxed">
+            <p className="mt-4 text-sm md:text-base text-[#8f8f8f] leading-relaxed max-w-2xl">
               A focused look at the work that best shows how I think, build, and polish product experiences.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
@@ -76,8 +77,8 @@ function ProjectsSection({ projects }) {
 
           {/* Filters */}
           {allTech.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {["All", ...allTech.sort()].map((tech) => (
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {['All', ...allTech.sort()].map((tech) => (
                 <button key={tech} onClick={() => setActiveFilter(tech)}
                   className={`px-4 py-1.5 rounded-md text-xs font-mono font-medium transition-all duration-200 ${
                     activeFilter.toLowerCase() === tech.toLowerCase()
@@ -91,7 +92,7 @@ function ProjectsSection({ projects }) {
           )}
 
           {/* Grid */}
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center">
             <AnimatePresence>
               {filtered?.map((project, idx) => {
                 const images = getImages(project);
@@ -161,6 +162,7 @@ function ProjectsSection({ projects }) {
                 className="text-[#ff4500] text-sm hover:underline font-mono">Clear filter</button>
             </div>
           )}
+          </div>
         </div>
       </section>
 
