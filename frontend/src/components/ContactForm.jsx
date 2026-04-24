@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 
+const genId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+
 function ContactForm({ info }) {
   const firestoreReady = Boolean(db);
   const [formData, setFormData] = useState({
@@ -30,8 +32,12 @@ function ContactForm({ info }) {
     setStatus({ message: "Sending...", type: "info" });
 
     try {
+      const conversationId = genId();
       await addDoc(collection(db, "messages"), {
         ...formData,
+        conversationId,
+        direction: "inbound",
+        source: "portfolio",
         read: false,
         createdAt: serverTimestamp(),
       });

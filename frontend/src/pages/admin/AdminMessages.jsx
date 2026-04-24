@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  collection, getDocs, updateDoc, deleteDoc, doc, arrayUnion,
+  collection, getDocs, updateDoc, deleteDoc, doc, addDoc, serverTimestamp, query, where,
 } from "firebase/firestore";
 import { Mail, Trash2, RefreshCw, Inbox, Send } from "lucide-react";
 import { useFirestorePortfolio } from "../../context/FirestorePortfolioContext";
@@ -48,6 +48,7 @@ export default function AdminMessages() {
   const [busyId, setBusyId] = useState(null);
   const [replyText, setReplyText] = useState("");
   const [replying, setReplying] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
   const bottomRef = useRef(null);
 
   const load = useCallback(async () => {
@@ -89,12 +90,13 @@ export default function AdminMessages() {
   };
 
   const handleDelete = async (id) => {
-    if (!db || !window.confirm("Delete this message permanently?")) return;
+    if (!db) return;
     setBusyId(id);
     try {
       await deleteDoc(doc(db, "messages", id));
       setMessages((prev) => prev.filter((m) => m.id !== id));
       setSelected((s) => s?.id === id ? null : s);
+      setDeleteTargetId((currentId) => (currentId === id ? null : currentId));
     } catch (e) {
       setError(e?.message || "Could not delete.");
     } finally {
@@ -147,6 +149,7 @@ export default function AdminMessages() {
   };
 
   const unread = messages.filter((m) => !m.read).length;
+  const isDeleteModalOpen = Boolean(deleteTargetId);
 
   // Build chat thread: original message first, then replies interleaved
   const thread = selected ? [
@@ -230,7 +233,7 @@ export default function AdminMessages() {
                     {selected.subject && <p className="text-xs text-gray-500 mt-0.5">{selected.subject}</p>}
                   </div>
                   <div className="flex items-center gap-3">
-                    <button type="button" disabled={busyId === selected.id} onClick={() => handleDelete(selected.id)}
+                    <button type="button" disabled={busyId === selected.id} onClick={() => setDeleteTargetId(selected.id)}
                       className="text-red-400 hover:text-red-300 disabled:opacity-50">
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -263,6 +266,40 @@ export default function AdminMessages() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => !busyId && setDeleteTargetId(null)}
+            aria-hidden="true"
+          />
+          <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl">
+            <h3 className="text-lg font-semibold text-white">Delete message?</h3>
+            <p className="mt-2 text-sm text-gray-400">
+              This action is permanent and cannot be undone.
+            </p>
+            <div className="mt-6 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteTargetId(null)}
+                disabled={Boolean(busyId)}
+                className="px-4 py-2 rounded-lg border border-white/10 text-gray-300 hover:bg-white/5 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDelete(deleteTargetId)}
+                disabled={Boolean(busyId)}
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 disabled:opacity-50"
+              >
+                {busyId ? "Deleting..." : "Delete"}
+              </button>
+            </div>
           </div>
         </div>
       )}
