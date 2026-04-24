@@ -246,7 +246,7 @@ function HeroSection({ info, stats = {} }) {
                 style={{ background: "linear-gradient(to top, rgba(10,5,0,0.45) 0%, transparent 100%)" }} />
             </div>
             {/* Decorative corner accent */}
-            <div className="absolute -bottom-4 -right-4 w-12 h-12 border-r-2 border-b-2 border-[#ff4500]/50 rounded-br-lg" />
+            <div className="absolute -bottom-4 -right-4 w-12 h-12 border-r-2 border-b-2 border-[#ff4500]/20 rounded-br-lg" />
             <div className="absolute -top-4 -left-4 w-12 h-12 border-l-2 border-t-2 border-[#ff4500]/20 rounded-tl-lg" />
           </div>
         </div>

@@ -35,8 +35,16 @@ function ContactForm({ info }) {
         read: false,
         createdAt: serverTimestamp(),
       });
+
+      // Show success immediately — email sends in background
       setStatus({ message: "Message sent successfully!", type: "success" });
       setFormData({ name: "", email: "", subject: "", message: "" });
+
+      fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }).catch(() => {}); // silent — message is already saved to Firestore
     } catch {
       setStatus({ message: "Connection error. Try again.", type: "error" });
     } finally {
