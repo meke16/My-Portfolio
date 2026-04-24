@@ -40,12 +40,13 @@ export default async function handler(req, res) {
 
   // Debug: log exactly what n8n sent
   console.log("inbound-email body:", JSON.stringify({ from, subject, text: text?.slice(0, 100) }));
-
-  if (!from || (!text && !html)) return res.status(400).json({ error: "Missing fields" });
+  console.log("full body keys:", Object.keys(req.body || {}));
 
   const conversationId = extractCid(subject);
-
   console.log("extracted CID:", conversationId, "from subject:", subject);
+
+  // temporarily skip validation to debug
+  // if (!from || (!text && !html)) return res.status(400).json({ error: "Missing fields" });
   if (!conversationId) {
     // No CID found — not a reply to a known conversation, ignore
     return res.status(200).json({ ok: true, skipped: "no CID in subject" });
