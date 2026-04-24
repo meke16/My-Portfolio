@@ -36,7 +36,9 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { from, subject, text, html } = req.body || {};
+  const from = req.body?.from || req.body?.From || "";
+  const subject = req.body?.subject || req.body?.Subject || "";
+  const text = req.body?.text || req.body?.Text || req.body?.html || "";
 
   if (!from || (!text && !html)) return res.status(400).json({ error: "Missing fields" });
 
