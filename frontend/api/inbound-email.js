@@ -41,6 +41,11 @@ export default async function handler(req, res) {
   if (!from || (!text && !html)) return res.status(400).json({ error: "Missing fields" });
 
   const conversationId = extractCid(subject);
+  console.log("CID:", conversationId, "| subject:", subject?.slice(0, 80));
+
+  if (!conversationId) {
+    return res.status(200).json({ ok: true, skipped: "no CID in subject" });
+  }
   if (!conversationId) {
     // No CID found — not a reply to a known conversation, ignore
     return res.status(200).json({ ok: true, skipped: "no CID in subject" });
@@ -63,6 +68,7 @@ export default async function handler(req, res) {
       read: false,
       createdAt: FieldValue.serverTimestamp(),
     });
+    console.log("saved to Firestore OK, conversationId:", conversationId);
     return res.status(200).json({ ok: true, conversationId });
   } catch (err) {
     console.error("inbound-email error:", err);
