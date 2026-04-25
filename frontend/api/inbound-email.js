@@ -27,6 +27,67 @@ function extractCid(subject = "") {
   return m ? m[1] : null;
 }
 
+function toTextFromHtml(html = "") {
+  return String(html)
+    .replace(/<\s*br\s*\/?\s*>/gi, "\n")
+    .replace(/<\s*\/\s*p\s*>/gi, "\n")
+    .replace(/<\s*li\b[^>]*>/gi, "\n- ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .trim();
+}
+
+function decodeQuotedPrintable(input = "") {
+  if (!input) return "";
+  const noSoftBreaks = input
+    // Soft line breaks in quoted-printable: "=\n" or "=\r\n"
+    .replace(/=\r?\n/g, "")
+    // Keep literal equals signs encoded as =3D
+    .replace(/=3D/gi, "=");
+
+  return noSoftBreaks.replace(/=([0-9A-F]{2})/gi, (_, hex) => {
+    try {
+      return String.fromCharCode(parseInt(hex, 16));
+    } catch {
+      return _;
+    }
+  });
+}
+
+function stripQuotedHistory(raw = "") {
+  const lines = String(raw).replace(/\r\n?/g, "\n").split("\n");
+  const out = [];
+
+  for (const line of lines) {
+    const l = line.trim();
+
+    // Stop when previous thread headers start.
+    if (
+      /^On\s.+wrote:\s*$/i.test(l) ||
+      /^From:\s/i.test(l) ||
+      /^Sent:\s/i.test(l) ||
+      /^To:\s/i.test(l) ||
+      /^Subject:\s/i.test(l) ||
+      /^-{2,}\s*Original Message\s*-{2,}$/i.test(l)
+    ) {
+      break;
+    }
+
+    // Ignore quoted lines from previous messages.
+    if (/^>+\s?/.test(l)) continue;
+
+    out.push(line);
+  }
+
+  return out
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -38,7 +99,8 @@ export default async function handler(req, res) {
 
   const from = req.body?.from || req.body?.From || "";
   const subject = req.body?.subject || req.body?.Subject || "";
-  const text = req.body?.text || req.body?.Text || req.body?.html || "";
+  const text = req.body?.text || req.body?.Text || "";
+  const html = req.body?.html || req.body?.Html || "";
 
   if (!from || (!text && !html)) return res.status(400).json({ error: "Missing fields" });
 
@@ -48,14 +110,14 @@ export default async function handler(req, res) {
   if (!conversationId) {
     return res.status(200).json({ ok: true, skipped: "no CID in subject" });
   }
-  if (!conversationId) {
-    // No CID found — not a reply to a known conversation, ignore
-    return res.status(200).json({ ok: true, skipped: "no CID in subject" });
-  }
 
-  const body = text || html?.replace(/<[^>]+>/g, " ").trim();
-  // Strip quoted reply text (lines starting with ">")
-  const cleanBody = body.split("\n").filter((l) => !l.startsWith(">")).join("\n").trim();
+  const rawBody = text || toTextFromHtml(html);
+  const decodedBody = decodeQuotedPrintable(rawBody);
+  const cleanBody = stripQuotedHistory(decodedBody);
+
+  if (!cleanBody) {
+    return res.status(200).json({ ok: true, skipped: "empty clean body" });
+  }
 
   try {
     const db = getDb();
