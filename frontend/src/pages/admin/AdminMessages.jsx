@@ -23,7 +23,13 @@ function formatWhen(c) {
   return "—";
 }
 
-function ChatBubble({ text, time, isMe, source }) {
+function isImageAttachment(a) {
+  const type = String(a?.mimeType || "").toLowerCase();
+  const url = String(a?.url || "").toLowerCase();
+  return type.startsWith("image/") || url.startsWith("data:image/") || /\.(png|jpe?g|gif|webp|svg)$/i.test(url);
+}
+
+function ChatBubble({ text, time, isMe, source, attachments = [] }) {
   return (
     <div className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
       <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap leading-relaxed ${
@@ -35,6 +41,37 @@ function ChatBubble({ text, time, isMe, source }) {
           <p className="text-[10px] text-gray-400 mb-1 font-mono">via email reply</p>
         )}
         {text}
+        {attachments.length > 0 && (
+          <div className="mt-2 space-y-2">
+            {attachments.map((a, i) => (
+              <div key={`${a.url || a.name}-${i}`} className="rounded-lg border border-white/15 bg-black/15 p-2">
+                {isImageAttachment(a) && a.url && (
+                  <a href={a.url} target="_blank" rel="noreferrer" className="block mb-2">
+                    <img
+                      src={a.url}
+                      alt={a.name || `attachment-${i + 1}`}
+                      className="max-h-48 w-auto rounded-md border border-white/10"
+                      loading="lazy"
+                    />
+                  </a>
+                )}
+                {a.url ? (
+                  <a
+                    href={a.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs underline break-all text-blue-200 hover:text-blue-100"
+                  >
+                    {a.name || `Attachment ${i + 1}`}
+                  </a>
+                ) : (
+                  <p className="text-xs break-all text-gray-300">{a.name || `Attachment ${i + 1}`}</p>
+                )}
+                {a.mimeType && <p className="text-[10px] text-gray-400 mt-0.5">{a.mimeType}</p>}
+              </div>
+            ))}
+          </div>
+        )}
         <p className={`text-[10px] mt-1 ${isMe ? "text-blue-200/70 text-right" : "text-gray-500"}`}>
           {time}
         </p>
@@ -286,6 +323,7 @@ export default function AdminMessages() {
                       time={formatWhen(msg.createdAt)}
                       isMe={msg.direction === "outbound"}
                       source={msg.source}
+                      attachments={Array.isArray(msg.attachments) ? msg.attachments : []}
                     />
                   ))}
                   <div ref={bottomRef} />

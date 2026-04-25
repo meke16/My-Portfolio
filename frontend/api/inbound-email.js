@@ -88,6 +88,38 @@ function stripQuotedHistory(raw = "") {
     .trim();
 }
 
+function normalizeAttachments(body = {}) {
+  const raw = body.attachments || body.attachment || body.files || [];
+  const list = Array.isArray(raw) ? raw : [raw];
+
+  return list
+    .map((a) => {
+      if (!a || typeof a !== "object") return null;
+
+      const name = a.fileName || a.filename || a.name || "attachment";
+      const mimeType = a.mimeType || a.contentType || a.type || "application/octet-stream";
+      const size = Number(a.size || a.fileSize || a.bytes || 0) || null;
+      const url = a.url || a.downloadUrl || a.link || "";
+      const contentId = a.contentId || a.cid || "";
+
+      // If n8n sends base64 data, keep a small data URL for preview/download.
+      const base64 = typeof a.data === "string" ? a.data.trim() : "";
+      const smallDataUrl = base64 && base64.length <= 200000
+        ? `data:${mimeType};base64,${base64}`
+        : "";
+
+      return {
+        name,
+        mimeType,
+        size,
+        url: url || smallDataUrl,
+        contentId,
+      };
+    })
+    .filter(Boolean)
+    .filter((a) => a.url || a.name || a.contentId);
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -101,8 +133,11 @@ export default async function handler(req, res) {
   const subject = req.body?.subject || req.body?.Subject || "";
   const text = req.body?.text || req.body?.Text || "";
   const html = req.body?.html || req.body?.Html || "";
+  const attachments = normalizeAttachments(req.body || {});
 
-  if (!from || (!text && !html)) return res.status(400).json({ error: "Missing fields" });
+  if (!from || (!text && !html && attachments.length === 0)) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
 
   const conversationId = extractCid(subject);
   console.log("CID:", conversationId, "| subject:", subject?.slice(0, 80));
@@ -115,7 +150,7 @@ export default async function handler(req, res) {
   const decodedBody = decodeQuotedPrintable(rawBody);
   const cleanBody = stripQuotedHistory(decodedBody);
 
-  if (!cleanBody) {
+  if (!cleanBody && attachments.length === 0) {
     return res.status(200).json({ ok: true, skipped: "empty clean body" });
   }
 
@@ -128,7 +163,8 @@ export default async function handler(req, res) {
       fromEmail: from,
       email: from,
       subject: subject || "",
-      message: cleanBody,
+      message: cleanBody || "(attachment)",
+      attachments,
       read: false,
       createdAt: FieldValue.serverTimestamp(),
     });
