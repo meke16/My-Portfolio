@@ -32,11 +32,10 @@ function isImageAttachment(a) {
 function ChatBubble({ text, time, isMe, source, attachments = [] }) {
   return (
     <div className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-      <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap leading-relaxed ${
-        isMe
-          ? "bg-blue-600 text-white rounded-br-sm"
-          : "bg-white/[0.07] text-gray-200 rounded-bl-sm"
-      }`}>
+      <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap leading-relaxed ${isMe
+        ? "bg-blue-600 text-white rounded-br-sm"
+        : "bg-white/[0.07] text-gray-200 rounded-bl-sm"
+        }`}>
         {source === "email" && !isMe && (
           <p className="text-[10px] text-gray-400 mb-1 font-mono">via email reply</p>
         )}
@@ -142,7 +141,7 @@ export default function AdminMessages() {
 
   const markRead = async (id) => {
     if (!db) return;
-    await updateDoc(doc(db, "messages", id), { read: true }).catch(() => {});
+    await updateDoc(doc(db, "messages", id), { read: true }).catch(() => { });
     setMessages((prev) => prev.map((m) => m.id === id ? { ...m, read: true } : m));
     setSelected((s) => s?.id === id ? { ...s, read: true } : s);
   };
@@ -212,7 +211,7 @@ export default function AdminMessages() {
           message: text,
           replyTo: selected.email,
         }),
-      }).catch(() => {});
+      }).catch(() => { });
 
       // Reload thread to replace optimistic entry with real doc
       loadThread(selected);
@@ -231,57 +230,58 @@ export default function AdminMessages() {
   const isDeleteModalOpen = Boolean(deleteTargetId);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className="max-w-6xl mx-auto space-y-10 pb-10">
+      <div className="flex flex-wrap items-start justify-between gap-6 border-b-[3px] border-white/20 pb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-            <Mail className="w-8 h-8 text-blue-400" />
-            Messages
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic flex items-center gap-4">
+            <Mail className="w-10 h-10" strokeWidth={3} />
+            Transmission Hub
           </h1>
-          <p className="text-gray-400 mt-1">
-            Contact form submissions
+          <p className="text-gray-500 font-bold mt-1 text-sm uppercase tracking-wider">
+            Inbound communication stream
             {messages.length > 0 && (
-              <span> · {messages.length} total{unread > 0 && <span className="text-blue-400 font-medium"> · {unread} unread</span>}</span>
+              <span className="text-white/40"> · {messages.length} Records{unread > 0 && <span className="text-accent underline font-black"> · {unread} Unread</span>}</span>
             )}
           </p>
         </div>
         <button type="button" onClick={load} disabled={loading || !db}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 text-sm font-medium disabled:opacity-50">
-          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
+          className="inline-flex items-center gap-3 px-8 py-4 border-[2.5px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest shadow-brutalist-white-sm hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all disabled:opacity-50">
+          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} strokeWidth={3} />
+          Sync Stream
         </button>
       </div>
 
-      {error && <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">{error}</div>}
-      {!db && <p className="text-amber-400 text-sm">Firebase is not configured.</p>}
+      {error && <div className="border-[2.5px] border-red-500 bg-red-950/30 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-red-500 shadow-brutalist-white-sm">{error}</div>}
+      {!db && <p className="text-red-500 font-black uppercase tracking-widest text-[10px]">Critical Error: Database link inactive.</p>}
 
       {loading ? (
-        <p className="text-gray-500 text-sm">Loading messages…</p>
+        <div className="flex items-center justify-center py-24 border-[3px] border-white/20 border-dashed bg-[#0a0a0a]">
+          <p className="text-white/20 font-black uppercase tracking-[0.2em] animate-pulse text-xs italic">Establishing secure link…</p>
+        </div>
       ) : messages.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] py-20 text-center">
-          <Inbox className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-500">No messages yet.</p>
+        <div className="border-[3px] border-white bg-[#111111] py-24 text-center shadow-brutalist-white">
+          <Inbox className="w-16 h-16 text-white opacity-10 mx-auto mb-6" strokeWidth={2} />
+          <p className="text-white/30 font-black uppercase tracking-widest italic">Archive empty. No inbound transmissions detected.</p>
         </div>
       ) : (
-        <div className="flex flex-col lg:flex-row gap-6" style={{ height: "calc(100vh - 220px)" }}>
+        <div className="flex flex-col lg:flex-row gap-8" style={{ height: "calc(100vh - 240px)" }}>
           {/* Inbox list */}
-          <div className="lg:w-[min(100%,320px)] flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden shrink-0">
-            <div className="px-4 py-3 border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-gray-500">Inbox</div>
-            <ul className="overflow-y-auto flex-1">
+          <div className="lg:w-[min(100%,360px)] flex flex-col border-[3px] border-white bg-[#111111] shadow-brutalist-white overflow-hidden shrink-0">
+            <div className="px-6 py-4 border-b-[3px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest italic">Inbound Queue</div>
+            <ul className="overflow-y-auto flex-1 scrollbar-custom bg-[#0a0a0a]">
               {messages.map((m) => (
                 <li key={m.id}>
                   <button type="button" onClick={() => openMessage(m)}
-                    className={`w-full text-left px-4 py-3 border-b border-white/10 transition-colors border-l-2 ${
-                      selected?.id === m.id ? "bg-blue-600/15 border-l-blue-500" : "border-l-transparent hover:bg-white/5"
-                    }`}>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className={`font-medium truncate text-sm ${m.read ? "text-gray-400" : "text-white"}`}>
-                        {m.name || "Anonymous"}
+                    className={`w-full text-left px-6 py-6 border-b-[2px] border-white/10 transition-all relative group ${selected?.id === m.id ? "bg-white/5 translate-x-[2px] translate-y-[2px] border-l-[6px] border-l-accent" : "hover:bg-white/[0.03]"
+                      }`}>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className={`font-black uppercase tracking-tight truncate text-sm italic ${m.read ? "text-white/30" : "text-white"}`}>
+                        {m.name || "UNIDENTIFIED SOURCE"}
                       </span>
-                      {!m.read && <span className="shrink-0 w-2 h-2 rounded-full bg-blue-500" />}
+                      {!m.read && <span className="shrink-0 w-3 h-3 bg-accent shadow-brutalist-accent" />}
                     </div>
-                    <p className="text-xs text-gray-500 truncate mt-0.5">{m.subject || m.message?.slice(0, 50) || "(no subject)"}</p>
-                    <p className="text-[11px] text-gray-600 mt-1">{formatWhen(m.createdAt)}</p>
+                    <p className="text-[11px] font-bold text-gray-400 truncate mt-1 uppercase italic tracking-tighter">{m.subject || m.message?.slice(0, 50) || "(NO SUBJECT)"}</p>
+                    <p className="text-[9px] font-black text-white/20 mt-3 uppercase tracking-widest">{formatWhen(m.createdAt)}</p>
                   </button>
                 </li>
               ))}
@@ -289,59 +289,94 @@ export default function AdminMessages() {
           </div>
 
           {/* Chat panel */}
-          <div className="flex-1 min-w-0 flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden">
+          <div className="flex-1 min-w-0 flex flex-col border-[3px] border-white bg-[#111111] shadow-brutalist-white overflow-hidden relative">
             {!selected ? (
-              <div className="flex-1 flex items-center justify-center text-gray-500 text-sm">Select a message</div>
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-10 bg-[#0a0a0a]">
+                <div className="w-24 h-24 border-[3px] border-white/20 bg-white/5 flex items-center justify-center shadow-brutalist-white-sm mb-6">
+                  <Mail className="w-10 h-10 text-white opacity-10" />
+                </div>
+                <p className="text-white/20 font-black uppercase tracking-[0.2em] text-xs italic">Select record from inbound queue to initiate inspection</p>
+              </div>
             ) : (
               <>
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 shrink-0">
-                  <div>
-                    <p className="font-semibold text-white">{selected.name}</p>
-                    <a href={`mailto:${selected.email}`} className="text-xs text-blue-400 hover:text-blue-300">{selected.email}</a>
-                    {selected.subject && <p className="text-xs text-gray-500 mt-0.5">{selected.subject}</p>}
-                    {selected.conversationId && (
-                      <p className="text-[10px] text-gray-600 font-mono mt-0.5">CID: {selected.conversationId}</p>
-                    )}
+                <div className="flex items-center justify-between px-8 py-6 border-b-[3px] border-white/20 bg-[#161616] shrink-0">
+                  <div className="space-y-1">
+                    <p className="text-2xl font-black text-white uppercase italic tracking-tight">{selected.name}</p>
+                    <div className="flex flex-wrap items-center gap-4">
+                      <a href={`mailto:${selected.email}`} className="text-[10px] font-black text-accent uppercase tracking-widest hover:underline">{selected.email}</a>
+                      {selected.conversationId && (
+                        <span className="text-[10px] font-black bg-white text-black px-2 py-0.5 tracking-tighter">CID: {selected.conversationId}</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <button type="button" disabled={busyId === selected.id} onClick={() => setDeleteTargetId(selected.id)}
-                      className="text-red-400 hover:text-red-300 disabled:opacity-50">
-                      <Trash2 className="w-4 h-4" />
+                      className="p-3 border-[2px] border-white bg-[#0a0a0a] text-red-500 hover:bg-red-600 hover:text-white shadow-brutalist-white-sm transition-all active:shadow-none disabled:opacity-50">
+                      <Trash2 className="w-5 h-5" strokeWidth={2.5} />
                     </button>
                     <button type="button" onClick={() => { setSelected(null); setThread([]); }}
-                      className="text-gray-500 hover:text-white text-sm">✕</button>
+                      className="p-3 border-[2px] border-white text-white hover:bg-white hover:text-black transition-all shadow-brutalist-white-sm active:shadow-none bg-[#0a0a0a]">
+                      <X className="w-5 h-5" strokeWidth={3} />
+                    </button>
                   </div>
                 </div>
 
                 {/* Thread */}
-                <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+                <div className="flex-1 overflow-y-auto px-10 py-10 space-y-8 bg-[#0a0a0a] scrollbar-custom">
                   {thread.map((msg) => (
-                    <ChatBubble
-                      key={msg.id}
-                      text={msg.message}
-                      time={formatWhen(msg.createdAt)}
-                      isMe={msg.direction === "outbound"}
-                      source={msg.source}
-                      attachments={Array.isArray(msg.attachments) ? msg.attachments : []}
-                    />
+                    <div key={msg.id} className={`flex ${msg.direction === "outbound" ? "justify-end" : "justify-start"}`}>
+                      <div className={`max-w-[85%] px-8 py-6 border-[2.5px] border-white shadow-brutalist-white-sm relative overflow-hidden ${msg.direction === "outbound"
+                        ? "bg-white text-black"
+                        : "bg-[#161616] text-white"
+                        }`}>
+                        {msg.source === "email" && msg.direction !== "outbound" && (
+                          <div className="absolute top-0 left-0 right-0 bg-accent text-white text-[8px] font-black uppercase text-center py-0.5 tracking-widest">VIA EMAIL RELAY</div>
+                        )}
+                        <p className="text-sm font-bold whitespace-pre-wrap leading-relaxed">{msg.message}</p>
+
+                        {Array.isArray(msg.attachments) && msg.attachments.length > 0 && (
+                          <div className="mt-6 grid gap-4">
+                            {msg.attachments.map((a, i) => (
+                              <div key={`${a.url || a.name}-${i}`} className="border-[2px] border-white/20 bg-black/40 p-4 space-y-3">
+                                {isImageAttachment(a) && a.url && (
+                                  <a href={a.url} target="_blank" rel="noreferrer" className="block border-[2px] border-white shadow-brutalist-white-sm overflow-hidden bg-black/20">
+                                    <img src={a.url} alt={a.name} className="max-h-80 w-full object-contain grayscale hover:grayscale-0 transition-all opacity-80 hover:opacity-100" />
+                                  </a>
+                                )}
+                                <div className="flex items-center justify-between gap-4">
+                                  <a href={a.url} target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase underline tracking-tighter truncate opacity-40 hover:opacity-100">
+                                    {a.name || "ATTACHED_FILE_LOG"}
+                                  </a>
+                                  {a.mimeType && <span className="text-[8px] font-black uppercase opacity-20 shrink-0">{a.mimeType}</span>}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <p className={`text-[9px] font-black uppercase tracking-widest mt-6 opacity-30 italic ${msg.direction === "outbound" ? "text-right" : ""}`}>
+                          {formatWhen(msg.createdAt)}
+                        </p>
+                      </div>
+                    </div>
                   ))}
                   <div ref={bottomRef} />
                 </div>
 
                 {/* Input */}
-                <div className="px-4 py-3 border-t border-white/10 flex gap-2 items-end shrink-0">
+                <div className="px-8 py-8 border-t-[3px] border-white/20 bg-[#161616] flex gap-6 items-end shrink-0">
                   <textarea
                     rows={2}
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Reply… (Enter to send, Shift+Enter for newline)"
-                    className="flex-1 px-3 py-2 rounded-xl bg-black/30 border border-white/10 text-gray-200 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-600"
+                    placeholder="TRANSMIT RESPONSE…"
+                    className="flex-1 px-6 py-5 border-[2.5px] border-white bg-[#0a0a0a] font-black uppercase text-xs tracking-tight text-white outline-none focus:bg-[#050505] shadow-brutalist-white-sm transition-all resize-none placeholder:text-white/10"
                   />
                   <button type="button" onClick={handleReply} disabled={replying || !replyText.trim()}
-                    className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-40 disabled:cursor-not-allowed shrink-0">
-                    <Send className="w-4 h-4" />
+                    className="p-5 border-[2.5px] border-white bg-white text-black shadow-brutalist-accent active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all disabled:opacity-20 disabled:cursor-not-allowed shrink-0">
+                    <Send className="w-6 h-6" strokeWidth={3} />
                   </button>
                 </div>
               </>
@@ -351,36 +386,32 @@ export default function AdminMessages() {
       )}
 
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/70"
-            onClick={() => !busyId && setDeleteTargetId(null)}
-            aria-hidden="true"
-          />
-          <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl">
-            <h3 className="text-lg font-semibold text-white">Delete message?</h3>
-            <p className="mt-2 text-sm text-gray-400">This action is permanent and cannot be undone.</p>
-            <div className="mt-6 flex items-center justify-end gap-3">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-[4px]">
+          <div className="w-full max-w-md border-[3px] border-white bg-[#111111] p-10 shadow-brutalist-white-lg">
+            <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Purge document record?</h3>
+            <p className="text-sm font-bold text-gray-500 mt-6 uppercase leading-relaxed tracking-tighter">Warning: Terminal deletion. Communication history will be erased from central archive.</p>
+            <div className="flex justify-end gap-4 mt-12 pt-8 border-t-[2px] border-white/10 border-dashed">
               <button
                 type="button"
                 onClick={() => setDeleteTargetId(null)}
                 disabled={Boolean(busyId)}
-                className="px-4 py-2 rounded-lg border border-white/10 text-gray-300 hover:bg-white/5 disabled:opacity-50"
+                className="px-8 py-4 border-[2px] border-white bg-transparent text-white text-[11px] font-black uppercase tracking-widest shadow-brutalist-white-sm active:shadow-none hover:bg-white hover:text-black transition-all"
               >
-                Cancel
+                Abort
               </button>
               <button
                 type="button"
                 onClick={() => handleDelete(deleteTargetId)}
                 disabled={Boolean(busyId)}
-                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 disabled:opacity-50"
+                className="px-8 py-4 border-[2px] border-white bg-red-600 text-white text-[11px] font-black uppercase tracking-widest shadow-brutalist-white-sm active:shadow-none transition-all"
               >
-                {busyId ? "Deleting..." : "Delete"}
+                {busyId ? "Purging…" : "Purge Record"}
               </button>
             </div>
           </div>
         </div>
       )}
     </div>
+
   );
 }

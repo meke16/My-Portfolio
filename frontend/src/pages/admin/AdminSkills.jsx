@@ -109,86 +109,93 @@ export default function AdminSkills() {
     : (form.category || "");
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="max-w-5xl mx-auto space-y-10 pb-10">
+      <div className="flex flex-wrap items-center justify-between gap-6 border-b-[3px] border-white/20 pb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Skills</h1>
-          <p className="text-gray-400 mt-1">Group skills by category and keep proficiency current.</p>
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Skills Arsenal</h1>
+          <p className="text-gray-500 font-bold mt-1 text-sm uppercase tracking-wider">Technical capability indexing</p>
         </div>
         <button
           type="button"
           onClick={openCreate}
           disabled={!db}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium disabled:opacity-50"
+          className="inline-flex items-center gap-3 px-6 py-3.5 border-[2.5px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest shadow-brutalist-accent hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all disabled:opacity-50"
         >
-          <Plus className="w-4 h-4" />
-          Add skill
+          <Plus className="w-4 h-4" strokeWidth={3} />
+          Register new skill
         </button>
       </div>
 
       {skills.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] py-16 text-center text-gray-500">
-            No skills yet. Import JSON from the dashboard or add one here.
-          </div>
-        ) : (
-        <div className="space-y-10">
-          {[{ key: "hard", title: "Hard Skills" }, { key: "soft", title: "Soft Skills" }].map((section) => {
+        <div className="border-[3px] border-white bg-[#111111] py-20 text-center shadow-brutalist-white">
+          <p className="text-white/20 font-black uppercase tracking-widest text-sm italic">No assets indexed.</p>
+          <p className="text-[10px] text-white/10 mt-2 font-bold uppercase tracking-widest">Initialize your professional stack.</p>
+        </div>
+      ) : (
+        <div className="space-y-12">
+          {[{ key: "hard", title: "Core Technologies" }, { key: "soft", title: "Interpersonal Stack" }].map((section) => {
             const categories = Object.keys(groupedSkills[section.key] || {});
             if (!categories.length) return null;
             return (
-              <div key={section.key} className="space-y-6">
-                <h2 className="text-xl font-semibold text-white">{section.title}</h2>
+              <div key={section.key} className="space-y-8">
+                <h2 className="text-2xl font-black text-white uppercase italic tracking-tight border-l-[6px] border-white pl-4">
+                  {section.title}
+                </h2>
                 {categories.map((cat) => {
                   const list = groupedSkills[section.key][cat] || [];
                   if (!list.length) return null;
                   return (
-                    <div key={`${section.key}-${cat}`}>
-                      <h3 className="text-lg font-semibold text-white mb-4">{cat}</h3>
-                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div key={`${section.key}-${cat}`} className="space-y-4">
+                      <h3 className="text-[10px] font-black text-white/30 uppercase tracking-[0.25em]">{cat}</h3>
+                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {list.map((skill) => (
                           <div
                             key={skill.id}
-                             className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 flex gap-3"
+                            className="group border-[2px] border-white bg-[#111111] p-5 flex gap-4 shadow-brutalist-white hover:shadow-brutalist-white-lg transition-all"
                           >
-                            {skill.logo ? (
-                              <img
-                                src={skill.logo}
-                                alt=""
-                                className="w-10 h-10 object-contain shrink-0"
-                              />
-                            ) : (
-                              <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center text-sm font-bold text-gray-400 shrink-0">
-                                {skill.name?.charAt(0)}
-                              </div>
-                            )}
-                            <div className="flex-1 min-w-0 space-y-2">
+                            <div className="shrink-0">
+                              {skill.logo ? (
+                                <div className="w-12 h-12 border-[1.5px] border-white bg-[#0a0a0a] p-2 shadow-brutalist-white-sm">
+                                  <img
+                                    src={skill.logo}
+                                    alt=""
+                                    className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all opacity-80 group-hover:opacity-100 invert"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="w-12 h-12 border-[1.5px] border-white bg-black flex items-center justify-center text-lg font-black text-white shadow-brutalist-white-sm uppercase italic">
+                                  {skill.name?.charAt(0)}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0 space-y-3">
                               <div className="flex items-start justify-between gap-2">
-                                <h4 className="font-medium text-white truncate">{skill.name}</h4>
-                                <div className="flex shrink-0">
+                                <h4 className="font-black text-sm text-white uppercase truncate tracking-tight italic">{skill.name}</h4>
+                                <div className="flex gap-1 shrink-0">
                                   <button
                                     type="button"
                                     onClick={() => openEdit(skill)}
-                                     className="p-1.5 text-gray-500 hover:text-white hover:bg-white/10 rounded-lg"
+                                    className="p-1.5 border-[1.5px] border-white bg-[#161616] text-white hover:bg-white hover:text-black transition-all shadow-brutalist-white-sm active:shadow-none"
                                   >
-                                    <Pencil className="w-4 h-4" />
+                                    <Pencil className="w-3.5 h-3.5" strokeWidth={2.5} />
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => setDeleteId(skill.id)}
-                                     className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg"
+                                    className="p-1.5 border-[1.5px] border-white bg-[#161616] text-red-500 hover:bg-red-600 hover:text-white transition-all shadow-brutalist-white-sm active:shadow-none"
                                   >
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-3.5 h-3.5" strokeWidth={2.5} />
                                   </button>
                                 </div>
                               </div>
-                              <div className="space-y-1">
-                                <div className="flex justify-between text-xs text-gray-500">
-                                  <span>Proficiency</span>
-                                  <span>{skill.proficiency}%</span>
+                              <div className="space-y-1.5">
+                                <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-white/30">
+                                  <span>Efficiency</span>
+                                  <span className="text-accent">{skill.proficiency}%</span>
                                 </div>
-                                <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden">
+                                <div className="h-2.5 border-[1.5px] border-white bg-[#0a0a0a] overflow-hidden p-[1px]">
                                   <div
-                                    className="h-full bg-blue-500 rounded-full transition-all"
+                                    className="h-full bg-white transition-all duration-1000"
                                     style={{ width: `${skill.proficiency}%` }}
                                   />
                                 </div>
@@ -207,23 +214,23 @@ export default function AdminSkills() {
       )}
 
       {open && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-md rounded-xl border border-gray-800 bg-gray-900 shadow-2xl">
-            <div className="flex items-center justify-between p-5 border-b border-gray-800">
-              <h2 className="text-lg font-semibold text-white">
-                {editing ? "Edit skill" : "New skill"}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-[2px]">
+          <div className="w-full max-w-md border-[3px] border-white bg-[#111111] shadow-brutalist-white-lg overflow-y-auto max-h-[90vh]">
+            <div className="flex items-center justify-between p-6 border-b-[3px] border-white/20 bg-[#111111] sticky top-0 z-10">
+              <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">
+                {editing ? "Modify Skill" : "Define Skill"}
               </h2>
               <button
                 type="button"
                 onClick={close}
-                className="p-2 rounded-lg text-gray-400 hover:bg-gray-800"
+                className="p-2 border-[2px] border-white text-white hover:bg-white hover:text-black transition-all shadow-brutalist-white-sm active:shadow-none"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Skill type</label>
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Archetype</label>
                 <select
                   value={form.skillType}
                   onChange={(e) => {
@@ -234,14 +241,14 @@ export default function AdminSkills() {
                       category: "",
                     });
                   }}
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm uppercase"
                 >
-                  <option value="hard">Hard skill</option>
-                  <option value="soft">Soft skill</option>
+                  <option value="hard">TECHNICAL ASSET</option>
+                  <option value="soft">COGNITIVE ASSET</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Category</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Classification</label>
                 <select
                   value={categorySelectValue}
                   onChange={(e) => {
@@ -254,48 +261,51 @@ export default function AdminSkills() {
                     setCategoryMode("existing");
                     setForm({ ...form, category: value });
                   }}
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm uppercase"
                 >
-                  <option value="">Select category</option>
+                  <option value="">SELECT INDEX</option>
                   {typeCategories.map((category) => (
-                    <option key={category} value={category}>{category}</option>
+                    <option key={category} value={category}>{category.toUpperCase()}</option>
                   ))}
-                  <option value={NEW_CATEGORY_VALUE}>+ Add new category</option>
+                  <option value={NEW_CATEGORY_VALUE}>+ NEW CLASSIFICATION</option>
                 </select>
               </div>
               {categoryMode === "new" && (
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">New category name</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/40">New Index Identity</label>
                   <input
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    placeholder={form.skillType === "soft" ? "Communication, Leadership..." : "Frontend, Backend, Tools..."}
-                    className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                    placeholder="e.g. INFRASTRUCTURE"
+                    className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm uppercase"
                   />
                 </div>
               )}
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Name *</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Skill Identity *</label>
                 <input
                   required
+                  placeholder="e.g. REACT.JS"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm uppercase"
                 />
               </div>
-              <div>
+              <div className="p-6 border-[2px] border-white bg-[#0a0a0a] shadow-brutalist-white-sm">
                 <ImageUploadField
-                  label="Logo"
                   folder="skills"
                   value={form.logo}
                   onChange={(url) => setForm({ ...form, logo: url })}
-                  helperText="Upload the skill logo instead of pasting a URL."
                 />
+                <p className="text-[9px] font-bold text-gray-500 uppercase mt-4 tracking-widest">Input stream requirement: SVG/PNG.</p>
               </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">
-                  Proficiency: {form.proficiency}%
-                </label>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/40">
+                    Efficiency rating
+                  </label>
+                  <span className="text-xs font-black text-accent bg-accent/5 px-2 py-1 border border-white/10">{form.proficiency}%</span>
+                </div>
                 <input
                   type="range"
                   min={0}
@@ -305,22 +315,22 @@ export default function AdminSkills() {
                   onChange={(e) =>
                     setForm({ ...form, proficiency: Number(e.target.value) })
                   }
-                  className="w-full accent-blue-600"
+                  className="w-full h-2 bg-[#0a0a0a] border border-white/20 appearance-none cursor-pointer accent-white"
                 />
               </div>
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-4 pt-6 border-t-[2px] border-white/20 border-dashed">
                 <button
                   type="button"
                   onClick={close}
-                  className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800"
+                  className="px-8 py-4 border-[2.5px] border-white bg-transparent text-white text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-brutalist-white-sm"
                 >
-                  Cancel
+                  Terminate
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium"
+                  className="px-8 py-4 border-[2.5px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest shadow-brutalist-accent hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
                 >
-                  {editing ? "Update" : "Add"}
+                  {editing ? "Update Ledger" : "Commit Entry"}
                 </button>
               </div>
             </form>
@@ -329,28 +339,30 @@ export default function AdminSkills() {
       )}
 
       {deleteId != null && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-md rounded-xl border border-gray-800 bg-gray-900 p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-white">Delete skill?</h3>
-            <div className="flex justify-end gap-2">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-[2px]">
+          <div className="w-full max-w-md border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white-lg">
+            <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Purge Skill?</h3>
+            <p className="text-sm font-bold text-gray-500 mt-4 uppercase leading-relaxed">Warning: Irreversible deletion of professional asset.</p>
+            <div className="flex justify-end gap-4 mt-10">
               <button
                 type="button"
                 onClick={() => setDeleteId(null)}
-                className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300"
+                className="px-8 py-4 border-[2px] border-white bg-transparent text-white text-[10px] font-black uppercase tracking-widest shadow-brutalist-white-sm"
               >
-                Cancel
+                Abort
               </button>
               <button
                 type="button"
                 onClick={confirmDelete}
-                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white"
+                className="px-8 py-4 border-[2px] border-white bg-red-600 text-white text-[10px] font-black uppercase tracking-widest shadow-brutalist-white-sm"
               >
-                Delete
+                Purge
               </button>
             </div>
           </div>
         </div>
       )}
     </div>
+
   );
 }

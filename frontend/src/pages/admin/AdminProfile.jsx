@@ -87,107 +87,174 @@ export default function AdminProfile() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Profile</h1>
-        <p className="text-gray-400 mt-1">Edit the core identity and contact details shown on your portfolio.</p>
+    <div className="max-w-4xl mx-auto space-y-10 pb-10">
+      <div className="flex flex-wrap items-center justify-between gap-6 border-b-[3px] border-white/20 pb-8">
+        <div>
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Identity Matrix</h1>
+          <p className="text-gray-500 font-bold mt-1 text-sm uppercase tracking-wider">Core profile configuration and nexus points</p>
+        </div>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-8">
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <User className="w-5 h-5 text-violet-400" />
-            Basic information
-          </h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Full name *</label>
+      <form onSubmit={handleSave} className="space-y-10">
+        {/* Basic Information */}
+        <section className="border-[3px] border-white bg-[#111111] shadow-brutalist-white p-10 space-y-10">
+          <div className="flex items-center gap-5 border-b-[2px] border-white/10 pb-6">
+            <User className="w-8 h-8 text-white" strokeWidth={3} />
+            <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Biometric Metadata</h2>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-10">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Legal Identity *</label>
               <input
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                className="w-full px-6 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm transition-all uppercase placeholder:text-white/10"
               />
             </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Title / tagline</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Professional Title</label>
               <input
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                placeholder="e.g. SYSTEMS ARCHITECT"
+                className="w-full px-6 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm transition-all uppercase placeholder:text-white/10"
               />
             </div>
           </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Email *</label>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Primary Communication Link *</label>
             <input
               type="email"
               required
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+              className="w-full px-6 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm placeholder:text-white/10"
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Bio</label>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Persona Narrative (Bio)</label>
             <textarea
               rows={4}
               value={form.bio}
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-none"
+              className="w-full px-6 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm transition-all resize-none placeholder:text-white/10"
             />
           </div>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Image className="w-5 h-5 text-amber-400" />
-            Images
-          </h2>
-          <ImageUploadField
-            label="Profile image"
-            folder="profile"
-            value={form.profile_image}
-            onChange={(url) => setForm({ ...form, profile_image: url })}
-            helperText="Upload a square portrait for the profile card."
-          />
+        {/* Visual Identity */}
+        <section className="border-[3px] border-white bg-[#111111] shadow-brutalist-white p-10 space-y-8">
+          <div className="flex items-center gap-5 border-b-[2px] border-white/10 pb-6">
+            <Image className="w-8 h-8 text-white" strokeWidth={3} />
+            <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Visual Authentication</h2>
+          </div>
+          <div className="p-8 border-[2px] border-white bg-[#0a0a0a] shadow-brutalist-white-sm">
+            <ImageUploadField
+              label={<span className="text-[10px] font-black uppercase tracking-widest text-white/40">Portrait Payload</span>}
+              folder="profile"
+              value={form.profile_image}
+              onChange={(url) => setForm({ ...form, profile_image: url })}
+              helperText={<span className="text-[9px] font-bold text-gray-500 uppercase tracking-tight">Resolution should be optimized for portal display.</span>}
+            />
+          </div>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
-          <h2 className="text-lg font-semibold text-white">Contact</h2>
-          <div className="space-y-3">
-            <label className="block text-sm text-gray-400">Phone numbers</label>
-            {form.phones.map((p, i) => (
-              <div key={i} className="flex gap-2">
-                <input
-                  value={p}
-                  onChange={(e) => updatePhone(i, e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
-                />
-                {form.phones.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm({ ...form, phones: form.phones.filter((_, j) => j !== i) })
-                    }
-                    className="p-2 text-gray-500 hover:text-red-400"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => setForm({ ...form, phones: [...form.phones, ""] })}
-              className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300"
-            >
-              <Plus className="w-4 h-4" />
-              Add phone
-            </button>
+        {/* Contact Information */}
+        <section className="border-[3px] border-white bg-[#111111] shadow-brutalist-white p-10 space-y-10">
+          <div className="flex items-center gap-5 border-b-[2px] border-white/10 pb-6">
+            <LinkIcon className="w-8 h-8 text-white" strokeWidth={3} />
+            <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Nexus Points</h2>
           </div>
-          <div className="space-y-1">
-            <label className="block text-sm text-gray-400">Telegram username</label>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Phone Numbers */}
+            <div className="space-y-8">
+              <label className="text-[11px] font-black uppercase tracking-[0.2em] text-white flex items-center justify-between">
+                Vocal Interface Channels
+                <span className="text-[9px] text-white/30 italic">{form.phones.filter(Boolean).length} Active</span>
+              </label>
+              <div className="space-y-6">
+                {form.phones.map((p, i) => (
+                  <div key={i} className="flex gap-4">
+                    <input
+                      value={p}
+                      onChange={(e) => updatePhone(i, e.target.value)}
+                      placeholder="+X XXX XXX XXXX"
+                      className="flex-1 px-5 py-3 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[1px] focus:translate-y-[1px] transition-all placeholder:text-white/10"
+                    />
+                    {form.phones.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setForm({ ...form, phones: form.phones.filter((_, j) => j !== i) })
+                        }
+                        className="p-3 border-[2px] border-white bg-[#0a0a0a] text-red-500 hover:bg-red-600 hover:text-white shadow-brutalist-white-sm transition-all"
+                      >
+                        <Trash2 className="w-5 h-5" strokeWidth={2.5} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, phones: [...form.phones, ""] })}
+                className="inline-flex items-center gap-3 px-6 py-3 border-[2.5px] border-white bg-white text-black text-[10px] font-black uppercase tracking-widest hover:translate-x-[-2px] hover:translate-y-[-2px] shadow-brutalist-white-sm active:shadow-none transition-all"
+              >
+                <Plus className="w-5 h-5" strokeWidth={3} />
+                Expand Interface
+              </button>
+            </div>
+
+            {/* Locations */}
+            <div className="space-y-8">
+              <label className="text-[11px] font-black uppercase tracking-[0.2em] text-white flex items-center justify-between">
+                Geospatial Latent Bases
+                <span className="text-[9px] text-white/30 italic">{form.locations.filter(Boolean).length} Active</span>
+              </label>
+              <div className="space-y-6">
+                {form.locations.map((loc, i) => (
+                  <div key={i} className="flex gap-4">
+                    <input
+                      value={loc}
+                      onChange={(e) => updateLoc(i, e.target.value)}
+                      placeholder="e.g. ADDIS ABABA, ETHIOPIA"
+                      className="flex-1 px-5 py-3 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[1px] focus:translate-y-[1px] transition-all uppercase placeholder:text-white/10"
+                    />
+                    {form.locations.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setForm({
+                            ...form,
+                            locations: form.locations.filter((_, j) => j !== i),
+                          })
+                        }
+                        className="p-3 border-[2px] border-white bg-[#0a0a0a] text-red-500 hover:bg-red-600 hover:text-white shadow-brutalist-white-sm transition-all"
+                      >
+                        <Trash2 className="w-5 h-5" strokeWidth={2.5} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, locations: [...form.locations, ""] })}
+                className="inline-flex items-center gap-3 px-6 py-3 border-[2.5px] border-white bg-white text-black text-[10px] font-black uppercase tracking-widest hover:translate-x-[-2px] hover:translate-y-[-2px] shadow-brutalist-white-sm active:shadow-none transition-all"
+              >
+                <Plus className="w-5 h-5" strokeWidth={3} />
+                Add physical base
+              </button>
+            </div>
+          </div>
+
+          <div className="p-8 border-[2.5px] border-white bg-blue-600/5 space-y-6 shadow-brutalist-white-sm">
+            <label className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Direct Synchronous Link (Telegram)</label>
             <input
               value={form.socials.telegram || ""}
               onChange={(e) =>
@@ -196,87 +263,60 @@ export default function AdminProfile() {
                   socials: { ...form.socials, telegram: e.target.value },
                 })
               }
-              placeholder="@yourusername"
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+              placeholder="@YOUR_UID"
+              className="w-full px-6 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm transition-all"
             />
-            <p className="text-xs text-gray-500">Used by the floating contact button.</p>
+            <p className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">Essential: Powers the persistent floating interface uplink.</p>
           </div>
-          <div className="space-y-3">
-            <label className="block text-sm text-gray-400">Locations</label>
-            {form.locations.map((loc, i) => (
-              <div key={i} className="flex gap-2">
+        </section>
+
+        {/* Social Matrix */}
+        <section className="border-[3px] border-white bg-[#111111] shadow-brutalist-white p-10 space-y-10">
+          <div className="flex items-center gap-5 border-b-[2px] border-white/10 pb-6">
+            <LinkIcon className="w-8 h-8 text-white" strokeWidth={3} />
+            <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Social Network Indices</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-x-12 gap-y-8">
+            {Object.keys(emptySocials).filter(k => k !== "telegram").map((key) => (
+              <div key={key} className="space-y-2">
+                <label className="text-[11px] font-black uppercase tracking-[0.2em] text-white/30">{key}</label>
                 <input
-                  value={loc}
-                  onChange={(e) => updateLoc(i, e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                  value={form.socials[key] || ""}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      socials: { ...form.socials, [key]: e.target.value },
+                    })
+                  }
+                  placeholder={`https://${key}.com/your-uid`}
+                  className="w-full px-5 py-3 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm focus:shadow-none transition-all placeholder:text-white/5"
                 />
-                {form.locations.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm({
-                        ...form,
-                        locations: form.locations.filter((_, j) => j !== i),
-                      })
-                    }
-                    className="p-2 text-gray-500 hover:text-red-400"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
               </div>
             ))}
-            <button
-              type="button"
-              onClick={() => setForm({ ...form, locations: [...form.locations, ""] })}
-              className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300"
-            >
-              <Plus className="w-4 h-4" />
-              Add location
-            </button>
           </div>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <LinkIcon className="w-5 h-5 text-sky-400" />
-            Social handles or URLs
-          </h2>
-          {Object.keys(emptySocials).map((key) => (
-            <div key={key}>
-              <label className="block text-sm text-gray-400 mb-1 capitalize">{key}</label>
-              <input
-                value={form.socials[key] || ""}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    socials: { ...form.socials, [key]: e.target.value },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
-              />
-            </div>
-          ))}
-        </section>
-
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          {msg && (
-            <p
-              className={`text-sm ${msg.includes("fail") ? "text-red-400" : "text-emerald-400"}`}
-            >
-              {msg}
-            </p>
-          )}
+        {/* Status & Actions */}
+        <div className="flex items-center justify-between gap-8 p-10 border-[3px] border-white bg-black text-white shadow-brutalist-accent sticky bottom-6 z-20">
+          <div className="flex-1">
+            {msg && (
+              <p className={`text-[12px] font-black uppercase tracking-widest italic ${msg.includes("fail") ? "text-red-500" : "text-accent"}`}>
+                {msg}
+              </p>
+            )}
+            {!msg && <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/20 italic">Waiting for parity commit…</p>}
+          </div>
           <button
             type="submit"
             disabled={saving || !db}
-            className="ml-auto inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium disabled:opacity-50"
+            className="inline-flex items-center gap-4 px-10 py-5 border-[2.5px] border-white bg-white text-black text-[13px] font-black uppercase tracking-widest hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all shadow-[6px_6px_0_0_rgba(255,255,255,0.2)] active:shadow-none disabled:opacity-50"
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-            Save to Firestore
+            {saving ? <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} /> : null}
+            Commit to Mainframe
           </button>
         </div>
       </form>
     </div>
+
   );
 }

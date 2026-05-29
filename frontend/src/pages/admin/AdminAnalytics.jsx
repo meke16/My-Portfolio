@@ -200,22 +200,21 @@ export default function AdminAnalytics() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-6xl mx-auto space-y-10 pb-10">
+      <div className="flex flex-wrap items-center justify-between gap-6 border-b-[3px] border-white/20 pb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Analytics</h1>
-          <p className="text-gray-400 text-sm mt-1">Track visitor activity on your portfolio</p>
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Visitor Log Intel</h1>
+          <p className="text-gray-500 font-bold mt-1 text-sm uppercase tracking-wider">Metrics and surveillance data</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 border-[2.5px] border-white p-1.5 bg-[#111111] shadow-brutalist-white-sm">
           {["24h", "7d", "30d"].map((range) => (
             <button
               key={range}
               onClick={() => setTimeRange(range)}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                timeRange === range
-                  ? "bg-blue-600 text-white"
-                  : "bg-white/10 text-gray-400 hover:bg-white/20"
-              }`}
+              className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${timeRange === range
+                ? "bg-white text-black"
+                : "text-white/20 hover:text-white"
+                }`}
             >
               {range}
             </button>
@@ -224,157 +223,158 @@ export default function AdminAnalytics() {
       </div>
 
       {selectedVisitors.size > 0 && (
-        <div className="flex items-center gap-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/30">
-          <span className="text-blue-300 text-sm">
-            {selectedVisitors.size} visitor{selectedVisitors.size > 1 ? "s" : ""} selected
+        <div className="flex items-center gap-4 px-6 py-4 border-[2.5px] border-white bg-accent/5 shadow-brutalist-white-sm">
+          <span className="text-[10px] font-black uppercase tracking-widest text-white">
+            {selectedVisitors.size} Targets Selected
           </span>
           <button
             onClick={handleDeleteSelected}
             disabled={deleting}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 border-[2px] border-white bg-red-600 text-white text-[10px] font-black uppercase tracking-widest shadow-brutalist-white-sm active:shadow-none transition-all disabled:opacity-50"
           >
-            <Trash2 className="w-4 h-4" />
-            Delete Selected
+            <Trash2 className="w-4 h-4" strokeWidth={3} />
+            Purge Cluster
           </button>
           <button
             onClick={() => setSelectedVisitors(new Set())}
-            className="px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white"
+            className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white underline"
           >
-            Cancel
+            Abort selection
           </button>
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-500/20 rounded-lg">
-              <Users className="w-5 h-5 text-blue-400" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white-sm">
+          <div className="flex items-center gap-5">
+            <div className="p-4 border-[2px] border-white bg-blue-600/10 text-blue-400 shadow-brutalist-white-sm">
+              <Users className="w-8 h-8" strokeWidth={3} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Unique Visitors</p>
-              <p className="text-2xl font-bold text-white">{visitors.length}</p>
+              <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Unique Assets</p>
+              <p className="text-4xl font-black text-white tracking-tighter italic">{visitors.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-500/20 rounded-lg">
-              <BarChart3 className="w-5 h-5 text-emerald-400" />
+        <div className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white-sm">
+          <div className="flex items-center gap-5">
+            <div className="p-4 border-[2px] border-white bg-emerald-600/10 text-emerald-400 shadow-brutalist-white-sm">
+              <BarChart3 className="w-8 h-8" strokeWidth={3} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Total Page Views</p>
-              <p className="text-2xl font-bold text-white">{totalViews}</p>
+              <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Aggregate Hits</p>
+              <p className="text-4xl font-black text-white tracking-tighter italic">{totalViews}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-violet-500/20 rounded-lg">
-              <Clock className="w-5 h-5 text-violet-400" />
+        <div className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white-sm">
+          <div className="flex items-center gap-5">
+            <div className="p-4 border-[2px] border-white bg-violet-600/10 text-violet-400 shadow-brutalist-white-sm">
+              <Clock className="w-8 h-8" strokeWidth={3} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Avg. Time on Page</p>
-              <p className="text-2xl font-bold text-white">{formatDuration(avgDuration)}</p>
+              <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Mean Exposure</p>
+              <p className="text-4xl font-black text-white tracking-tighter italic">{formatDuration(avgDuration)}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Visitors</h2>
+      <div className="border-[3px] border-white bg-[#111111] shadow-brutalist-white overflow-hidden">
+        <div className="px-8 py-6 border-b-[3px] border-white bg-white flex items-center justify-between">
+          <h2 className="text-sm font-black text-black uppercase tracking-widest italic">Active surveillance log</h2>
+          <span className="text-[9px] font-black text-black/50 uppercase tracking-tighter italic">Showing {Math.min(visitors.length, 50)} of {visitors.length} indexed records</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-left">
             <thead>
-              <tr className="text-gray-500 border-b border-white/10">
-                <th className="text-left py-3 pr-4 w-10">
-                  <button onClick={toggleSelectAll} className="p-1 hover:text-white">
+              <tr className="bg-[#161616] border-b-[2.5px] border-white/20">
+                <th className="py-6 px-8 w-10">
+                  <button onClick={toggleSelectAll} className="p-1 border-[2px] border-white bg-[#0a0a0a] text-white shadow-brutalist-white-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all">
                     {selectedVisitors.size === visitors.length && visitors.length > 0 ? (
-                      <CheckSquare className="w-4 h-4" />
+                      <CheckSquare className="w-4 h-4" strokeWidth={3} />
                     ) : (
-                      <Square className="w-4 h-4" />
+                      <Square className="w-4 h-4" strokeWidth={3} />
                     )}
                   </button>
                 </th>
-                <th className="text-left py-3 pr-4">Last Seen</th>
-                <th className="text-left py-3 pr-4">Device</th>
-                <th className="text-left py-3 pr-4">Location</th>
-                <th className="text-left py-3 pr-4">Pages</th>
-                <th className="text-left py-3">Time</th>
-                <th className="text-left py-3 w-10"></th>
+                <th className="py-6 px-4 text-[11px] font-black uppercase tracking-widest text-white/20">Timestamp</th>
+                <th className="py-6 px-4 text-[11px] font-black uppercase tracking-widest text-white/20">Hardware Class</th>
+                <th className="py-6 px-4 text-[11px] font-black uppercase tracking-widest text-white/20">Coordinates</th>
+                <th className="py-6 px-4 text-[11px] font-black uppercase tracking-widest text-white/20">Page Depth</th>
+                <th className="py-6 px-4 text-[11px] font-black uppercase tracking-widest text-white/20">Duration</th>
+                <th className="py-6 px-8 w-10"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y-[1.5px] divide-white/5 bg-[#111111]">
               {visitors.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-gray-500">
-                    No visitors recorded yet
+                  <td colSpan={7} className="py-24 text-center">
+                    <p className="text-white/20 font-black uppercase tracking-[0.2em] text-xs italic">Zero activity signatures detected in current timeframe.</p>
                   </td>
                 </tr>
               ) : (
                 visitors.slice(0, 50).map((visitor) => (
-                  <tr 
-                    key={visitor.sessionId} 
-                    className="border-b border-white/5 hover:bg-white/5"
+                  <tr
+                    key={visitor.sessionId}
+                    className="group hover:bg-white/[0.03] transition-colors"
                   >
-                    <td className="py-3 pr-4">
-                      <button 
+                    <td className="py-5 px-8">
+                      <button
                         onClick={() => toggleSelect(visitor.sessionId)}
-                        className="p-1 hover:text-white"
+                        className="p-1 border-[2px] border-white bg-[#0a0a0a] text-white shadow-brutalist-white-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                       >
                         {selectedVisitors.has(visitor.sessionId) ? (
-                          <CheckSquare className="w-4 h-4 text-blue-400" />
+                          <div className="bg-white p-0.5"><CheckSquare className="w-3.5 h-3.5 text-black" strokeWidth={3} /></div>
                         ) : (
-                          <Square className="w-4 h-4 text-gray-500" />
+                          <Square className="w-4 h-4" strokeWidth={3} />
                         )}
                       </button>
                     </td>
-                    <td 
-                      className="py-3 pr-4 whitespace-nowrap text-gray-400 cursor-pointer"
+                    <td
+                      className="py-5 px-4 whitespace-nowrap text-[12px] font-black uppercase tracking-tight text-white/80 group-hover:text-white cursor-pointer italic"
                       onClick={() => setSelectedVisitor(visitor)}
                     >
                       {formatTimeAgo(visitor.lastSeen)}
                     </td>
-                    <td 
-                      className="py-3 pr-4 cursor-pointer"
+                    <td
+                      className="py-5 px-4 cursor-pointer"
                       onClick={() => setSelectedVisitor(visitor)}
                     >
-                      <div className="flex items-center gap-2">
-                        <Monitor className="w-4 h-4 text-gray-500" />
-                        <span className="text-gray-300">
-                          {visitor.device?.browser} {visitor.device?.os}
-                          {visitor.device?.isMobile && <span className="text-gray-500 ml-1">(mobile)</span>}
+                      <div className="flex items-center gap-4">
+                        <Monitor className="w-4 h-4 text-white/10 group-hover:text-white/40 transition-colors" strokeWidth={2.5} />
+                        <span className="text-[11px] font-black uppercase tracking-widest text-white/40 group-hover:text-white/80">
+                          {visitor.device?.browser} · {visitor.device?.os}
+                          {visitor.device?.isMobile && <span className="bg-white text-black px-2 py-0.5 text-[8px] ml-3 tracking-tighter font-black italic">MOBILE</span>}
                         </span>
                       </div>
                     </td>
-                    <td 
-                      className="py-3 pr-4 text-gray-300 cursor-pointer"
+                    <td
+                      className="py-5 px-4 text-[11px] font-black uppercase tracking-widest text-white/40 group-hover:text-white/60 cursor-pointer"
                       onClick={() => setSelectedVisitor(visitor)}
                     >
-                      {visitor.location?.city ? `${visitor.location.city}, ` : ""}{visitor.location?.country || "—"}
+                      {visitor.location?.city ? `${visitor.location.city}, ` : ""}<span className="text-white/80">{visitor.location?.country || "UNKNOWN"}</span>
                     </td>
-                    <td 
-                      className="py-3 pr-4 cursor-pointer"
+                    <td
+                      className="py-5 px-4 cursor-pointer"
                       onClick={() => setSelectedVisitor(visitor)}
                     >
-                      <span className="text-gray-300">{visitor.pageCount} pages</span>
+                      <span className="text-[11px] font-black uppercase tracking-widest text-white italic underline decoration-white/10 underline-offset-4 group-hover:decoration-white/40 transition-all">{visitor.pageCount} Targets</span>
                     </td>
-                    <td 
-                      className="py-3 text-gray-300 cursor-pointer"
+                    <td
+                      className="py-5 px-4 text-[12px] font-black text-white group-hover:text-accent transition-colors cursor-pointer"
                       onClick={() => setSelectedVisitor(visitor)}
                     >
                       {formatDuration(visitor.totalDuration)}
                     </td>
-                    <td className="py-3">
+                    <td className="py-5 px-8 text-right">
                       <button
                         onClick={() => handleDeleteVisitor(visitor)}
                         disabled={deleting}
-                        className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-50"
-                        title="Delete this visitor"
+                        className="p-2.5 border-[2px] border-white bg-[#0a0a0a] text-red-500 hover:bg-red-600 hover:text-white shadow-brutalist-white-sm transition-all active:shadow-none disabled:opacity-50"
+                        title="Purge record"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" strokeWidth={2.5} />
                       </button>
                     </td>
                   </tr>
@@ -383,86 +383,78 @@ export default function AdminAnalytics() {
             </tbody>
           </table>
         </div>
-        {visitors.length > 50 && (
-          <p className="text-center text-gray-500 text-sm mt-4">Showing 50 of {visitors.length} visitors</p>
-        )}
       </div>
 
       {selectedVisitor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-gray-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-5 border-b border-white/10">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-[3px] p-4">
+          <div className="bg-[#111111] border-[3px] border-white max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-brutalist-white-lg">
+            <div className="flex items-center justify-between p-8 border-b-[3px] border-white/20 bg-[#111111] sticky top-0 z-10">
               <div>
-                <h3 className="text-lg font-semibold text-white">Visitor Details</h3>
-                <p className="text-gray-500 text-sm mt-1">
-                  Session: {selectedVisitor.sessionId.slice(0, 20)}...
+                <h3 className="text-3xl font-black text-white uppercase italic tracking-tight">Record Inspection</h3>
+                <p className="text-[10px] font-black text-white/20 uppercase mt-2 tracking-[0.2em] italic">
+                  Cluster ID: <span className="text-white/40">{selectedVisitor.sessionId}</span>
                 </p>
               </div>
               <button
                 onClick={() => setSelectedVisitor(null)}
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10"
+                className="p-3 border-[2px] border-white text-white hover:bg-white hover:text-black transition-all shadow-brutalist-white-sm active:shadow-none"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" strokeWidth={3} />
               </button>
             </div>
-            
-            <div className="p-5 border-b border-white/10 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">Device</p>
-                  <p className="text-gray-200 mt-1">
-                    {selectedVisitor.device?.browser} / {selectedVisitor.device?.os}
-                    {selectedVisitor.device?.isMobile && " (Mobile)"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">Total Time</p>
-                  <p className="text-gray-200 mt-1">{formatDuration(selectedVisitor.totalDuration)}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">Location</p>
-                  <p className="text-gray-200 mt-1">
-                    {selectedVisitor.location?.city ? `${selectedVisitor.location.city}, ` : ""}
-                    {selectedVisitor.location?.country || "Unknown"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">IP Address</p>
-                  <p className="text-gray-200 mt-1">{selectedVisitor.location?.ip || "—"}</p>
-                </div>
+
+            <div className="p-8 border-b-[2.5px] border-white/10 bg-[#0a0a0a] flex flex-wrap items-center gap-10 overflow-x-auto">
+              <div className="shrink-0 space-y-2">
+                <p className="text-[9px] font-black text-white/20 uppercase tracking-widest">Hardware Architecture</p>
+                <p className="text-[11px] font-black text-white uppercase tracking-tight italic">
+                  {selectedVisitor.device?.browser} / {selectedVisitor.device?.os}
+                  {selectedVisitor.device?.isMobile && <span className="text-accent ml-2">· MOBILE_ACTIVE</span>}
+                </p>
               </div>
-              {selectedVisitor.location?.timezone && (
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">Timezone</p>
-                  <p className="text-gray-200 mt-1">{selectedVisitor.location.timezone}</p>
-                </div>
-              )}
+              <div className="shrink-0 space-y-2 border-l-[2px] border-white/10 pl-10">
+                <p className="text-[9px] font-black text-white/20 uppercase tracking-widest">Total Exposure</p>
+                <p className="text-[11px] font-black text-white uppercase tracking-tight italic">{formatDuration(selectedVisitor.totalDuration)}</p>
+              </div>
+              <div className="shrink-0 space-y-2 border-l-[2px] border-white/10 pl-10">
+                <p className="text-[9px] font-black text-white/20 uppercase tracking-widest">Physical Coordinates</p>
+                <p className="text-[11px] font-black text-white uppercase tracking-tight italic">
+                  {selectedVisitor.location?.city ? `${selectedVisitor.location.city}, ` : ""}
+                  {selectedVisitor.location?.country || "UNKNOWN_ORIGIN"}
+                </p>
+              </div>
+              <div className="shrink-0 space-y-2 border-l-[2px] border-white/10 pl-10">
+                <p className="text-[9px] font-black text-white/20 uppercase tracking-widest">Network ID</p>
+                <p className="text-[11px] font-black text-white tracking-tight italic">{selectedVisitor.location?.ip || "MASKED"}</p>
+              </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5">
-              <h4 className="text-sm font-semibold text-white mb-3">Pages Visited</h4>
-              <div className="space-y-2">
-                {selectedVisitor.pages.filter(p => p.views > 0).map((page, idx) => (
-                  <div 
-                    key={idx} 
-                    className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10"
-                  >
-                    <div>
-                      <p className="text-gray-200 font-medium">{page.page}</p>
-                      <p className="text-gray-500 text-xs mt-1">
-                        {page.views} view{page.views > 1 ? "s" : ""} • {formatDuration(page.duration)} spent
-                      </p>
+            <div className="flex-1 overflow-y-auto p-10 space-y-10 scrollbar-custom bg-[#050505]">
+              <div className="border-l-[4px] border-accent pl-8">
+                <h4 className="text-base font-black text-white uppercase tracking-widest mb-8 italic underline decoration-white/10 underline-offset-8">Sequence of Operations</h4>
+                <div className="grid gap-6">
+                  {selectedVisitor.pages.filter(p => p.views > 0).map((page, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-6 border-[2.5px] border-white bg-[#111111] shadow-brutalist-white-sm group hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                    >
+                      <div>
+                        <p className="text-white font-black uppercase text-sm tracking-tight italic">{page.page}</p>
+                        <p className="text-[10px] font-black text-white/30 mt-2 uppercase tracking-[0.1em]">
+                          Hits: {page.views} · Latency: {formatDuration(page.duration)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white font-black text-base uppercase tracking-tighter italic">{formatDuration(page.duration)}</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-gray-400 text-sm">{formatDuration(page.duration)}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
     </div>
+
   );
 }

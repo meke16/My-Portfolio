@@ -110,165 +110,170 @@ export default function AdminWorkExperience() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Work & Experience</h1>
-        <p className="text-gray-400 mt-1">
-          Manage the Work & Experience page content stored in Firestore document
-          <code className="text-gray-300"> content/workExperience</code>.
+    <div className="max-w-5xl mx-auto space-y-10 pb-10">
+      <div className="border-b-[3px] border-white/20 pb-8">
+        <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Professional Log</h1>
+        <p className="text-gray-500 font-bold mt-1 text-sm uppercase tracking-wider">
+          Managing Firestore document: <code className="bg-white/5 text-white/50 px-2 py-0.5 border border-white/10 uppercase tracking-tighter">content/workExperience</code>
         </p>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6">
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <BriefcaseBusiness className="w-5 h-5 text-blue-400" />
-            Page intro
-          </h2>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Headline</label>
+      <form onSubmit={handleSave} className="space-y-8">
+        <section className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white space-y-6">
+          <div className="flex items-center gap-3 border-b-[2.5px] border-white/20 pb-4">
+            <BriefcaseBusiness className="w-6 h-6 text-white" strokeWidth={3} />
+            <h2 className="text-xl font-black text-white uppercase italic tracking-tight">Executive Summary</h2>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Primary Headline</label>
             <input
               value={form.headline}
               onChange={(e) => setForm({ ...form, headline: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+              className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm transition-all uppercase placeholder:text-white/10"
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Intro</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Contextual Narrative</label>
             <textarea
               rows={3}
               value={form.intro}
               onChange={(e) => setForm({ ...form, intro: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-y"
+              className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm transition-all resize-y placeholder:text-white/10"
             />
           </div>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold text-white">Experience entries</h2>
+        <section className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white space-y-8">
+          <div className="flex items-center justify-between gap-6 border-b-[2.5px] border-white/20 pb-4">
+            <h2 className="text-xl font-black text-white uppercase italic tracking-tight">Deployment History</h2>
             <button
               type="button"
               onClick={addExperience}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 border-[2.5px] border-white bg-white text-black text-[10px] font-black uppercase tracking-widest shadow-brutalist-accent active:shadow-none hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
             >
-              <Plus className="w-4 h-4" />
-              Add entry
+              <Plus className="w-4 h-4" strokeWidth={3} />
+              Register Entry
             </button>
           </div>
 
-          <div className="space-y-4">
+          <div className="grid gap-8">
             {form.experiences.map((exp, idx) => (
-              <article key={exp.id} className="rounded-xl border border-white/10 bg-black/20 p-4 space-y-3">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-white font-medium">Entry {idx + 1}</h3>
+              <article key={exp.id} className="border-[2.5px] border-white bg-[#0a0a0a] p-8 space-y-8 shadow-brutalist-white-sm relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-16 h-16 bg-white flex items-center justify-center -rotate-45 translate-x-8 -translate-y-8 shadow-brutalist-white-sm">
+                  <span className="text-black font-black text-sm rotate-45 mt-6 ml-[-4px] italic">{idx + 1}</span>
+                </div>
+
+                <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-6">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-white italic">Record Segment {idx + 1}</h3>
                   <button
                     type="button"
                     onClick={() => removeExperience(exp.id)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-red-300 hover:bg-red-500/10"
+                    className="inline-flex items-center gap-2 px-4 py-2 border-[2px] border-white bg-[#161616] text-red-500 text-[9px] font-black uppercase tracking-widest shadow-brutalist-white-sm hover:bg-red-600 hover:text-white active:shadow-none transition-all"
                   >
-                    <Trash2 className="w-4 h-4" />
-                    Remove
+                    <Trash2 className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    Purge Record
                   </button>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Role</label>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-white/30">Designation</label>
                     <input
                       value={exp.role}
                       onChange={(e) => updateExperience(exp.id, { role: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                      className="w-full px-4 py-4 border-[2px] border-white bg-transparent font-black text-white outline-none focus:bg-white/5 shadow-brutalist-white-sm uppercase"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Company</label>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-white/30">Organization</label>
                     <input
                       value={exp.company}
                       onChange={(e) => updateExperience(exp.id, { company: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                      className="w-full px-4 py-4 border-[2px] border-white bg-transparent font-black text-white outline-none focus:bg-white/5 shadow-brutalist-white-sm uppercase"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Period</label>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-white/30">Timeframe</label>
                     <input
                       value={exp.period}
                       onChange={(e) => updateExperience(exp.id, { period: e.target.value })}
-                      placeholder="2023 - Present"
-                      className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                      placeholder="e.g. 2026 - PRESENT"
+                      className="w-full px-4 py-4 border-[2px] border-white bg-transparent font-black text-white outline-none focus:bg-white/5 shadow-brutalist-white-sm uppercase"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Location</label>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-white/30">Coordinates</label>
                     <input
                       value={exp.location}
                       onChange={(e) => updateExperience(exp.id, { location: e.target.value })}
-                      placeholder="Remote / City"
-                      className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                      placeholder="e.g. REMOTE / SYNC LABS"
+                      className="w-full px-4 py-4 border-[2px] border-white bg-transparent font-black text-white outline-none focus:bg-white/5 shadow-brutalist-white-sm uppercase"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Type</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/30">Contract Class</label>
                   <input
                     value={exp.type}
                     onChange={(e) => updateExperience(exp.id, { type: e.target.value })}
-                    placeholder="Full-time, Contract, Internship"
-                    className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+                    placeholder="e.g. DEPLOYMENT CONTRACT"
+                    className="w-full px-4 py-4 border-[2px] border-white bg-transparent font-black text-white outline-none focus:bg-white/5 shadow-brutalist-white-sm uppercase"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Summary</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/30">Executive Summary</label>
                   <textarea
                     rows={3}
                     value={exp.summary}
                     onChange={(e) => updateExperience(exp.id, { summary: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-y"
+                    className="w-full px-4 py-4 border-[2px] border-white bg-transparent font-black text-white outline-none focus:bg-white/5 shadow-brutalist-white-sm resize-y"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Highlights (one per line)</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/30">Key Deliverables (SEQUENTIAL)</label>
                   <textarea
                     rows={4}
                     value={exp.highlightsText}
                     onChange={(e) => updateExperience(exp.id, { highlightsText: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-y"
+                    className="w-full px-4 py-4 border-[2px] border-white bg-transparent font-bold text-white outline-none shadow-brutalist-white-sm resize-y font-mono text-xs uppercase"
                   />
                 </div>
               </article>
             ))}
 
             {form.experiences.length === 0 && (
-              <p className="text-gray-500 text-sm">No entries yet. Add your first experience.</p>
+              <div className="text-center py-20 border-[3px] border-white/20 border-dashed bg-[#0a0a0a]">
+                <p className="text-white/20 font-black uppercase tracking-[0.2em] text-xs italic">Zero records in stack. Initiate primary deployment entry.</p>
+              </div>
             )}
           </div>
         </section>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          {msg ? (
-            <p className={`text-sm ${msg.includes("Failed") ? "text-red-400" : "text-emerald-400"}`}>{msg}</p>
-          ) : (
-            <span />
-          )}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t-[3px] border-white/20 border-dashed">
+          <div className="min-h-[20px]">
+            {msg && (
+              <p className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 border-[2px] ${msg.includes("Failed") ? "bg-red-950/30 border-red-500 text-red-500" : "bg-emerald-950/30 border-emerald-500 text-emerald-500"}`}>{msg}</p>
+            )}
+          </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4 w-full sm:w-auto">
             <button
               type="button"
               onClick={handleReset}
-              className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800"
+              className="flex-1 sm:flex-none px-10 py-4 border-[2.5px] border-white bg-transparent text-white text-[11px] font-black uppercase tracking-widest shadow-brutalist-white-sm active:shadow-none hover:bg-white hover:text-black transition-all"
             >
-              Load defaults
+              Defaults
             </button>
             <button
               type="submit"
               disabled={saving || !db}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium disabled:opacity-50"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-3 px-10 py-4 border-[2.5px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest shadow-brutalist-accent hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all disabled:opacity-50"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              Save
+              {saving ? <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} /> : null}
+              Commit Entry
             </button>
           </div>
         </div>

@@ -76,65 +76,68 @@ export default function AdminTestimonials() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="max-w-5xl mx-auto space-y-10 pb-10">
+      <div className="flex flex-wrap items-center justify-between gap-6 border-b-[3px] border-white/20 pb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Testimonials</h1>
-          <p className="text-gray-400 mt-1">Manage client and colleague testimonials.</p>
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">External Validation</h1>
+          <p className="text-gray-500 font-bold mt-1 text-sm uppercase tracking-wider">Social proof index and testimonial management</p>
         </div>
         <button
           type="button"
           onClick={openCreate}
           disabled={!db}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium disabled:opacity-50"
+          className="inline-flex items-center gap-3 px-6 py-3.5 border-[2.5px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest shadow-brutalist-accent hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all disabled:opacity-50"
         >
-          <Plus className="w-4 h-4" />
-          Add testimonial
+          <Plus className="w-4 h-4" strokeWidth={3} />
+          Register Endorsement
         </button>
       </div>
 
       {testimonials.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] py-16 text-center text-gray-500">
-          No testimonials yet. Add one to get started.
+        <div className="border-[3px] border-white bg-[#111111] py-20 text-center shadow-brutalist-white">
+          <p className="text-white/20 font-black uppercase tracking-widest text-sm italic">Zero endorsements documented.</p>
+          <p className="text-[10px] text-white/10 mt-2 font-bold uppercase tracking-widest">Initiate primary social validation entry.</p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-8">
           {testimonials.map((t) => (
             <div
               key={t.id}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col gap-3"
+              className="border-[2.5px] border-white bg-[#111111] p-8 flex flex-col gap-6 shadow-brutalist-white hover:shadow-brutalist-white-lg transition-all group"
             >
-              <div className="flex items-start justify-between gap-2">
-                <Quote className="w-5 h-5 text-blue-500/40 shrink-0 mt-0.5" />
-                <div className="flex shrink-0 gap-1">
+              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-6">
+                <Quote className="w-10 h-10 text-white opacity-10 shrink-0" strokeWidth={3} />
+                <div className="flex shrink-0 gap-3">
                   <button
                     type="button"
                     onClick={() => openEdit(t)}
-                    className="p-1.5 text-gray-500 hover:text-white hover:bg-white/10 rounded-lg"
+                    className="p-2 border-[2px] border-white bg-[#161616] text-blue-400 hover:bg-blue-600 hover:text-white shadow-brutalist-white-sm transition-all active:shadow-none"
                   >
-                    <Pencil className="w-4 h-4" />
+                    <Pencil className="w-4 h-4" strokeWidth={2.5} />
                   </button>
                   <button
                     type="button"
                     onClick={() => setDeleteId(t.id)}
-                    className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg"
+                    className="p-2 border-[2px] border-white bg-[#161616] text-red-500 hover:bg-red-600 hover:text-white shadow-brutalist-white-sm transition-all active:shadow-none"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4" strokeWidth={2.5} />
                   </button>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed italic">&ldquo;{t.quote}&rdquo;</p>
-              <div className="flex items-center gap-3 pt-2 border-t border-white/5">
+              <p className="text-gray-300 font-bold text-sm leading-relaxed italic border-l-[3px] border-white/10 pl-4">&ldquo;{t.quote}&rdquo;</p>
+              <div className="flex items-center gap-4 pt-6 border-t-[2px] border-white/10 border-dashed">
                 {t.avatar ? (
-                  <img src={t.avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
+                  <div className="w-14 h-14 border-[2px] border-white shadow-brutalist-white-sm overflow-hidden bg-black">
+                    <img src={t.avatar} alt="" className="w-full h-full object-cover grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 transition-all" />
+                  </div>
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-blue-500/15 flex items-center justify-center text-blue-400 text-xs font-bold">
+                  <div className="w-14 h-14 border-[2px] border-white bg-[#0a0a0a] flex items-center justify-center text-white text-xs font-black shadow-brutalist-white-sm uppercase italic">
                     {t.name.split(" ").map((n) => n[0]).join("")}
                   </div>
                 )}
                 <div>
-                  <p className="text-white text-sm font-medium">{t.name}</p>
-                  <p className="text-gray-500 text-xs">{t.role}</p>
+                  <p className="text-white text-sm font-black uppercase tracking-tight italic">{t.name}</p>
+                  <p className="text-white/30 text-[10px] font-black uppercase tracking-widest mt-0.5">{t.role}</p>
                 </div>
               </div>
             </div>
@@ -144,73 +147,72 @@ export default function AdminTestimonials() {
 
       {/* Create / Edit modal */}
       {open && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-md rounded-xl border border-gray-800 bg-gray-900 shadow-2xl">
-            <div className="flex items-center justify-between p-5 border-b border-gray-800">
-              <h2 className="text-lg font-semibold text-white">
-                {editing ? "Edit testimonial" : "New testimonial"}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-[2px]">
+          <div className="w-full max-w-lg border-[3px] border-white bg-[#111111] shadow-brutalist-white-lg">
+            <div className="flex items-center justify-between p-6 border-b-[3px] border-white/20 bg-[#111111] sticky top-0 z-10">
+              <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">
+                {editing ? "Modify endorsement" : "New endorsement draft"}
               </h2>
               <button
                 type="button"
                 onClick={close}
-                className="p-2 rounded-lg text-gray-400 hover:bg-gray-800"
+                className="p-2 border-[2px] border-white text-white hover:bg-white hover:text-black transition-all shadow-brutalist-white-sm active:shadow-none"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" strokeWidth={3} />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Name *</label>
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Source Identity *</label>
                 <input
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Jane Doe"
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  placeholder="e.g. JANE DOE"
+                  className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm transition-all uppercase placeholder:text-white/10"
                 />
               </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Role / Company</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Designation / Affiliation</label>
                 <input
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  placeholder="CTO at Acme Inc"
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500"
+                  placeholder="e.g. CTO AT ACME INC"
+                  className="w-full px-4 py-4 border-[2px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm uppercase placeholder:text-white/10"
                 />
               </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Quote *</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Transmission Payload (Quote) *</label>
                 <textarea
                   required
                   rows={4}
                   value={form.quote}
                   onChange={(e) => setForm({ ...form, quote: e.target.value })}
-                  placeholder="What did they say about working with you?"
-                  className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white outline-none focus:border-blue-500 resize-none"
+                  placeholder="Primary social verification content..."
+                  className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all resize-none placeholder:text-white/10"
                 />
               </div>
-              <div>
+              <div className="p-6 border-[2px] border-white bg-[#0a0a0a] shadow-brutalist-white-sm">
                 <ImageUploadField
-                  label="Avatar"
                   folder="testimonials"
                   value={form.avatar}
                   onChange={(url) => setForm({ ...form, avatar: url })}
-                  helperText="Optional avatar image for the testimonial author."
                 />
+                <p className="text-[9px] font-bold text-gray-500 uppercase mt-4 tracking-widest">Optional visual identity verification.</p>
               </div>
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-4 pt-6 border-t-[2px] border-white/20 border-dashed">
                 <button
                   type="button"
                   onClick={close}
-                  className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800"
+                  className="px-8 py-4 border-[2.5px] border-white bg-transparent text-white text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-brutalist-white-sm"
                 >
-                  Cancel
+                  Abort
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium"
+                  className="px-8 py-4 border-[2.5px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest shadow-brutalist-accent hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
                 >
-                  {editing ? "Update" : "Add"}
+                  {editing ? "Commit Update" : "Index Endorsement"}
                 </button>
               </div>
             </form>
@@ -220,28 +222,30 @@ export default function AdminTestimonials() {
 
       {/* Delete confirmation */}
       {deleteId != null && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-md rounded-xl border border-gray-800 bg-gray-900 p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-white">Delete testimonial?</h3>
-            <div className="flex justify-end gap-2">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-[2px]">
+          <div className="w-full max-w-md border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white-lg">
+            <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Purge endorsement record?</h3>
+            <p className="text-sm font-bold text-gray-500 mt-4 uppercase leading-relaxed">Warning: Irreversible clearance from validation index.</p>
+            <div className="flex justify-end gap-4 mt-10">
               <button
                 type="button"
                 onClick={() => setDeleteId(null)}
-                className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300"
+                className="px-8 py-4 border-[2px] border-white bg-transparent text-white text-[10px] font-black uppercase tracking-widest shadow-brutalist-white-sm"
               >
-                Cancel
+                Abort
               </button>
               <button
                 type="button"
                 onClick={confirmDelete}
-                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white"
+                className="px-8 py-4 border-[2px] border-white bg-red-600 text-white text-[10px] font-black uppercase tracking-widest shadow-brutalist-white-sm"
               >
-                Delete
+                Purge
               </button>
             </div>
           </div>
         </div>
       )}
     </div>
+
   );
 }

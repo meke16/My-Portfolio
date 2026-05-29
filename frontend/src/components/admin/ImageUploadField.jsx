@@ -33,36 +33,36 @@ export default function ImageUploadField({
 
   if (multiple) {
     return (
-      <div className="space-y-3">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">{label}</label>
-            {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
+            <label className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{label}</label>
+            {helperText && <p className="text-[9px] font-bold text-gray-500 uppercase tracking-tight">{helperText}</p>}
           </div>
           {uploadButton}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {values.length > 0 ? (
             values.map((url, index) => (
               <div
                 key={`${url}-${index}`}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-gray-800 bg-gray-950"
+                className="group relative aspect-square overflow-hidden border-[2px] border-white bg-[#0a0a0a] shadow-brutalist-white-sm"
               >
-                <img src={url} alt="" className="h-full w-full object-cover" />
+                <img src={url} alt="" className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all duration-300" />
                 <button
                   type="button"
                   onClick={() => onValuesChange?.(values.filter((_, i) => i !== index))}
-                  className="absolute right-2 top-2 rounded-lg bg-black/70 p-2 text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                  className="absolute right-2 top-2 border-[1.5px] border-white bg-black/80 p-2 text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity active:bg-red-600"
                   aria-label="Remove image"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4" strokeWidth={3} />
                 </button>
               </div>
             ))
           ) : (
-            <div className="col-span-full rounded-xl border border-dashed border-gray-800 bg-gray-950/60 p-6 text-center text-sm text-gray-500">
-              No images uploaded yet.
+            <div className="col-span-full border-[2px] border-dashed border-white/20 bg-[#0a0a0a] p-8 text-center">
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/20 italic">No assets detected.</span>
             </div>
           )}
         </div>
@@ -71,20 +71,20 @@ export default function ImageUploadField({
   }
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between gap-3 flex-wrap">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <label className="block text-sm text-gray-400 mb-1">{label}</label>
-          {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
+          <label className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{label}</label>
+          {helperText && <p className="text-[9px] font-bold text-gray-500 uppercase tracking-tight">{helperText}</p>}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           {hasValue && onChange && (
             <button
               type="button"
               onClick={() => onChange("")}
-              className="px-3 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 text-sm"
+              className="px-4 py-2 border-[2px] border-white text-white/40 hover:text-red-500 hover:border-red-500 text-[10px] font-black uppercase tracking-widest transition-all"
             >
-              Remove
+              Purge Asset
             </button>
           )}
           {uploadButton}
@@ -92,11 +92,11 @@ export default function ImageUploadField({
       </div>
 
       <div className="flex items-center gap-4 flex-wrap">
-        <div className="w-32 h-32 rounded-xl border border-gray-800 bg-gray-950 overflow-hidden flex items-center justify-center">
+        <div className="w-40 h-40 border-[2.5px] border-white bg-[#0a0a0a] shadow-brutalist-white-sm overflow-hidden flex items-center justify-center">
           {hasValue ? (
-            <img src={value} alt="" className="h-full w-full object-cover" />
+            <img src={value} alt="" className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all" />
           ) : (
-            <span className="text-xs text-gray-500 text-center px-3">No image selected</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/10 text-center px-4 italic leading-relaxed">No asset signature present.</span>
           )}
         </div>
       </div>

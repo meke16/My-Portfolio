@@ -45,10 +45,10 @@ export default function UploadToCpanelButton({
         type="button"
         onClick={openPicker}
         disabled={uploading}
-        className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-800 text-white text-sm hover:bg-gray-700 disabled:opacity-60 ${className}`}
+        className={`inline-flex items-center gap-2.5 px-5 py-2.5 border-[2px] border-white bg-white text-black text-[10px] font-black uppercase tracking-widest hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all shadow-brutalist-white-sm active:shadow-none disabled:opacity-50 ${className}`}
       >
-        {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-        {uploading ? "Uploading..." : label}
+        {uploading ? <Loader2 className="w-4 h-4 animate-spin" strokeWidth={3} /> : <Upload className="w-4 h-4" strokeWidth={3} />}
+        {uploading ? "Transmitting..." : label}
       </button>
     </>
   );

@@ -83,95 +83,95 @@ export default function AdminAbout() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">About page content</h1>
-        <p className="text-gray-400 mt-1">
-          Manage the public About page sections. Stored in Firestore document{" "}
-          <code className="text-gray-300">content/about</code>.
+    <div className="max-w-4xl mx-auto space-y-10 pb-10">
+      <div className="border-b-[3px] border-white/20 pb-8">
+        <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Institutional Archive</h1>
+        <p className="text-gray-500 font-bold mt-1 text-sm uppercase tracking-wider">
+          Managing Firestore document: <code className="bg-white/5 text-white/50 px-2 py-0.5 border border-white/10 uppercase tracking-tighter">content/about</code>
         </p>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6">
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-blue-400" />
-            Core intro
-          </h2>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Headline</label>
+      <form onSubmit={handleSave} className="space-y-8">
+        <section className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white space-y-6">
+          <div className="flex items-center gap-3 border-b-[2.5px] border-white/20 pb-4">
+            <BookOpen className="w-6 h-6 text-white" strokeWidth={3} />
+            <h2 className="text-xl font-black text-white uppercase italic tracking-tight">Core Protocol</h2>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Primary Headline</label>
             <input
               value={form.headline}
               onChange={(e) => setForm({ ...form, headline: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none"
+              className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all placeholder:text-white/10 uppercase"
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Overview</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Executive Overview</label>
             <textarea
               rows={5}
               value={form.overview}
               onChange={(e) => setForm({ ...form, overview: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-y"
+              className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none focus:bg-[#161616] shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all resize-y placeholder:text-white/10"
             />
           </div>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-white">My journey</h2>
-          <p className="text-xs text-gray-500">
-            One line per item. Format: <code>Title - Period | Description</code>
-          </p>
+        <section className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white space-y-6">
+          <div className="flex items-center justify-between border-b-[2.5px] border-white/20 pb-4">
+            <h2 className="text-xl font-black text-white uppercase italic tracking-tight">Operational Journey</h2>
+            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest italic">Protocol: Title - Period | Description</span>
+          </div>
           <textarea
             rows={7}
             value={form.journeyText}
             onChange={(e) => setForm({ ...form, journeyText: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-y font-mono text-sm"
+            className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all resize-y font-mono text-sm uppercase tracking-tight"
           />
         </section>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-white">Focus areas</h2>
-            <p className="text-xs text-gray-500">One item per line.</p>
+        <div className="grid md:grid-cols-2 gap-8">
+          <section className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white space-y-6">
+            <h2 className="text-lg font-black text-white uppercase italic tracking-tight border-b-[2.5px] border-white/20 pb-4">Strategic Focus</h2>
             <textarea
               rows={7}
+              placeholder="ONE ITEM PER LINE..."
               value={form.focusAreasText}
               onChange={(e) => setForm({ ...form, focusAreasText: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-y"
+              className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all resize-y"
             />
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-white">Principles</h2>
-            <p className="text-xs text-gray-500">One item per line.</p>
+          <section className="border-[3px] border-white bg-[#111111] p-8 shadow-brutalist-white space-y-6">
+            <h2 className="text-lg font-black text-white uppercase italic tracking-tight border-b-[2.5px] border-white/20 pb-4">Core Principles</h2>
             <textarea
               rows={7}
+              placeholder="ONE ITEM PER LINE..."
               value={form.principlesText}
               onChange={(e) => setForm({ ...form, principlesText: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-gray-950 border border-gray-700 text-white focus:border-blue-500 outline-none resize-y"
+              className="w-full px-4 py-4 border-[2.5px] border-white bg-[#0a0a0a] font-black text-white outline-none shadow-brutalist-white-sm focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all resize-y"
             />
           </section>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          {msg ? (
-            <p className={`text-sm ${msg.includes("Failed") ? "text-red-400" : "text-emerald-400"}`}>
-              {msg}
-            </p>
-          ) : (
-            <span />
-          )}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t-[3px] border-white/20 border-dashed">
+          <div className="min-h-[20px]">
+            {msg && (
+              <p className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 border-[2px] ${msg.includes("Failed") ? "bg-red-950/30 border-red-500 text-red-500" : "bg-emerald-950/30 border-emerald-500 text-emerald-500"}`}>
+                {msg}
+              </p>
+            )}
+          </div>
           <button
             type="submit"
             disabled={saving || !db}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium disabled:opacity-50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 border-[2.5px] border-white bg-white text-black text-[11px] font-black uppercase tracking-widest shadow-brutalist-accent hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all disabled:opacity-50"
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-            Save about content
+            {saving ? <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} /> : null}
+            Commit to Archive
           </button>
         </div>
       </form>
     </div>
+
   );
 }
